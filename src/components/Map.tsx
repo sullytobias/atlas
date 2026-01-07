@@ -40,6 +40,7 @@ export default function Map({
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const isLoadingFlags = useRef(false); // Prevent double flag loading
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -227,6 +228,9 @@ export default function Map({
         if (!map) return;
 
         const onLoad = async () => {
+            if (isLoadingFlags.current) return;
+            isLoadingFlags.current = true;
+
             const flagPromises = (countryData as any).features.map(
                 async (feature: any) => {
                     const { cca3, flag } = feature.properties;
