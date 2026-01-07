@@ -1,5 +1,6 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useEffect, useCallback } from "react";
 import type { StyleSpecification } from "maplibre-gl";
+import { Popup } from "maplibre-gl";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/map.css";
@@ -8,11 +9,25 @@ import { MAP_SOURCES } from "../config/mapSources";
 import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
+import capitalsData from "../data/capitals.json";
 
 type Props = {
     showCoastlines: boolean;
     showSatellite: boolean;
     showCapitals?: boolean;
+};
+
+type CapitalProperties = {
+    capital: string;
+    country: string;
+    population: number;
+    flag: string;
+    flagAlt: string;
+    currencies: string;
+    area: number;
+    languages: string;
+    car: { side: string };
+    continents: string[];
 };
 
 export default function Map({
@@ -21,6 +36,8 @@ export default function Map({
     showCapitals = false,
 }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const popupRef = useRef<Popup | null>(null);
+    const hoveredCountryId = useRef<string | number | null>(null);
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -48,6 +65,177 @@ export default function Map({
     );
 
     useLayerVisibility(mapRef, visibilityConfigs);
+
+    const createPopupContent = useCallback((props: CapitalProperties) => {
+        const {
+            capital,
+            country,
+            population,
+            flag,
+            flagAlt,
+            currencies,
+            area,
+            languages,
+            car,
+            continents,
+        } = props;
+
+        return `
+            <div style="padding: 12px; max-width: 320px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <img src="${flag}" alt="${flagAlt || `${country} flag`}" 
+                         style="width: 40px; height: 30px; object-fit: cover; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" />
+                    <h3 style="margin: 0; font-size: 18px; font-weight: bold;">${
+                        country || "N/A"
+                    }</h3>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                    <p style="margin: 0; font-size: 14px;"><strong>Capital:</strong> ${
+                        capital || "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Population:</strong> ${
+                        population ? Number(population).toLocaleString() : "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Area:</strong> ${
+                        area ? `${Number(area).toLocaleString()} km²` : "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Languages:</strong> ${
+                        languages || "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Currencies:</strong> ${
+                        currencies || "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Driving Side:</strong> ${
+                        car?.side || "N/A"
+                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Continent:</strong> ${
+                        Array.isArray(continents)
+                            ? continents.join(", ")
+                            : continents || "N/A"
+                    }</p>
+                </div>
+            </div>
+        `;
+    }, []);
+
+    const handleClick = useCallback(
+        (e: any) => {
+            const map = mapRef.current;
+            if (!map) return;
+
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ["countries-fill"],
+            });
+
+            if (features.length === 0) {
+                popupRef.current?.remove();
+                popupRef.current = null;
+                return;
+            }
+
+            const countryName = features[0]?.properties?.NAME;
+            if (!countryName) return;
+
+            const capitalFeature = (capitalsData as any).features.find(
+                (f: any) => f.properties.country === countryName
+            );
+
+            if (!capitalFeature) {
+                console.warn(`No capital data found for: ${countryName}`);
+                return;
+            }
+
+            const popupContent = createPopupContent(capitalFeature.properties);
+
+            popupRef.current?.remove();
+            popupRef.current = new Popup({
+                closeButton: true,
+                closeOnClick: false,
+            })
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+        },
+        [createPopupContent]
+    );
+
+    const handleMouseMove = useCallback((e: any) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const features = map.queryRenderedFeatures(e.point, {
+            layers: ["countries-fill"],
+        });
+
+        if (features.length > 0) {
+            map.getCanvas().style.cursor = "pointer";
+
+            const feature = features[0];
+            const countryId = feature.id;
+
+            if (countryId === undefined) return;
+
+            if (
+                hoveredCountryId.current !== null &&
+                hoveredCountryId.current !== countryId
+            ) {
+                map.setFeatureState(
+                    {
+                        source: "countries",
+                        sourceLayer: "countries",
+                        id: hoveredCountryId.current,
+                    },
+                    { hover: false }
+                );
+            }
+
+            hoveredCountryId.current = countryId;
+            map.setFeatureState(
+                {
+                    source: "countries",
+                    sourceLayer: "countries",
+                    id: countryId,
+                },
+                { hover: true }
+            );
+        } else {
+            map.getCanvas().style.cursor = "default";
+
+            if (hoveredCountryId.current !== null) {
+                map.setFeatureState(
+                    {
+                        source: "countries",
+                        sourceLayer: "countries",
+                        id: hoveredCountryId.current,
+                    },
+                    { hover: false }
+                );
+            }
+            hoveredCountryId.current = null;
+        }
+    }, []);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const onLoad = () => {
+            map.on("click", handleClick);
+            map.on("mousemove", handleMouseMove);
+        };
+
+        if (map.isStyleLoaded()) {
+            onLoad();
+        } else {
+            map.once("load", onLoad);
+        }
+
+        return () => {
+            map.off("click", handleClick);
+            map.off("mousemove", handleMouseMove);
+            popupRef.current?.remove();
+        };
+    }, [handleClick, handleMouseMove]);
 
     return <div ref={containerRef} className="map" />;
 }

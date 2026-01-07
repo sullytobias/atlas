@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Map from "./components/Map";
 import LayerToggles from "./components/LayerToggles";
+import InfoBanner from "./components/InfoBanner";
 
 export default function App() {
     const [showCoastlines, setShowCoastlines] = useState(false);
@@ -9,6 +10,7 @@ export default function App() {
 
     return (
         <>
+            <InfoBanner />
             <LayerToggles
                 showCoastlines={showCoastlines}
                 onToggleCoastlines={setShowCoastlines}

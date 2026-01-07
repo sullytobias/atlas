@@ -1,16 +1,118 @@
-# React + Vite
+# 🗺️ Atlas - Interactive World Map
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive world map application built with React, TypeScript, and MapLibre GL. Click on any country to explore detailed information including capitals, population, languages, currencies, and more.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🌍 **Interactive Map** - Click on any country to view detailed information
+- 🛰️ **Multiple Base Layers** - Switch between satellite imagery and standard map view
+- 🏛️ **Capital Cities** - Toggle capital city markers and labels
+- 🌊 **Coastlines** - Show/hide country borders and coastlines
+- 🎨 **Country Highlighting** - Hover over countries for visual feedback
+- 📊 **Rich Data** - View population, area, languages, currencies, and more
+- 🎯 **Responsive UI** - Clean drawer interface for layer controls
 
-## React Compiler
+## 🚀 Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- Node.js (v18 or higher recommended)
+- npm or yarn
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd atlas
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+### Generate Capital Data
+
+The application uses REST Countries API data. To regenerate the capital cities dataset:
+
+```bash
+npm run generate:capitals
+```
+
+This fetches the latest country data including:
+- Capital cities with coordinates
+- Country flags
+- Population statistics
+- Languages and currencies
+- Geographic information
+
+## 🛠️ Tech Stack
+
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **MapLibre GL** - Map rendering engine
+- **Vite** - Build tool and dev server
+- **REST Countries API** - Country data source
+
+## 📁 Project Structure
+
+```
+atlas/
+├── src/
+│   ├── components/
+│   │   ├── Map.tsx              # Main map component
+│   │   ├── LayerToggles.tsx     # Layer control drawer
+│   │   └── InfoBanner.tsx       # User info banner
+│   ├── config/
+│   │   ├── mapSources.ts        # Map data sources
+│   │   └── mapLayers.ts         # Map layer definitions
+│   ├── hooks/
+│   │   ├── useMapInstance.ts    # Map initialization hook
+│   │   └── useLayerVisibility.ts # Layer toggle hook
+│   ├── data/
+│   │   └── capitals.json        # Generated capital cities data
+│   ├── styles/
+│   │   ├── index.css
+│   │   └── map.css
+│   └── App.tsx
+├── scripts/
+│   └── generateCapitals.ts      # Data generation script
+└── package.json
+```
+
+## 🎮 Usage
+
+1. **Toggle Layers** - Click the hamburger menu (☰) in the top-right to open layer controls
+2. **View Country Info** - Click on any country to see detailed information in a popup
+3. **Navigate** - Use mouse/trackpad to pan and zoom the map
+4. **Switch Views** - Toggle between satellite and standard map views
+5. **Show Capitals** - Enable capital city markers and labels
+
+## 📦 Available Scripts
+
+```bash
+npm run dev              # Start development server
+npm run build            # Build for production
+npm run preview          # Preview production build
+npm run generate:capitals # Generate/update capital cities data
+```
+
+## 🌐 Data Sources
+
+- **Map Tiles**: OpenStreetMap & ArcGIS World Imagery
+- **Vector Data**: MapLibre Demo Tiles
+- **Country Data**: [REST Countries API](https://restcountries.com)
+
+## 📝 License
+
+MIT
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 👨‍💻 Author
+
+Tobias Sullivan

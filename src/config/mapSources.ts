@@ -1,9 +1,10 @@
 import type { SourceSpecification } from "maplibre-gl";
+import capitalsData from "../data/capitals.json";
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     capitals: {
         type: "geojson",
-        data: "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_populated_places_simple.geojson",
+        data: capitalsData as any,
     },
     satellite: {
         type: "raster",
@@ -17,7 +18,7 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
         tileSize: 256,
     },
-    coastline: {
+    countries: {
         type: "vector",
         tiles: ["https://demotiles.maplibre.org/tiles/{z}/{x}/{y}.pbf"],
     },
