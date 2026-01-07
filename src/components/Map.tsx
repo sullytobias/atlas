@@ -1,6 +1,6 @@
 import { useMemo, useRef, useEffect, useCallback, useState } from "react";
 import type { StyleSpecification } from "maplibre-gl";
-import { Popup } from "maplibre-gl";
+import { Popup, MapMouseEvent } from "maplibre-gl";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/map.css";
@@ -29,6 +29,21 @@ type CountryProps = {
     languages: string;
     car: { side: string };
     continents: string[];
+};
+
+type CountryDataFeature = {
+    properties: {
+        cca3: string;
+        capital: string;
+        country: string;
+        population: number;
+        flag: string;
+        flagAlt: string;
+        currencies: string;
+        area: number;
+        languages: string;
+        car: { side: string };
+    };
 };
 
 export default function Map({
@@ -68,33 +83,51 @@ export default function Map({
 
     useLayerVisibility(mapRef, visibilityConfigs);
 
-    const createPopupContent = useCallback((props: CountryProps) => {
-        const {
-            capital,
-            country,
-            population,
-            flag,
-            flagAlt,
-            currencies,
-            area,
-            languages,
-            car,
-            continents,
-        } = props;
+    const formatLanguages = useCallback((languages: string): string => {
+        return languages
+            .split(",")
+            .map((lang) => lang.trim())
+            .map(
+                (lang) =>
+                    `<a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                        lang
+                    )}_language">${lang}</a>`
+            )
+            .join(", ");
+    }, []);
 
-        return `
+    const createPopupContent = useCallback(
+        (props: CountryProps): string => {
+            const {
+                capital,
+                country,
+                population,
+                flag,
+                flagAlt,
+                currencies,
+                area,
+                languages,
+                car,
+                continents,
+            } = props;
+
+            return `
             <div style="padding: 12px; max-width: 320px;">
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                     <img src="${flag}" alt="${flagAlt || `${country} flag`}" 
                          style="width: 40px; height: 30px; object-fit: cover; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" />
-                    <h3 style="margin: 0; font-size: 18px; font-weight: bold;">${
-                        country || "N/A"
-                    }</h3>
+                    <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                        country
+                    )}" style="margin: 0; font-size: 18px; font-weight: bold;">${
+                country || "N/A"
+            }</a>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <p style="margin: 0; font-size: 14px;"><strong>Capital:</strong> ${
-                        capital || "N/A"
-                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Capital:</strong> 
+                        <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                            capital
+                        )}">${capital || "N/A"}</a>
+                    </p>
                     <p style="margin: 0; font-size: 14px;"><strong>Population:</strong> ${
                         population ? Number(population).toLocaleString() : "N/A"
                     }</p>
@@ -102,24 +135,63 @@ export default function Map({
                         area ? `${Number(area).toLocaleString()} km²` : "N/A"
                     }</p>
                     <p style="margin: 0; font-size: 14px;"><strong>Languages:</strong> ${
-                        languages || "N/A"
+                        languages ? formatLanguages(languages) : "N/A"
                     }</p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Currencies:</strong> ${
-                        currencies || "N/A"
-                    }</p>
+                    <p style="margin: 0; font-size: 14px;"><strong>Currencies:</strong> <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                        currencies
+                    )}">${currencies || "N/A"}</a></p>
                     <p style="margin: 0; font-size: 14px;"><strong>Driving Side:</strong> ${
                         car?.side || "N/A"
                     }</p>
                     <p style="margin: 0; font-size: 14px;"><strong>Continent:</strong> ${
-                        continents || "N/A"
+                        continents
+                            .map(
+                                (continent) =>
+                                    `<a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                        continent
+                                    )}">${continent}</a>`
+                            )
+                            .join(", ") || "N/A"
                     }</p>
                 </div>
             </div>
         `;
+        },
+        [formatLanguages]
+    );
+
+    const clearHoveredCountry = useCallback(() => {
+        const map = mapRef.current;
+        if (!map || hoveredCountryId.current === null) return;
+
+        map.setFeatureState(
+            {
+                source: "countries",
+                sourceLayer: "countries",
+                id: hoveredCountryId.current,
+            },
+            { hover: false }
+        );
+        hoveredCountryId.current = null;
+    }, []);
+
+    const setHoveredCountry = useCallback((countryId: string | number) => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        map.setFeatureState(
+            {
+                source: "countries",
+                sourceLayer: "countries",
+                id: countryId,
+            },
+            { hover: true }
+        );
+        hoveredCountryId.current = countryId;
     }, []);
 
     const handleClick = useCallback(
-        (e: any) => {
+        (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
 
@@ -133,24 +205,22 @@ export default function Map({
                 return;
             }
 
-            const ADM0_A3 = features[0]?.properties?.ADM0_A3;
-            const CONTINENT = features[0]?.properties?.CONTINENT;
+            const { ADM0_A3, CONTINENT } = features[0].properties || {};
             if (!ADM0_A3) return;
 
-            const countryFeature = (countryData as any).features.find(
-                (f: any) => f.properties.cca3 === ADM0_A3
-            );
+            const countryFeature = (
+                countryData as { features: CountryDataFeature[] }
+            ).features.find((f) => f.properties.cca3 === ADM0_A3);
 
             if (!countryFeature) {
-                console.warn(`No capital data found for: ${ADM0_A3}`);
-                console.warn(features);
+                console.warn(`No country data found for: ${ADM0_A3}`);
                 return;
             }
 
             const enrichedProperties = {
                 ...countryFeature.properties,
                 continents: [CONTINENT],
-            };
+            } as CountryProps;
 
             const popupContent = createPopupContent(enrichedProperties);
 
@@ -166,75 +236,48 @@ export default function Map({
         [createPopupContent]
     );
 
-    const handleMouseMove = useCallback((e: any) => {
-        const map = mapRef.current;
-        if (!map) return;
+    const handleMouseMove = useCallback(
+        (e: MapMouseEvent) => {
+            const map = mapRef.current;
+            if (!map) return;
 
-        const features = map.queryRenderedFeatures(e.point, {
-            layers: ["countries-fill"],
-        });
+            const features = map.queryRenderedFeatures(e.point, {
+                layers: ["countries-fill"],
+            });
 
-        if (features.length > 0) {
-            map.getCanvas().style.cursor = "pointer";
+            if (features.length > 0) {
+                map.getCanvas().style.cursor = "pointer";
 
-            const feature = features[0];
-            const countryId = feature.id;
+                const countryId = features[0].id;
+                if (countryId === undefined) return;
 
-            if (countryId === undefined) return;
-
-            if (
-                hoveredCountryId.current !== null &&
-                hoveredCountryId.current !== countryId
-            ) {
-                map.setFeatureState(
-                    {
-                        source: "countries",
-                        sourceLayer: "countries",
-                        id: hoveredCountryId.current,
-                    },
-                    { hover: false }
-                );
+                if (hoveredCountryId.current !== countryId) {
+                    clearHoveredCountry();
+                    setHoveredCountry(countryId);
+                }
+            } else {
+                map.getCanvas().style.cursor = "default";
+                clearHoveredCountry();
             }
-
-            hoveredCountryId.current = countryId;
-            map.setFeatureState(
-                {
-                    source: "countries",
-                    sourceLayer: "countries",
-                    id: countryId,
-                },
-                { hover: true }
-            );
-        } else {
-            map.getCanvas().style.cursor = "default";
-
-            if (hoveredCountryId.current !== null) {
-                map.setFeatureState(
-                    {
-                        source: "countries",
-                        sourceLayer: "countries",
-                        id: hoveredCountryId.current,
-                    },
-                    { hover: false }
-                );
-            }
-            hoveredCountryId.current = null;
-        }
-    }, []);
+        },
+        [clearHoveredCountry, setHoveredCountry]
+    );
 
     useEffect(() => {
         const map = mapRef.current;
         if (!map) return;
 
-        const onLoad = async () => {
+        const onLoad = () => {
             map.on("click", handleClick);
             map.on("mousemove", handleMouseMove);
-
             setIsLoading(false);
         };
 
-        if (map.isStyleLoaded()) onLoad();
-        else map.once("load", onLoad);
+        if (map.isStyleLoaded()) {
+            onLoad();
+        } else {
+            map.once("load", onLoad);
+        }
 
         return () => {
             map.off("click", handleClick);
