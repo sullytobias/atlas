@@ -12,21 +12,30 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "satellite",
     },
     {
+        id: "countries-tint",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "fill-opacity": [
+                "case",
+                ["boolean", ["feature-state", "hover"], false],
+                0.25,
+                0,
+            ],
+        },
+    },
+    {
         id: "countries-fill",
         type: "fill",
         source: "countries",
         "source-layer": "countries",
         paint: {
-            "fill-color": [
-                "case",
-                ["boolean", ["feature-state", "hover"], false],
-                "#000",
-                "transparent",
-            ],
+            "fill-pattern": ["get", "ADM0_A3"],
             "fill-opacity": [
                 "case",
                 ["boolean", ["feature-state", "hover"], false],
-                0.3,
+                0.7,
                 0,
             ],
         },
@@ -36,7 +45,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "countries",
         "source-layer": "countries",
         type: "line",
-        paint: { "line-color": "#198EC8", "line-width": 1 },
+        paint: { "line-color": "#198EC8", "line-width": 2 },
     },
     {
         id: "capitals-points",

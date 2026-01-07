@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useCallback } from "react";
+import { useMemo, useRef, useEffect, useCallback, useState } from "react";
 import type { StyleSpecification } from "maplibre-gl";
 import { Popup } from "maplibre-gl";
 
@@ -9,7 +9,8 @@ import { MAP_SOURCES } from "../config/mapSources";
 import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
-import capitalsData from "../data/data.json";
+import countryData from "../data/data.json";
+import Loader from "./Loader";
 
 type Props = {
     showCoastlines: boolean;
@@ -17,7 +18,7 @@ type Props = {
     showCapitals?: boolean;
 };
 
-type CapitalProperties = {
+type CountryProps = {
     capital: string;
     country: string;
     population: number;
@@ -38,6 +39,7 @@ export default function Map({
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -66,7 +68,7 @@ export default function Map({
 
     useLayerVisibility(mapRef, visibilityConfigs);
 
-    const createPopupContent = useCallback((props: CapitalProperties) => {
+    const createPopupContent = useCallback((props: CountryProps) => {
         const {
             capital,
             country,
@@ -109,9 +111,7 @@ export default function Map({
                         car?.side || "N/A"
                     }</p>
                     <p style="margin: 0; font-size: 14px;"><strong>Continent:</strong> ${
-                        Array.isArray(continents)
-                            ? continents.join(", ")
-                            : continents || "N/A"
+                        continents || "N/A"
                     }</p>
                 </div>
             </div>
@@ -133,19 +133,26 @@ export default function Map({
                 return;
             }
 
-            const countryName = features[0]?.properties?.NAME;
-            if (!countryName) return;
+            const ADM0_A3 = features[0]?.properties?.ADM0_A3;
+            const CONTINENT = features[0]?.properties?.CONTINENT;
+            if (!ADM0_A3) return;
 
-            const capitalFeature = (capitalsData as any).features.find(
-                (f: any) => f.properties.country === countryName
+            const countryFeature = (countryData as any).features.find(
+                (f: any) => f.properties.cca3 === ADM0_A3
             );
 
-            if (!capitalFeature) {
-                console.warn(`No capital data found for: ${countryName}`);
+            if (!countryFeature) {
+                console.warn(`No capital data found for: ${ADM0_A3}`);
+                console.warn(features);
                 return;
             }
 
-            const popupContent = createPopupContent(capitalFeature.properties);
+            const enrichedProperties = {
+                ...countryFeature.properties,
+                continents: [CONTINENT],
+            };
+
+            const popupContent = createPopupContent(enrichedProperties);
 
             popupRef.current?.remove();
             popupRef.current = new Popup({
@@ -219,16 +226,42 @@ export default function Map({
         const map = mapRef.current;
         if (!map) return;
 
-        const onLoad = () => {
+        const onLoad = async () => {
+            const flagPromises = (countryData as any).features.map(
+                async (feature: any) => {
+                    const { cca3, flag } = feature.properties;
+                    if (!flag || !cca3) return;
+
+                    try {
+                        if (map.hasImage(cca3)) return;
+
+                        const img = await new Promise<HTMLImageElement>(
+                            (resolve, reject) => {
+                                const image = new Image();
+                                image.crossOrigin = "anonymous";
+                                image.onload = () => resolve(image);
+                                image.onerror = reject;
+                                image.src = flag;
+                            }
+                        );
+
+                        map.addImage(cca3, img);
+                    } catch (err) {
+                        console.warn(`Failed to load flag for ${cca3}:`, err);
+                    }
+                }
+            );
+
+            await Promise.allSettled(flagPromises);
+
             map.on("click", handleClick);
             map.on("mousemove", handleMouseMove);
+
+            setIsLoading(false);
         };
 
-        if (map.isStyleLoaded()) {
-            onLoad();
-        } else {
-            map.once("load", onLoad);
-        }
+        if (map.isStyleLoaded()) onLoad();
+        else map.once("load", onLoad);
 
         return () => {
             map.off("click", handleClick);
@@ -237,5 +270,10 @@ export default function Map({
         };
     }, [handleClick, handleMouseMove]);
 
-    return <div ref={containerRef} className="map" />;
+    return (
+        <>
+            <Loader isLoading={isLoading} />
+            <div ref={containerRef} className="map" />
+        </>
+    );
 }

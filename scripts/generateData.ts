@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function generateCapitals() {
     const response = await fetch(
-        "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,population,flags,currencies,area,car,languages,continents"
+        "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,population,flags,currencies,area,car,languages,cca3"
     );
     const countries = await response.json();
 
@@ -16,7 +16,7 @@ async function generateCapitals() {
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [c.capitalInfo.latlng[1], c.capitalInfo.latlng[0]] 
+                coordinates: [c.capitalInfo.latlng[1], c.capitalInfo.latlng[0]],
             },
             properties: {
                 capital: c.capital[0],
@@ -30,14 +30,14 @@ async function generateCapitals() {
                           .join(", ")
                     : "N/A",
                 area: c.area,
-                languages: c.languages 
-                    ? Object.values(c.languages).join(", ") 
+                languages: c.languages
+                    ? Object.values(c.languages).join(", ")
                     : "N/A",
                 car: {
                     signs: c.car?.signs || [],
                     side: c.car?.side || "right",
                 },
-                continents: c.continents || [],
+                cca3: c.cca3 || "N/A",
             },
         }));
 
