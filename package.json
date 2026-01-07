@@ -8,8 +8,7 @@
         "build": "vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "generate:capitals": "node scripts/generateCapitals.ts",
-        "prebuild": "npm run generate:capitals"
+        "generate:data": "node scripts/generateData.ts"
     },
     "dependencies": {
         "maplibre-gl": "^5.14.0",

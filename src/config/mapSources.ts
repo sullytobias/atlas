@@ -1,5 +1,5 @@
 import type { SourceSpecification } from "maplibre-gl";
-import capitalsData from "../data/capitals.json";
+import capitalsData from "../data/data.json";
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     capitals: {

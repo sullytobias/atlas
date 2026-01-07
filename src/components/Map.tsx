@@ -9,7 +9,7 @@ import { MAP_SOURCES } from "../config/mapSources";
 import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
-import capitalsData from "../data/capitals.json";
+import capitalsData from "../data/data.json";
 
 type Props = {
     showCoastlines: boolean;

@@ -46,7 +46,7 @@ async function generateCapitals() {
         features,
     };
 
-    const outputPath = path.join(__dirname, "../src/data/capitals.json");
+    const outputPath = path.join(__dirname, "../src/data/data.json");
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, JSON.stringify(geojson, null, 2));
 
