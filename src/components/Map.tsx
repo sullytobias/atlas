@@ -40,7 +40,6 @@ export default function Map({
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const isLoadingFlags = useRef(false); // Prevent double flag loading
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -228,36 +227,6 @@ export default function Map({
         if (!map) return;
 
         const onLoad = async () => {
-            if (isLoadingFlags.current) return;
-            isLoadingFlags.current = true;
-
-            const flagPromises = (countryData as any).features.map(
-                async (feature: any) => {
-                    const { cca3, flag } = feature.properties;
-                    if (!flag || !cca3) return;
-
-                    try {
-                        if (map.hasImage(cca3)) return;
-
-                        const img = await new Promise<HTMLImageElement>(
-                            (resolve, reject) => {
-                                const image = new Image();
-                                image.crossOrigin = "anonymous";
-                                image.onload = () => resolve(image);
-                                image.onerror = reject;
-                                image.src = flag;
-                            }
-                        );
-
-                        map.addImage(cca3, img);
-                    } catch (err) {
-                        console.warn(`Failed to load flag for ${cca3}:`, err);
-                    }
-                }
-            );
-
-            await Promise.allSettled(flagPromises);
-
             map.on("click", handleClick);
             map.on("mousemove", handleMouseMove);
 
