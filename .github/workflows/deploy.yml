@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Generate data
-        run: npm run generate:data
+        run: npx tsx scripts/generateData.ts
 
       - name: Build
         run: npm run build
