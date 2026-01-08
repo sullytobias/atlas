@@ -1,5 +1,6 @@
 import type { SourceSpecification } from "maplibre-gl";
 import capitalsData from "../data/data.json";
+import continentsData from "../data/continents.json";
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     capitals: {
@@ -21,5 +22,9 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
     countries: {
         type: "vector",
         tiles: ["https://demotiles.maplibre.org/tiles/{z}/{x}/{y}.pbf"],
+    },
+    continents: {
+        type: "geojson",
+        data: continentsData as any,
     },
 };

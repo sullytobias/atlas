@@ -7,11 +7,14 @@ export default function App() {
     const [showCoastlines, setShowCoastlines] = useState(false);
     const [showSatellite, setShowSatellite] = useState(false);
     const [showCapitals, setShowCapitals] = useState(false);
+    const [showContinents, setShowContinents] = useState(false);
 
     return (
         <>
             <InfoBanner />
             <LayerToggles
+                showContinents={showContinents}
+                onToggleContinents={setShowContinents}
                 showCoastlines={showCoastlines}
                 onToggleCoastlines={setShowCoastlines}
                 showSatellite={showSatellite}
@@ -23,6 +26,7 @@ export default function App() {
                 showCoastlines={showCoastlines}
                 showSatellite={showSatellite}
                 showCapitals={showCapitals}
+                showContinents={showContinents}
             />
         </>
     );

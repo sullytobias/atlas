@@ -9,7 +9,7 @@ export default function InfoBanner() {
         <div
             style={{
                 position: "absolute",
-                top: "20px",
+                bottom: "20px",
                 left: "50%",
                 transform: "translateX(-50%)",
                 backgroundColor: "rgba(0, 0, 0, 0.7)",

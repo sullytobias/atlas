@@ -15,7 +15,8 @@ import Loader from "./Loader";
 type Props = {
     showCoastlines: boolean;
     showSatellite: boolean;
-    showCapitals?: boolean;
+    showCapitals: boolean;
+    showContinents: boolean;
 };
 
 type CountryProps = {
@@ -50,6 +51,7 @@ export default function Map({
     showCoastlines,
     showSatellite,
     showCapitals = false,
+    showContinents = false,
 }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
@@ -77,8 +79,12 @@ export default function Map({
                 layerId: "capitals-labels",
                 condition: showCapitals && showSatellite,
             },
+            {
+                layerId: "continents-fill",
+                condition: showContinents,
+            },
         ],
-        [showCoastlines, showSatellite, showCapitals]
+        [showCoastlines, showSatellite, showCapitals, showContinents]
     );
 
     useLayerVisibility(mapRef, visibilityConfigs);
