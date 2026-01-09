@@ -47,6 +47,10 @@ type CountryDataFeature = {
     };
 };
 
+const CODE_MAPPING: Record<string, string> = {
+    SDS: "SSD",
+};
+
 export default function Map({
     showCoastlines,
     showSatellite,
@@ -212,11 +216,13 @@ export default function Map({
             }
 
             const { ADM0_A3, CONTINENT } = features[0].properties || {};
-            if (!ADM0_A3) return;
+            const mappedCode = CODE_MAPPING[ADM0_A3] || ADM0_A3;
+
+            if (!mappedCode) return;
 
             const countryFeature = (
                 countryData as { features: CountryDataFeature[] }
-            ).features.find((f) => f.properties.cca3 === ADM0_A3);
+            ).features.find((f) => f.properties.cca3 === mappedCode);
 
             if (!countryFeature) {
                 console.warn(`No country data found for: ${ADM0_A3}`);
@@ -226,7 +232,7 @@ export default function Map({
             const enrichedProperties = {
                 ...countryFeature.properties,
                 continents: [CONTINENT],
-            } as CountryProps;
+            };
 
             const popupContent = createPopupContent(enrichedProperties);
 

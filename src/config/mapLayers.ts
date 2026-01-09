@@ -1,4 +1,5 @@
 import type { LayerSpecification } from "maplibre-gl";
+import { getContinentColorExpression } from "../constants/continents";
 
 export const MAP_LAYERS: LayerSpecification[] = [
     {
@@ -31,11 +32,10 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "countries",
         "source-layer": "countries",
         paint: {
-            "fill-pattern": ["get", "ADM0_A3"],
             "fill-opacity": [
                 "case",
                 ["boolean", ["feature-state", "hover"], false],
-                0.7,
+                0.1,
                 0,
             ],
         },
@@ -80,25 +80,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         type: "fill",
         source: "continents",
         paint: {
-            "fill-color": [
-                "match",
-                ["get", "continent"],
-                "Africa",
-                "#FF6B6B",
-                "Asia",
-                "#4ECDC4",
-                "Europe",
-                "#95E1D3",
-                "North America",
-                "#FFE66D",
-                "South America",
-                "#A8E6CF",
-                "Oceania",
-                "#C7CEEA",
-                "Antarctica",
-                "#F0F0F0",
-                "#CCCCCC",
-            ],
+            "fill-color": getContinentColorExpression() as any,
             "fill-opacity": 0.4,
         },
     },
