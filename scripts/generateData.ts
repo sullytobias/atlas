@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function generateCapitals() {
+async function generateData() {
     const response = await fetch(
         "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,population,flags,currencies,area,car,languages,cca3"
     );
@@ -30,6 +30,9 @@ async function generateCapitals() {
                           .join(", ")
                     : "N/A",
                 area: c.area,
+                populationDensity: c.area
+                    ? Math.round(c.population / c.area)
+                    : 0,
                 languages: c.languages
                     ? Object.values(c.languages).join(", ")
                     : "N/A",
@@ -54,4 +57,4 @@ async function generateCapitals() {
     console.log(`Saved to ${outputPath}`);
 }
 
-generateCapitals();
+generateData();

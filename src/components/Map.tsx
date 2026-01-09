@@ -17,6 +17,7 @@ type Props = {
     showSatellite: boolean;
     showCapitals: boolean;
     showContinents: boolean;
+    showHeatmap: boolean;
 };
 
 type CountryProps = {
@@ -56,6 +57,7 @@ export default function Map({
     showSatellite,
     showCapitals = false,
     showContinents = false,
+    showHeatmap = false,
 }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
@@ -87,11 +89,76 @@ export default function Map({
                 layerId: "continents-fill",
                 condition: showContinents,
             },
+            {
+                layerId: "population-choropleth",
+                condition: showHeatmap,
+            },
         ],
-        [showCoastlines, showSatellite, showCapitals, showContinents]
+        [
+            showCoastlines,
+            showSatellite,
+            showCapitals,
+            showContinents,
+            showHeatmap,
+        ]
     );
 
     useLayerVisibility(mapRef, visibilityConfigs);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const loadPopulationData = () => {
+            const countriesDataTyped = countryData as {
+                features: CountryDataFeature[];
+            };
+
+            countriesDataTyped.features.forEach((feature) => {
+                const cca3 =
+                    CODE_MAPPING[feature.properties.cca3] ||
+                    feature.properties.cca3;
+
+                const countryFeatures = map.querySourceFeatures("countries", {
+                    sourceLayer: "countries",
+                    filter: ["==", "ADM0_A3", cca3],
+                });
+
+                countryFeatures.forEach((f) => {
+                    if (f.id !== undefined) {
+                        map.setFeatureState(
+                            {
+                                source: "countries",
+                                sourceLayer: "countries",
+                                id: f.id,
+                            },
+                            {
+                                population: feature.properties.population,
+                            }
+                        );
+                    }
+                });
+            });
+        };
+
+        const onStyleLoad = () => {
+            if (map.isSourceLoaded("countries")) {
+                loadPopulationData();
+            } else {
+                map.once("sourcedata", (e) => {
+                    if (e.sourceId === "countries" && e.isSourceLoaded) {
+                        loadPopulationData();
+                    }
+                });
+            }
+        };
+
+        if (map.isStyleLoaded()) {
+            onStyleLoad();
+        } else {
+            map.once("load", onStyleLoad);
+        }
+    }, []);
 
     const formatLanguages = useCallback((languages: string): string => {
         return languages

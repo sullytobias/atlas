@@ -1,11 +1,15 @@
 import type { SourceSpecification } from "maplibre-gl";
-import capitalsData from "../data/data.json";
+import countriesData from "../data/data.json";
 import continentsData from "../data/continents.json";
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
-    capitals: {
+    countriesData: {
         type: "geojson",
-        data: capitalsData as any,
+        data: countriesData as any,
+    },
+    populationHeatmap: {
+        type: "geojson",
+        data: countriesData as any,
     },
     satellite: {
         type: "raster",

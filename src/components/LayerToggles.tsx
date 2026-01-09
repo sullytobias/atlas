@@ -9,6 +9,16 @@ type Props = {
     onToggleCapitals: (value: boolean) => void;
     showContinents: boolean;
     onToggleContinents: (value: boolean) => void;
+    showHeatmap: boolean;
+    onToggleHeatmap: (value: boolean) => void;
+};
+
+type LayerItem = {
+    label: string;
+    icon: string;
+    checked: boolean;
+    onChange: (value: boolean) => void;
+    color: string;
 };
 
 export default function LayerToggles({
@@ -20,222 +30,150 @@ export default function LayerToggles({
     onToggleCapitals,
     showContinents,
     onToggleContinents,
+    showHeatmap,
+    onToggleHeatmap,
 }: Props) {
-    const [isOpen, setIsOpen] = useState(false);
+    const layers: LayerItem[] = [
+        {
+            label: "Coastlines",
+            icon: "🌊",
+            checked: showCoastlines,
+            onChange: onToggleCoastlines,
+            color: "#198EC8",
+        },
+        {
+            label: "Satellite",
+            icon: "🛰️",
+            checked: showSatellite,
+            onChange: onToggleSatellite,
+            color: "#8B4513",
+        },
+        {
+            label: "Capitals",
+            icon: "🏛️",
+            checked: showCapitals,
+            onChange: onToggleCapitals,
+            color: "#DC143C",
+        },
+        {
+            label: "Continents",
+            icon: "🗺️",
+            checked: showContinents,
+            onChange: onToggleContinents,
+            color: "#9370DB",
+        },
+        {
+            label: "Population",
+            icon: "🔥",
+            checked: showHeatmap,
+            onChange: onToggleHeatmap,
+            color: "#FF4500",
+        },
+    ];
 
     return (
-        <>
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                style={{
-                    position: "absolute",
-                    top: "20px",
-                    left: "20px",
-                    zIndex: 1000,
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    backdropFilter: "blur(10px)",
-                    border: "none",
-                    borderRadius: "12px",
-                    padding: "14px 20px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    transition: "all 0.2s ease",
-                }}
-                onMouseOver={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
-                    e.currentTarget.style.boxShadow =
-                        "0 6px 20px rgba(0,0,0,0.2)";
-                }}
-                onMouseOut={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                        "0 4px 16px rgba(0,0,0,0.15)";
-                }}
-            >
-                <span style={{ fontSize: "20px" }}>{isOpen ? "✕" : "☰"}</span>
-                <span>Layers</span>
-            </button>
+        <div
+            style={{
+                position: "absolute",
+                top: "20px",
+                left: "20px",
+                zIndex: 1000,
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
+            }}
+        >
+            <style>
+                {`
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(1); }
+                        50% { transform: scale(1.05); }
+                    }
+                    
+                    .layer-orb {
+                        position: relative;
+                    }
+                    
+                    .layer-orb::before {
+                        content: attr(data-label);
+                        position: absolute;
+                        left: 58px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: rgba(0, 0, 0, 0.85);
+                        color: white;
+                        padding: 6px 12px;
+                        border-radius: 8px;
+                        font-size: 13px;
+                        white-space: nowrap;
+                        opacity: 0;
+                        pointer-events: none;
+                        transition: opacity 0.2s ease;
+                        font-weight: 500;
+                        backdrop-filter: blur(10px);
+                    }
+                    
+                    .layer-orb:hover::before {
+                        opacity: 1;
+                    }
+                `}
+            </style>
 
-            {isOpen && (
-                <div
+            {layers.map((layer, index) => (
+                <button
+                    key={layer.label}
+                    className="layer-orb"
+                    data-label={layer.label}
+                    onClick={() => layer.onChange(!layer.checked)}
                     style={{
-                        position: "absolute",
-                        top: "85px",
-                        left: "20px",
-                        zIndex: 1000,
-                        backgroundColor: "rgba(255, 255, 255, 0.95)",
+                        width: "48px",
+                        height: "48px",
+                        backgroundColor: layer.checked
+                            ? layer.color
+                            : "rgba(255, 255, 255, 0.9)",
                         backdropFilter: "blur(10px)",
-                        padding: "20px",
-                        borderRadius: "12px",
-                        boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-                        minWidth: "220px",
-                        animation: "slideIn 0.2s ease",
+                        border: layer.checked
+                            ? `2px solid ${layer.color}`
+                            : "2px solid rgba(255, 255, 255, 0.3)",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        fontSize: "20px",
+                        boxShadow: layer.checked
+                            ? `0 4px 20px ${layer.color}60, 0 0 40px ${layer.color}30`
+                            : "0 4px 12px rgba(0,0,0,0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        animation: layer.checked
+                            ? `pulse 2s ease-in-out ${index * 0.2}s infinite`
+                            : "none",
+                        filter: layer.checked ? "none" : "grayscale(0.3)",
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.transform = "scale(1.15)";
+                        e.currentTarget.style.boxShadow = layer.checked
+                            ? `0 6px 24px ${layer.color}70, 0 0 50px ${layer.color}40`
+                            : "0 6px 20px rgba(0,0,0,0.15)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                        e.currentTarget.style.boxShadow = layer.checked
+                            ? `0 4px 20px ${layer.color}60, 0 0 40px ${layer.color}30`
+                            : "0 4px 12px rgba(0,0,0,0.1)";
                     }}
                 >
-                    <h3
+                    <span
                         style={{
-                            margin: "0 0 16px 0",
-                            fontSize: "14px",
-                            fontWeight: "600",
-                            color: "#333",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
+                            filter: layer.checked
+                                ? "drop-shadow(0 2px 4px rgba(0,0,0,0.3))"
+                                : "none",
                         }}
                     >
-                        Map Layers
-                    </h3>
-
-                    <label
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "14px",
-                            cursor: "pointer",
-                            fontSize: "15px",
-                            padding: "8px",
-                            borderRadius: "6px",
-                            transition: "background-color 0.15s ease",
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "rgba(0,0,0,0.05)";
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "transparent";
-                        }}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={showCoastlines}
-                            onChange={(e) =>
-                                onToggleCoastlines(e.target.checked)
-                            }
-                            style={{
-                                marginRight: "12px",
-                                cursor: "pointer",
-                                width: "18px",
-                                height: "18px",
-                                accentColor: "#198EC8",
-                            }}
-                        />
-                        <span>🌊 Coastlines</span>
-                    </label>
-
-                    <label
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "14px",
-                            cursor: "pointer",
-                            fontSize: "15px",
-                            padding: "8px",
-                            borderRadius: "6px",
-                            transition: "background-color 0.15s ease",
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "rgba(0,0,0,0.05)";
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "transparent";
-                        }}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={showSatellite}
-                            onChange={(e) =>
-                                onToggleSatellite(e.target.checked)
-                            }
-                            style={{
-                                marginRight: "12px",
-                                cursor: "pointer",
-                                width: "18px",
-                                height: "18px",
-                                accentColor: "#198EC8",
-                            }}
-                        />
-                        <span>🛰️ Satellite</span>
-                    </label>
-
-                    <label
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            marginBottom: "14px",
-                            cursor: "pointer",
-                            fontSize: "15px",
-                            padding: "8px",
-                            borderRadius: "6px",
-                            transition: "background-color 0.15s ease",
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "rgba(0,0,0,0.05)";
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "transparent";
-                        }}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={showCapitals}
-                            onChange={(e) => onToggleCapitals(e.target.checked)}
-                            style={{
-                                marginRight: "12px",
-                                cursor: "pointer",
-                                width: "18px",
-                                height: "18px",
-                                accentColor: "#198EC8",
-                            }}
-                        />
-                        <span>🏛️ Capitals</span>
-                    </label>
-
-                    <label
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            cursor: "pointer",
-                            fontSize: "15px",
-                            padding: "8px",
-                            borderRadius: "6px",
-                            transition: "background-color 0.15s ease",
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "rgba(0,0,0,0.05)";
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor =
-                                "transparent";
-                        }}
-                    >
-                        <input
-                            type="checkbox"
-                            checked={showContinents}
-                            onChange={(e) =>
-                                onToggleContinents(e.target.checked)
-                            }
-                            style={{
-                                marginRight: "12px",
-                                cursor: "pointer",
-                                width: "18px",
-                                height: "18px",
-                                accentColor: "#198EC8",
-                            }}
-                        />
-                        <span>🗺️ Continents</span>
-                    </label>
-                </div>
-            )}
-        </>
+                        {layer.icon}
+                    </span>
+                </button>
+            ))}
+        </div>
     );
 }

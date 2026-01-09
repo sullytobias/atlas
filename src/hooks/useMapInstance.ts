@@ -15,7 +15,7 @@ export function useMapInstance(
             container: containerRef.current,
             style,
             center: [8, 48],
-            zoom: 3,
+            zoom: 0,
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");

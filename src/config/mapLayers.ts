@@ -13,6 +13,39 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "satellite",
     },
     {
+        id: "population-choropleth",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "fill-color": [
+                "case",
+                ["!=", ["feature-state", "population"], null],
+                [
+                    "interpolate",
+                    ["linear"],
+                    ["feature-state", "population"],
+                    0,
+                    "#E0F3FF",
+                    1000000,
+                    "#87CEEB",
+                    10000000,
+                    "#4169E1",
+                    50000000,
+                    "#FFA500",
+                    100000000,
+                    "#FF4500",
+                    500000000,
+                    "#DC143C",
+                    1000000000,
+                    "#8B008B",
+                ],
+                "transparent",
+            ],
+            "fill-opacity": 0.5,
+        },
+    },
+    {
         id: "countries-tint",
         type: "fill",
         source: "countries",
@@ -50,7 +83,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
     {
         id: "capitals-points",
         type: "circle",
-        source: "capitals",
+        source: "countriesData",
         paint: {
             "circle-radius": 6,
             "circle-color": "#FF0000",
@@ -61,7 +94,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
     {
         id: "capitals-labels",
         type: "symbol",
-        source: "capitals",
+        source: "countriesData",
         layout: {
             "text-field": ["get", "capital"],
             "text-font": ["Open Sans Regular"],
@@ -80,7 +113,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         type: "fill",
         source: "continents",
         paint: {
-            "fill-color": getContinentColorExpression() as any,
+            "fill-color": getContinentColorExpression(),
             "fill-opacity": 0.4,
         },
     },

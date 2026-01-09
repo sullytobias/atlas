@@ -18,6 +18,7 @@
         "flagAlt": "The flag of Antigua and Barbuda has a red field with an inverted isosceles triangle based on the top edge and spanning the height of the field. This triangle has three horizontal bands of black, light blue and white, with the light blue band half the height of the two other bands. The top half of a golden-yellow sun is situated in the lower two-third of the black band to depict a rising sun.",
         "currencies": "Eastern Caribbean dollar",
         "area": 442,
+        "populationDensity": 234,
         "languages": "English",
         "car": {
           "signs": [
@@ -45,6 +46,7 @@
         "flagAlt": "The flag of Bhutan is divided diagonally, from the lower hoist-side corner to the upper fly-side corner, into an upper yellow and a lower orange triangle. A fly-side facing white dragon holding four jewels in its claws is situated along the boundary of the two triangles.",
         "currencies": "Bhutanese ngultrum, Indian rupee",
         "area": 38394,
+        "populationDensity": 20,
         "languages": "Dzongkha",
         "car": {
           "signs": [
@@ -72,6 +74,7 @@
         "flagAlt": "The flag of Italy is composed of three equal vertical bands of green, white and red.",
         "currencies": "Euro",
         "area": 301336,
+        "populationDensity": 196,
         "languages": "Italian, Catalan",
         "car": {
           "signs": [
@@ -99,6 +102,7 @@
         "flagAlt": "The flag of Tuvalu has a light blue field with the flag of the United Kingdom — the Union Jack — in the canton. A representation of the country's nine Islands using nine five-pointed yellow stars is situated in the fly half of the field.",
         "currencies": "Australian dollar, Tuvaluan dollar",
         "area": 26,
+        "populationDensity": 409,
         "languages": "English, Tuvaluan",
         "car": {
           "signs": [
@@ -126,6 +130,7 @@
         "flagAlt": "Flag of Anguilla",
         "currencies": "Eastern Caribbean dollar",
         "area": 91,
+        "populationDensity": 176,
         "languages": "English",
         "car": {
           "signs": [
@@ -153,6 +158,7 @@
         "flagAlt": "The flag of Australia has a dark blue field. It features the flag of the United Kingdom — the Union Jack — in the canton, beneath which is a large white seven-pointed star. A representation of the Southern Cross constellation, made up of one small five-pointed and four larger seven-pointed white stars, is situated on the fly side of the field.",
         "currencies": "Australian dollar",
         "area": 7692024,
+        "populationDensity": 4,
         "languages": "English",
         "car": {
           "signs": [
@@ -180,6 +186,7 @@
         "flagAlt": "The flag of Belize has a royal blue field with a thin red horizontal band at the top and bottom of the field and the national coat of arms in the center.",
         "currencies": "Belize dollar",
         "area": 22966,
+        "populationDensity": 18,
         "languages": "Belizean Creole, English, Spanish",
         "car": {
           "signs": [
@@ -207,6 +214,7 @@
         "flagAlt": "The flag of Vanuatu is composed of two equal horizontal bands of red and green, with a black isosceles triangle superimposed on the hoist side of the field. This triangle has its base on the hoist end, spans about two-fifth the width of the field and is enclosed on its sides by the arms of a thin black-edged yellow horizontally oriented Y-shaped band which extends along the boundary of the red and green bands to the fly end of the field. A yellow boar's tusk encircling two yellow crossed namele leaves is centered in the triangle.",
         "currencies": "Vanuatu vatu",
         "area": 12189,
+        "populationDensity": 26,
         "languages": "Bislama, English, French",
         "car": {
           "signs": [
@@ -234,6 +242,7 @@
         "flagAlt": "The flag of Belarus features a vertical band, with a white and red ornamental pattern, spanning about one-fifth the width of the field on the hoist side. Adjoining the vertical band are two horizontal bands of red and green, with the red band twice the height of the green band.",
         "currencies": "Belarusian ruble",
         "area": 207600,
+        "populationDensity": 44,
         "languages": "Belarusian, Russian",
         "car": {
           "signs": [
@@ -261,6 +270,7 @@
         "flagAlt": "The flag of Mauritius is composed of four equal horizontal bands of red, blue, yellow and green.",
         "currencies": "Mauritian rupee",
         "area": 2040,
+        "populationDensity": 610,
         "languages": "English, French, Mauritian Creole",
         "car": {
           "signs": [
@@ -288,6 +298,7 @@
         "flagAlt": "The flag of Laos is composed of three horizontal bands of red, blue and red. The blue band is twice the height of the red bands and bears a white circle at its center.",
         "currencies": "Lao kip",
         "area": 236800,
+        "populationDensity": 32,
         "languages": "Lao",
         "car": {
           "signs": [
@@ -315,6 +326,7 @@
         "flagAlt": "The flag of Senegal is composed of three equal vertical bands of green, golden-yellow and red, with a five-pointed green star centered in the golden-yellow band.",
         "currencies": "West African CFA franc",
         "area": 196722,
+        "populationDensity": 95,
         "languages": "French",
         "car": {
           "signs": [
@@ -342,6 +354,7 @@
         "flagAlt": "The flag of Turkey has a red field bearing a large fly-side facing white crescent and a smaller five-pointed white star placed just outside the crescent opening. The white crescent and star are offset slightly towards the hoist side of center.",
         "currencies": "Turkish lira",
         "area": 783562,
+        "populationDensity": 109,
         "languages": "Turkish",
         "car": {
           "signs": [
@@ -369,6 +382,7 @@
         "flagAlt": "The flag of Bolivia is composed of three equal horizontal bands of red, yellow and green, with the national coat of arms centered in the yellow band.",
         "currencies": "Bolivian boliviano",
         "area": 1098581,
+        "populationDensity": 10,
         "languages": "Aymara, Guaraní, Quechua, Spanish",
         "car": {
           "signs": [
@@ -396,6 +410,7 @@
         "flagAlt": "The flag of Sri Lanka features two large adjacent but separate rectangular areas, centered on a golden-yellow field. The smaller hoist-side rectangle is divided into two equal vertical bands of teal and orange, and the larger fly-side rectangle is maroon with a centered golden-yellow lion holding a Kastane sword in its right fore-paw and four golden-yellow Bo leaves, one in each corner.",
         "currencies": "Sri Lankan rupee",
         "area": 65610,
+        "populationDensity": 332,
         "languages": "Sinhala, Tamil",
         "car": {
           "signs": [
@@ -423,6 +438,7 @@
         "flagAlt": "Flag of Norfolk Island",
         "currencies": "Australian dollar",
         "area": 36,
+        "populationDensity": 61,
         "languages": "English, Norfuk",
         "car": {
           "signs": [
@@ -450,6 +466,7 @@
         "flagAlt": "The flag of China has a red field. In the canton are five yellow five-pointed stars — a large star and four smaller stars arranged in a vertical arc on the fly side of the large star.",
         "currencies": "Chinese yuan",
         "area": 9706961,
+        "populationDensity": 145,
         "languages": "Chinese",
         "car": {
           "signs": [
@@ -477,6 +494,7 @@
         "flagAlt": "Flag of Caribbean Netherlands",
         "currencies": "United States dollar",
         "area": 328,
+        "populationDensity": 98,
         "languages": "English, Dutch, Papiamento",
         "car": {
           "signs": [
@@ -504,6 +522,7 @@
         "flagAlt": "Flag of Guernsey",
         "currencies": "British pound, Guernsey pound",
         "area": 78,
+        "populationDensity": 831,
         "languages": "English, French, Guernésiais",
         "car": {
           "signs": [
@@ -531,6 +550,7 @@
         "flagAlt": "The flag of Sudan is composed of three equal horizontal bands of red, white and black, with a green isosceles triangle superimposed on the hoist side. The green triangle spans about two-fifth the width of the field with its base on the hoist end.",
         "currencies": "Sudanese pound",
         "area": 1886068,
+        "populationDensity": 27,
         "languages": "Arabic, English",
         "car": {
           "signs": [
@@ -558,6 +578,7 @@
         "flagAlt": "Flag of Mayotte",
         "currencies": "Euro",
         "area": 374,
+        "populationDensity": 858,
         "languages": "French",
         "car": {
           "signs": [
@@ -585,6 +606,7 @@
         "flagAlt": "Flag of Saint Barthélemy",
         "currencies": "Euro",
         "area": 21,
+        "populationDensity": 503,
         "languages": "French",
         "car": {
           "signs": [
@@ -612,6 +634,7 @@
         "flagAlt": "The flag of Vatican City is square shaped. It is composed of two equal vertical bands of yellow and white, with national coat of arms centered in the white band. The national coat of arms comprises the Papal Tiara superimposed on two crossed keys.",
         "currencies": "Euro",
         "area": 0.49,
+        "populationDensity": 1800,
         "languages": "Italian, Latin",
         "car": {
           "signs": [
@@ -639,6 +662,7 @@
         "flagAlt": "Flag of Turks and Caicos Islands",
         "currencies": "United States dollar",
         "area": 948,
+        "populationDensity": 54,
         "languages": "English",
         "car": {
           "signs": [
@@ -666,6 +690,7 @@
         "flagAlt": "Flag of Curaçao",
         "currencies": "Netherlands Antillean guilder",
         "area": 444,
+        "populationDensity": 352,
         "languages": "English, Dutch, Papiamento",
         "car": {
           "signs": [
@@ -693,6 +718,7 @@
         "flagAlt": "The flag of Botswana has a light blue field with a white-edged black horizontal band across its center.",
         "currencies": "Botswana pula",
         "area": 582000,
+        "populationDensity": 4,
         "languages": "English, Tswana",
         "car": {
           "signs": [
@@ -720,6 +746,7 @@
         "flagAlt": "The flag of Benin features a green vertical band on its hoist side that takes up about two-fifth the width of the field and two equal horizontal bands of yellow and red adjoining the vertical band.",
         "currencies": "West African CFA franc",
         "area": 112622,
+        "populationDensity": 117,
         "languages": "French",
         "car": {
           "signs": [
@@ -747,6 +774,7 @@
         "flagAlt": "The flag of Lithuania is composed of three equal horizontal bands of yellow, green and red.",
         "currencies": "Euro",
         "area": 65300,
+        "populationDensity": 44,
         "languages": "Lithuanian",
         "car": {
           "signs": [
@@ -774,6 +802,7 @@
         "flagAlt": "Flag of Montserrat",
         "currencies": "Eastern Caribbean dollar",
         "area": 102,
+        "populationDensity": 43,
         "languages": "English",
         "car": {
           "signs": [
@@ -801,6 +830,7 @@
         "flagAlt": "Flag of British Virgin Islands",
         "currencies": "United States dollar",
         "area": 151,
+        "populationDensity": 261,
         "languages": "English",
         "car": {
           "signs": [
@@ -828,6 +858,7 @@
         "flagAlt": "The flag of Burundi is divided by a white diagonal cross into four alternating triangular areas of red at the top and bottom, and green on the hoist and fly sides. A white circle, with three green-edged red six-pointed stars arranged to form a triangle, is superimposed at the center of the cross.",
         "currencies": "Burundian franc",
         "area": 27834,
+        "populationDensity": 443,
         "languages": "French, Kirundi",
         "car": {
           "signs": [
@@ -855,6 +886,7 @@
         "flagAlt": "Flag of United States Minor Outlying Islands",
         "currencies": "United States dollar",
         "area": 34.2,
+        "populationDensity": 0,
         "languages": "English",
         "car": {
           "signs": [
@@ -882,6 +914,7 @@
         "flagAlt": "The flag of Ireland is composed of three equal vertical bands of green, white and orange.",
         "currencies": "Euro",
         "area": 70273,
+        "populationDensity": 78,
         "languages": "English, Irish",
         "car": {
           "signs": [
@@ -909,6 +942,7 @@
         "flagAlt": "The flag of Solomon Islands features a thin yellow diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. Above and beneath this band are a blue and green triangle respectively. Five white five-pointed stars arranged in an X shape are situated on the hoist side of the upper blue triangle.",
         "currencies": "Solomon Islands dollar",
         "area": 28896,
+        "populationDensity": 26,
         "languages": "English",
         "car": {
           "signs": [
@@ -936,6 +970,7 @@
         "flagAlt": "Flag of Bermuda",
         "currencies": "Bermudian dollar",
         "area": 54,
+        "populationDensity": 1186,
         "languages": "English",
         "car": {
           "signs": [
@@ -963,6 +998,7 @@
         "flagAlt": "The flag of Finland has a white field with a large blue cross that extend to the edges of the field. The vertical part of this cross is offset towards the hoist side.",
         "currencies": "Euro",
         "area": 338455,
+        "populationDensity": 17,
         "languages": "Finnish, Swedish",
         "car": {
           "signs": [
@@ -990,6 +1026,7 @@
         "flagAlt": "The flag of Peru is composed of three equal vertical bands of red, white and red, with the national emblem centered in the white band.",
         "currencies": "Peruvian sol",
         "area": 1285216,
+        "populationDensity": 27,
         "languages": "Aymara, Quechua, Spanish",
         "car": {
           "signs": [
@@ -1017,6 +1054,7 @@
         "flagAlt": "The flag of Bangladesh has a dark green field bearing a large red circle that is offset slightly towards the hoist side of center.",
         "currencies": "Bangladeshi taka",
         "area": 147570,
+        "populationDensity": 1151,
         "languages": "Bengali",
         "car": {
           "signs": [
@@ -1044,6 +1082,7 @@
         "flagAlt": "The flag of Denmark has a red field with a large white cross that extend to the edges of the field. The vertical part of this cross is offset towards the hoist side.",
         "currencies": "Danish krone",
         "area": 43094,
+        "populationDensity": 139,
         "languages": "Danish",
         "car": {
           "signs": [
@@ -1071,6 +1110,7 @@
         "flagAlt": "The flag of Saint Vincent and the Grenadines is composed of three vertical bands of blue, gold and green. The gold band is twice as wide as the other two bands and bears three green diamonds arranged to form the letter V at its center.",
         "currencies": "Eastern Caribbean dollar",
         "area": 389,
+        "populationDensity": 285,
         "languages": "English",
         "car": {
           "signs": [
@@ -1098,6 +1138,7 @@
         "flagAlt": "The flag of the Dominican Republic is divided into four rectangles by a centered white cross that extends to the edges of the field and bears the national coat of arms in its center. The upper hoist-side and lower fly-side rectangles are blue and the lower hoist-side and upper fly-side rectangles are red.",
         "currencies": "Dominican peso",
         "area": 48671,
+        "populationDensity": 221,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -1125,6 +1166,7 @@
         "flagAlt": "The flag of Moldova is composed of three equal vertical bands of blue, yellow and red, with the national coat of arms centered in the yellow band.",
         "currencies": "Moldovan leu",
         "area": 33847,
+        "populationDensity": 81,
         "languages": "Romanian",
         "car": {
           "signs": [
@@ -1152,6 +1194,7 @@
         "flagAlt": "The flag of Bulgaria is composed of three equal horizontal bands of white, green and red.",
         "currencies": "Bulgarian lev",
         "area": 110879,
+        "populationDensity": 58,
         "languages": "Bulgarian",
         "car": {
           "signs": [
@@ -1179,6 +1222,7 @@
         "flagAlt": "The flag of Costa Rica is composed of five horizontal bands of blue, white, red, white and blue. The central red band is twice the height of the other four bands.",
         "currencies": "Costa Rican colón",
         "area": 51100,
+        "populationDensity": 104,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -1206,6 +1250,7 @@
         "flagAlt": "The flag of Namibia features a white-edged red diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. Above and beneath this band are a blue and green triangle respectively. A gold sun with twelve triangular rays is situated on the hoist side of the upper triangle.",
         "currencies": "Namibian dollar, South African rand",
         "area": 825615,
+        "populationDensity": 4,
         "languages": "Afrikaans, German, English, Herero, Khoekhoe, Kwangali, Lozi, Ndonga, Tswana",
         "car": {
           "signs": [
@@ -1233,6 +1278,7 @@
         "flagAlt": "Flag of Svalbard and Jan Mayen",
         "currencies": "krone",
         "area": 61399,
+        "populationDensity": 0,
         "languages": "Norwegian",
         "car": {
           "signs": [
@@ -1260,6 +1306,7 @@
         "flagAlt": "The flag of Luxembourg is composed of three equal horizontal bands of red, white and light blue.",
         "currencies": "Euro",
         "area": 2586,
+        "populationDensity": 264,
         "languages": "German, French, Luxembourgish",
         "car": {
           "signs": [
@@ -1287,6 +1334,7 @@
         "flagAlt": "The flag of Russia is composed of three equal horizontal bands of white, blue and red.",
         "currencies": "Russian ruble",
         "area": 17098246,
+        "populationDensity": 9,
         "languages": "Russian",
         "car": {
           "signs": [
@@ -1314,6 +1362,7 @@
         "flagAlt": "The flag of United Arab Emirates features a red vertical band on its hoist side that takes up about one-fourth the width of the field and three equal horizontal bands of green, white and black adjoining the vertical band.",
         "currencies": "United Arab Emirates dirham",
         "area": 83600,
+        "populationDensity": 135,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -1341,6 +1390,7 @@
         "flagAlt": "Flag of Sint Maarten",
         "currencies": "Netherlands Antillean guilder",
         "area": 34,
+        "populationDensity": 1216,
         "languages": "English, French, Dutch",
         "car": {
           "signs": [
@@ -1368,6 +1418,7 @@
         "flagAlt": "The flag of the Bahamas is composed of three equal horizontal bands of aquamarine, yellow and aquamarine, with a black equilateral triangle superimposed on the hoist side of the field. This triangle has its base on the hoist end and spans about one-third the width of the field.",
         "currencies": "Bahamian dollar, United States dollar",
         "area": 13943,
+        "populationDensity": 29,
         "languages": "English",
         "car": {
           "signs": [
@@ -1395,6 +1446,7 @@
         "flagAlt": "The flag of Japan features a crimson-red circle at the center of a white field.",
         "currencies": "Japanese yen",
         "area": 377930,
+        "populationDensity": 326,
         "languages": "Japanese",
         "car": {
           "signs": [
@@ -1422,6 +1474,7 @@
         "flagAlt": "The flag of Nigeria is composed of three equal vertical bands of green, white and green.",
         "currencies": "Nigerian naira",
         "area": 923768,
+        "populationDensity": 242,
         "languages": "English",
         "car": {
           "signs": [
@@ -1449,6 +1502,7 @@
         "flagAlt": "The flag of Ghana is composed of three equal horizontal bands of red, gold and green, with a five-pointed black star centered in the gold band.",
         "currencies": "Ghanaian cedi",
         "area": 238533,
+        "populationDensity": 141,
         "languages": "English",
         "car": {
           "signs": [
@@ -1476,6 +1530,7 @@
         "flagAlt": "The flag of Sierra Leone is composed of three equal horizontal bands of green, white and blue.",
         "currencies": "Leone",
         "area": 71740,
+        "populationDensity": 127,
         "languages": "English",
         "car": {
           "signs": [
@@ -1503,6 +1558,7 @@
         "flagAlt": "Flag of Saint Pierre and Miquelon",
         "currencies": "Euro",
         "area": 242,
+        "populationDensity": 24,
         "languages": "French",
         "car": {
           "signs": [
@@ -1530,6 +1586,7 @@
         "flagAlt": "The flag of Albania features a silhouetted double-headed black eagle at the center of a red field.",
         "currencies": "Albanian lek",
         "area": 28748,
+        "populationDensity": 82,
         "languages": "Albanian",
         "car": {
           "signs": [
@@ -1557,6 +1614,7 @@
         "flagAlt": "Flag of Tokelau",
         "currencies": "New Zealand dollar",
         "area": 12,
+        "populationDensity": 217,
         "languages": "English, Samoan, Tokelauan",
         "car": {
           "signs": [
@@ -1584,6 +1642,7 @@
         "flagAlt": "Flag of Saint Helena, Ascension and Tristan da Cunha",
         "currencies": "Pound sterling, Saint Helena pound",
         "area": 394,
+        "populationDensity": 14,
         "languages": "English",
         "car": {
           "signs": [
@@ -1611,6 +1670,7 @@
         "flagAlt": "The flag of Tonga has a red field. A white rectangle bearing a red Greek cross is superimposed in the canton.",
         "currencies": "Tongan paʻanga",
         "area": 747,
+        "populationDensity": 134,
         "languages": "English, Tongan",
         "car": {
           "signs": [
@@ -1638,6 +1698,7 @@
         "flagAlt": "The flag of Turkmenistan has a green field. It features a red vertical band, bearing five carpet guls stacked above two crossed olive branches, near the hoist end of the field. Just to the fly side of the vertical band near the top edge of the field is a hoist-side facing white crescent and five small five-pointed white stars placed just outside the crescent opening.",
         "currencies": "Turkmenistan manat",
         "area": 488100,
+        "populationDensity": 14,
         "languages": "Russian, Turkmen",
         "car": {
           "signs": [
@@ -1665,6 +1726,7 @@
         "flagAlt": "The flag of Djibouti is composed of two equal horizontal bands of light blue and light green, with a white isosceles triangle superimposed on the hoist side of the field. The triangle has its base on the hoist end, spans about two-fifth the width of the field and bears a red five-pointed star at its center.",
         "currencies": "Djiboutian franc",
         "area": 23200,
+        "populationDensity": 46,
         "languages": "Arabic, French",
         "car": {
           "signs": [
@@ -1692,6 +1754,7 @@
         "flagAlt": "The flag of Central African Republic is composed of four equal horizontal bands of blue, white, green and yellow intersected at the center by a vertical red band of equal size as the horizontal bands. A yellow five-pointed star is situated on the hoist side of the blue band.",
         "currencies": "Central African CFA franc",
         "area": 622984,
+        "populationDensity": 10,
         "languages": "French, Sango",
         "car": {
           "signs": [
@@ -1719,6 +1782,7 @@
         "flagAlt": "The flag of Lebanon is composed of three horizontal bands of red, white and red. The white band is twice the height of the red bands and bears a green Lebanese Cedar tree at its center.",
         "currencies": "Lebanese pound",
         "area": 10452,
+        "populationDensity": 525,
         "languages": "Arabic, French",
         "car": {
           "signs": [
@@ -1746,6 +1810,7 @@
         "flagAlt": "The flag of Latvia has a carmine-red field with a thin white horizontal band across the middle of the field.",
         "currencies": "Euro",
         "area": 64559,
+        "populationDensity": 28,
         "languages": "Latvian",
         "car": {
           "signs": [
@@ -1773,6 +1838,7 @@
         "flagAlt": "Flag of Cocos (Keeling) Islands",
         "currencies": "Australian dollar",
         "area": 14,
+        "populationDensity": 42,
         "languages": "English",
         "car": {
           "signs": [
@@ -1800,6 +1866,7 @@
         "flagAlt": "The flag of Gambia is composed of three equal horizontal bands of red, blue with white top and bottom edges, and green.",
         "currencies": "dalasi",
         "area": 10689,
+        "populationDensity": 227,
         "languages": "English",
         "car": {
           "signs": [
@@ -1827,6 +1894,7 @@
         "flagAlt": "The flag of Honduras is composed of three equal horizontal bands of turquoise, white and turquoise, with five small five-pointed turquoise stars arranged in a quincuncial pattern at the center of the white band.",
         "currencies": "Honduran lempira",
         "area": 112492,
+        "populationDensity": 88,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -1854,6 +1922,7 @@
         "flagAlt": "Flag of Niue",
         "currencies": "New Zealand dollar",
         "area": 260,
+        "populationDensity": 6,
         "languages": "English, Niuean",
         "car": {
           "signs": [
@@ -1881,6 +1950,7 @@
         "flagAlt": "The flag of Mauritania has a green field with a thin red horizontal band at the top and bottom of the field. At the center of the field is a five-pointed yellow star above an upward facing yellow crescent.",
         "currencies": "Mauritanian ouguiya",
         "area": 1030700,
+        "populationDensity": 5,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -1908,6 +1978,7 @@
         "flagAlt": "Flag of Kosovo",
         "currencies": "Euro",
         "area": 10908,
+        "populationDensity": 145,
         "languages": "Albanian, Serbian",
         "car": {
           "signs": [
@@ -1935,6 +2006,7 @@
         "flagAlt": "Flag of Wallis and Futuna",
         "currencies": "CFP franc",
         "area": 142,
+        "populationDensity": 82,
         "languages": "French",
         "car": {
           "signs": [
@@ -1962,6 +2034,7 @@
         "flagAlt": "Flag of South Georgia",
         "currencies": "British pound",
         "area": 3903,
+        "populationDensity": 0,
         "languages": "English",
         "car": {
           "signs": [
@@ -1989,6 +2062,7 @@
         "flagAlt": "Flag of French Polynesia",
         "currencies": "CFP franc",
         "area": 4167,
+        "populationDensity": 67,
         "languages": "French",
         "car": {
           "signs": [
@@ -2016,6 +2090,7 @@
         "flagAlt": "The flag of Togo is composed of five equal horizontal bands of green alternating with yellow. A red square bearing a five-pointed white star is superimposed in the canton.",
         "currencies": "West African CFA franc",
         "area": 56785,
+        "populationDensity": 143,
         "languages": "French",
         "car": {
           "signs": [
@@ -2043,6 +2118,7 @@
         "flagAlt": "The flag of Belgium is composed of three equal vertical bands of black, yellow and red.",
         "currencies": "Euro",
         "area": 30528,
+        "populationDensity": 387,
         "languages": "German, French, Dutch",
         "car": {
           "signs": [
@@ -2070,6 +2146,7 @@
         "flagAlt": "The flag of Zambia has a green field, on the fly side of which is a soaring orange African fish eagle above a rectangular area divided into three equal vertical bands of red, black and orange.",
         "currencies": "Zambian kwacha",
         "area": 752612,
+        "populationDensity": 26,
         "languages": "English",
         "car": {
           "signs": [
@@ -2097,6 +2174,7 @@
         "flagAlt": "Flag of Cayman Islands",
         "currencies": "Cayman Islands dollar",
         "area": 264,
+        "populationDensity": 321,
         "languages": "English",
         "car": {
           "signs": [
@@ -2124,6 +2202,7 @@
         "flagAlt": "Flag of Pitcairn Islands",
         "currencies": "New Zealand dollar",
         "area": 47,
+        "populationDensity": 1,
         "languages": "English",
         "car": {
           "signs": [
@@ -2151,6 +2230,7 @@
         "flagAlt": "Flag of Cook Islands",
         "currencies": "Cook Islands dollar, New Zealand dollar",
         "area": 236,
+        "populationDensity": 64,
         "languages": "English, Cook Islands Māori",
         "car": {
           "signs": [
@@ -2178,6 +2258,7 @@
         "flagAlt": "The flag of Madagascar features a white vertical band on the hoist side that takes up about one-third the width of the field, and two equal horizontal bands of red and green adjoining the vertical band.",
         "currencies": "Malagasy ariary",
         "area": 587041,
+        "populationDensity": 54,
         "languages": "French, Malagasy",
         "car": {
           "signs": [
@@ -2205,6 +2286,7 @@
         "flagAlt": "The flag of Montenegro features a large red central rectangular area surrounded by a golden-yellow border. The coat of arms of Montenegro is centered in the red rectangle.",
         "currencies": "Euro",
         "area": 13812,
+        "populationDensity": 45,
         "languages": "Montenegrin",
         "car": {
           "signs": [
@@ -2232,6 +2314,7 @@
         "flagAlt": "The flag of South Korea has a white field, at the center of which is a red and blue Taegeuk circle surrounded by four black trigrams, one in each corner.",
         "currencies": "South Korean won",
         "area": 100210,
+        "populationDensity": 511,
         "languages": "Korean",
         "car": {
           "signs": [
@@ -2259,6 +2342,7 @@
         "flagAlt": "The flag of Ethiopia is composed of three equal horizontal bands of green, yellow and red, with the national emblem superimposed at the center of the field. The national emblem comprises a light blue circle bearing a golden-yellow pentagram with single yellow rays emanating from the angles between the points of the pentagram.",
         "currencies": "Ethiopian birr",
         "area": 1104300,
+        "populationDensity": 101,
         "languages": "Amharic",
         "car": {
           "signs": [
@@ -2286,6 +2370,7 @@
         "flagAlt": "The flag of Mongolia is composed of three equal vertical bands of red, blue and red, with the national emblem — the Soyombo — in gold centered in the hoist-side red band.",
         "currencies": "Mongolian tögrög",
         "area": 1564110,
+        "populationDensity": 2,
         "languages": "Mongolian",
         "car": {
           "signs": [
@@ -2313,6 +2398,7 @@
         "flagAlt": "The flag of Slovakia is composed of three equal horizontal bands of white, blue and red. The coat of arms of Slovakia is superimposed at the center of the field slightly towards the hoist side.",
         "currencies": "Euro",
         "area": 49037,
+        "populationDensity": 110,
         "languages": "Slovak",
         "car": {
           "signs": [
@@ -2340,6 +2426,7 @@
         "flagAlt": "The flag of Cuba is composed of five equal horizontal bands of blue alternating with white and a red equilateral triangle superimposed on the hoist side of the field. The triangle has its base on the hoist end, spans about two-fifth the width of the field and bears a white five-pointed star at its center.",
         "currencies": "Cuban convertible peso, Cuban peso",
         "area": 109884,
+        "populationDensity": 89,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -2366,6 +2453,7 @@
         "flagAlt": "Flag of Antarctica",
         "currencies": "",
         "area": 14000000,
+        "populationDensity": 0,
         "languages": "",
         "car": {
           "signs": [
@@ -2393,6 +2481,7 @@
         "flagAlt": "The flag of Guatemala is composed of three equal vertical bands of light blue, white and light blue, with the national coat of arms centered in the white band.",
         "currencies": "Guatemalan quetzal",
         "area": 108889,
+        "populationDensity": 166,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -2420,6 +2509,7 @@
         "flagAlt": "Flag of French Guiana",
         "currencies": "Euro",
         "area": 83534,
+        "populationDensity": 3,
         "languages": "French",
         "car": {
           "signs": [
@@ -2447,6 +2537,7 @@
         "flagAlt": "The flag of Norway has a red field with a large white-edged navy blue cross that extends to the edges of the field. The vertical part of this cross is offset towards the hoist side.",
         "currencies": "Norwegian krone",
         "area": 386224,
+        "populationDensity": 15,
         "languages": "Norwegian Nynorsk, Norwegian Bokmål, Sami",
         "car": {
           "signs": [
@@ -2474,6 +2565,7 @@
         "flagAlt": "The flag of Grenada features a large central rectangular area surrounded by a red border, with three five-pointed yellow stars centered on the top and bottom borders. The central rectangle is divided diagonally into four alternating triangular areas of yellow at the top and bottom and green on the hoist and fly sides, and a five-pointed yellow star on a red circle is superimposed at its center. A symbolic nutmeg pod is situated on the green hoist-side triangle.",
         "currencies": "Eastern Caribbean dollar",
         "area": 344,
+        "populationDensity": 317,
         "languages": "English",
         "car": {
           "signs": [
@@ -2501,6 +2593,7 @@
         "flagAlt": "Flag of Réunion",
         "currencies": "Euro",
         "area": 2511,
+        "populationDensity": 357,
         "languages": "French",
         "car": {
           "signs": [
@@ -2528,6 +2621,7 @@
         "flagAlt": "The flag of Chile is composed of two equal horizontal bands of white and red, with a blue square of the same height as the white band superimposed in the canton. A white five-pointed star is centered in the blue square.",
         "currencies": "Chilean peso",
         "area": 756102,
+        "populationDensity": 27,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -2555,6 +2649,7 @@
         "flagAlt": "The flag of Colombia is composed of three horizontal bands of yellow, blue and red, with the yellow band twice the height of the other two bands.",
         "currencies": "Colombian peso",
         "area": 1141748,
+        "populationDensity": 46,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -2582,6 +2677,7 @@
         "flagAlt": "The flag of Saudi Arabia has a green field, at the center of which is an Arabic inscription — the Shahada — in white above a white horizontal sabre with its tip pointed to the hoist side of the field.",
         "currencies": "Saudi riyal",
         "area": 2149690,
+        "populationDensity": 16,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -2609,6 +2705,7 @@
         "flagAlt": "The flag of Israel has a white field with a blue hexagram — the Magen David — centered between two equal horizontal blue bands situated near the top and bottom edges of the field.",
         "currencies": "Israeli new shekel",
         "area": 21937,
+        "populationDensity": 462,
         "languages": "Arabic, Hebrew",
         "car": {
           "signs": [
@@ -2636,6 +2733,7 @@
         "flagAlt": "The flag of Germany is composed of three equal horizontal bands of black, red and gold.",
         "currencies": "Euro",
         "area": 357114,
+        "populationDensity": 234,
         "languages": "German",
         "car": {
           "signs": [
@@ -2663,6 +2761,7 @@
         "flagAlt": "The flag of New Zealand has a dark blue field with the flag of the United Kingdom — the Union Jack — in the canton and a representation of the Southern Cross constellation, made up of four five-pointed white-edged red stars, on the fly side of the field.",
         "currencies": "New Zealand dollar",
         "area": 268838,
+        "populationDensity": 20,
         "languages": "English, Māori, New Zealand Sign Language",
         "car": {
           "signs": [
@@ -2690,6 +2789,7 @@
         "flagAlt": "Flag of Greenland",
         "currencies": "krone",
         "area": 2166086,
+        "populationDensity": 0,
         "languages": "Greenlandic",
         "car": {
           "signs": [
@@ -2717,6 +2817,7 @@
         "flagAlt": "The flag of Kyrgyzstan features a yellow sun with forty rays at the center of a red field. At the center of the sun is a stylized depiction of a tunduk.",
         "currencies": "Kyrgyzstani som",
         "area": 199951,
+        "populationDensity": 36,
         "languages": "Kyrgyz, Russian",
         "car": {
           "signs": [
@@ -2744,6 +2845,7 @@
         "flagAlt": "The flag of El Salvador is composed of three equal horizontal bands of cobalt blue, white and cobalt blue, with the national coat of arms centered in the white band.",
         "currencies": "United States dollar",
         "area": 21041,
+        "populationDensity": 287,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -2771,6 +2873,7 @@
         "flagAlt": "Flag of Faroe Islands",
         "currencies": "Danish krone, Faroese króna",
         "area": 1393,
+        "populationDensity": 39,
         "languages": "Danish, Faroese",
         "car": {
           "signs": [
@@ -2798,6 +2901,7 @@
         "flagAlt": "The flag of Palau has a light blue field with a large golden-yellow circle that is offset slightly towards the hoist side of center.",
         "currencies": "United States dollar",
         "area": 459,
+        "populationDensity": 36,
         "languages": "English, Palauan",
         "car": {
           "signs": [
@@ -2825,6 +2929,7 @@
         "flagAlt": "The flag of Malta is composed of two equal vertical bands of white and red. A representation of the George cross edged in red is situated on the upper hoist-side corner of the white band.",
         "currencies": "Euro",
         "area": 316,
+        "populationDensity": 1817,
         "languages": "English, Maltese",
         "car": {
           "signs": [
@@ -2852,6 +2957,7 @@
         "flagAlt": "The flag of Syria is composed of three equal horizontal bands of red, white and black. At the center of the white band are two small five-pointed green stars arranged in a horizontal line.",
         "currencies": "Syrian pound",
         "area": 185180,
+        "populationDensity": 138,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -2879,6 +2985,7 @@
         "flagAlt": "The flag of Timor-Leste has a red field with two isosceles triangles which share a common base on the hoist end. The smaller black triangle, which bears a five-pointed white star at its center and spans one-third the width of the field, is superimposed on the larger yellow triangle that extends to the center of the field.",
         "currencies": "United States dollar",
         "area": 14874,
+        "populationDensity": 94,
         "languages": "Portuguese, Tetum",
         "car": {
           "signs": [
@@ -2906,6 +3013,7 @@
         "flagAlt": "The flag of Croatia is composed of three equal horizontal bands of red, white and blue, with the coat of arms of Croatia superimposed in the center.",
         "currencies": "Euro",
         "area": 56594,
+        "populationDensity": 68,
         "languages": "Croatian",
         "car": {
           "signs": [
@@ -2933,6 +3041,7 @@
         "flagAlt": "The flag of Papua New Guinea is divided diagonally, from the upper hoist-side corner to the lower fly-side corner, into a lower black and an upper red triangle. On the hoist side of the lower black triangle is a representation of the Southern Cross constellation made up of one small and four larger five-pointed white stars. A golden Raggiana bird-of-paradise is situated on the fly side of the upper red triangle.",
         "currencies": "Papua New Guinean kina",
         "area": 462840,
+        "populationDensity": 25,
         "languages": "English, Hiri Motu, Tok Pisin",
         "car": {
           "signs": [
@@ -2960,6 +3069,7 @@
         "flagAlt": "The flag of the Netherlands is composed of three equal horizontal bands of red, white and blue.",
         "currencies": "Euro",
         "area": 41865,
+        "populationDensity": 432,
         "languages": "Dutch",
         "car": {
           "signs": [
@@ -2987,6 +3097,7 @@
         "flagAlt": "The flag of Liberia is composed of eleven equal horizontal bands of red alternating with white. A blue square bearing a five-pointed white star is superimposed in the canton.",
         "currencies": "Liberian dollar",
         "area": 111369,
+        "populationDensity": 47,
         "languages": "English",
         "car": {
           "signs": [
@@ -3014,6 +3125,7 @@
         "flagAlt": "The flag of Somalia features a large five-pointed white star centered on a light blue field.",
         "currencies": "Somali shilling",
         "area": 637657,
+        "populationDensity": 31,
         "languages": "Arabic, Somali",
         "car": {
           "signs": [
@@ -3041,6 +3153,7 @@
         "flagAlt": "The flag of Venezuela is composed of three equal horizontal bands of yellow, blue and red. At the center of the blue band are eight five-pointed white stars arranged in a horizontal arc.",
         "currencies": "Venezuelan bolívar soberano",
         "area": 916445,
+        "populationDensity": 31,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -3068,6 +3181,7 @@
         "flagAlt": "The flag of Haiti is composed of two equal horizontal bands of blue and red. A white square bearing the national coat of arms is superimposed at the center of the field.",
         "currencies": "Haitian gourde",
         "area": 27750,
+        "populationDensity": 428,
         "languages": "French, Haitian Creole",
         "car": {
           "signs": [
@@ -3095,6 +3209,7 @@
         "flagAlt": "The flag of Algeria features two equal vertical bands of green and white. A five-pointed red star within a fly-side facing red crescent is centered over the two-color boundary.",
         "currencies": "Algerian dinar",
         "area": 2381741,
+        "populationDensity": 20,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -3122,6 +3237,7 @@
         "flagAlt": "Flag of Northern Mariana Islands",
         "currencies": "United States dollar",
         "area": 464,
+        "populationDensity": 102,
         "languages": "Carolinian, Chamorro, English",
         "car": {
           "signs": [
@@ -3149,6 +3265,7 @@
         "flagAlt": "Flag of Saint Martin",
         "currencies": "Euro",
         "area": 53,
+        "populationDensity": 594,
         "languages": "French",
         "car": {
           "signs": [
@@ -3175,6 +3292,7 @@
         "flagAlt": "Flag of Heard Island and McDonald Islands",
         "currencies": "",
         "area": 412,
+        "populationDensity": 0,
         "languages": "English",
         "car": {
           "signs": [
@@ -3202,6 +3320,7 @@
         "flagAlt": "Flag of Aruba",
         "currencies": "Aruban florin",
         "area": 180,
+        "populationDensity": 598,
         "languages": "Dutch, Papiamento",
         "car": {
           "signs": [],
@@ -3227,6 +3346,7 @@
         "flagAlt": "The flag of Egypt is composed of three equal horizontal bands of red, white and black, with Egypt's national emblem — a hoist-side facing gold eagle of Saladin — centered in the white band.",
         "currencies": "Egyptian pound",
         "area": 1002450,
+        "populationDensity": 107,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -3254,6 +3374,7 @@
         "flagAlt": "The flag of Malawi is composed of three equal horizontal bands of black, red and green. The top half of a red sun with thirty-one visible rays is centered in the black band.",
         "currencies": "Malawian kwacha",
         "area": 118484,
+        "populationDensity": 175,
         "languages": "English, Chewa",
         "car": {
           "signs": [
@@ -3281,6 +3402,7 @@
         "flagAlt": "The flag of Equatorial Guinea is composed of three equal horizontal bands of green, white and red with the national coat of arms centered in the white band and an isosceles triangle superimposed on the hoist side of the field. The triangle is light blue, has its base on the hoist end and spans about one-fifth the width of the field.",
         "currencies": "Central African CFA franc",
         "area": 28051,
+        "populationDensity": 59,
         "languages": "French, Portuguese, Spanish",
         "car": {
           "signs": [
@@ -3308,6 +3430,7 @@
         "flagAlt": "Flag of United States Virgin Islands",
         "currencies": "United States dollar",
         "area": 347,
+        "populationDensity": 251,
         "languages": "English",
         "car": {
           "signs": [
@@ -3335,6 +3458,7 @@
         "flagAlt": "The flag of Ecuador is composed of the horizontal bands of yellow, blue and red, with the yellow band twice the height of the other two bands. The Ecuadorian coat of arms is superimposed in the center of the field.",
         "currencies": "United States dollar",
         "area": 276841,
+        "populationDensity": 65,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -3362,6 +3486,7 @@
         "flagAlt": "The flag of Uzbekistan is composed of three equal horizontal bands of turquoise, white with red top and bottom edges, and green. On the hoist side of the turquoise band is a fly-side facing white crescent and twelve five-pointed white stars arranged just outside the crescent opening in three rows comprising three, four and five stars.",
         "currencies": "Uzbekistani soʻm",
         "area": 447400,
+        "populationDensity": 85,
         "languages": "Russian, Uzbek",
         "car": {
           "signs": [
@@ -3389,6 +3514,7 @@
         "flagAlt": "The flag of Gabon is composed of three equal horizontal bands of green, yellow and blue.",
         "currencies": "Central African CFA franc",
         "area": 267668,
+        "populationDensity": 9,
         "languages": "French",
         "car": {
           "signs": [
@@ -3416,6 +3542,7 @@
         "flagAlt": "The flag of South Sudan is composed of three equal horizontal bands of black, red with white top and bottom edges, and green. A blue equilateral triangle which spans about two-fifth the width of the field is superimposed on the hoist side with its base on the hoist end of the field. At the center of this triangle is a five-pointed yellow star.",
         "currencies": "South Sudanese pound",
         "area": 619745,
+        "populationDensity": 25,
         "languages": "English",
         "car": {
           "signs": [
@@ -3443,6 +3570,7 @@
         "flagAlt": "The flag of Iran is composed of three equal horizontal bands of green, white and red. A red emblem of Iran is centered in the white band and Arabic inscriptions in white span the bottom edge of the green band and the top edge of the red band.",
         "currencies": "Iranian rial",
         "area": 1648195,
+        "populationDensity": 52,
         "languages": "Persian (Farsi)",
         "car": {
           "signs": [
@@ -3470,6 +3598,7 @@
         "flagAlt": "The flag of Kazakhstan has a turquoise field, at the center of which is a gold sun with thirty-two rays above a soaring golden steppe eagle. A thin vertical band displays a national ornamental pattern — koshkar-muiz — in gold near the hoist end.",
         "currencies": "Kazakhstani tenge",
         "area": 2724900,
+        "populationDensity": 7,
         "languages": "Kazakh, Russian",
         "car": {
           "signs": [
@@ -3497,6 +3626,7 @@
         "flagAlt": "The flag of Nicaragua is composed of three equal horizontal bands of blue, white and blue, with the national coat of arms centered in the white band.",
         "currencies": "Nicaraguan córdoba",
         "area": 130373,
+        "populationDensity": 52,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -3524,6 +3654,7 @@
         "flagAlt": "The flag of Iceland has a blue field with a large white-edged red cross that extends to the edges of the field. The vertical part of this cross is offset towards the hoist side.",
         "currencies": "Icelandic króna",
         "area": 103000,
+        "populationDensity": 4,
         "languages": "Icelandic",
         "car": {
           "signs": [
@@ -3551,6 +3682,7 @@
         "flagAlt": "The flag of Slovenia is composed of three equal horizontal bands of white, blue and red. The national coat of arms is situated in the upper hoist side of the field centered on the boundary between the white and blue bands.",
         "currencies": "Euro",
         "area": 20273,
+        "populationDensity": 105,
         "languages": "Slovene",
         "car": {
           "signs": [
@@ -3578,6 +3710,7 @@
         "flagAlt": "Flag of Guadeloupe",
         "currencies": "Euro",
         "area": 1628,
+        "populationDensity": 233,
         "languages": "French",
         "car": {
           "signs": [
@@ -3605,6 +3738,7 @@
         "flagAlt": "The flag of Cameroon is composed of three equal vertical bands of green, red and yellow, with a yellow five-pointed star in the center.",
         "currencies": "Central African CFA franc",
         "area": 475442,
+        "populationDensity": 62,
         "languages": "English, French",
         "car": {
           "signs": [
@@ -3632,6 +3766,7 @@
         "flagAlt": "The flag of Argentina features three equal horizontal bands of light blue, white and light blue. A brown-edged golden sun is centered in the white band.",
         "currencies": "Argentine peso",
         "area": 2780400,
+        "populationDensity": 17,
         "languages": "Guaraní, Spanish",
         "car": {
           "signs": [
@@ -3659,6 +3794,7 @@
         "flagAlt": "The flag of Azerbaijan features three equal horizontal bands of blue, red and green, with a white fly-side facing crescent and eight-pointed star centered in the red band.",
         "currencies": "Azerbaijani manat",
         "area": 86600,
+        "populationDensity": 118,
         "languages": "Azerbaijani",
         "car": {
           "signs": [
@@ -3686,6 +3822,7 @@
         "flagAlt": "The flag of Uganda is composed of six equal horizontal bands of black, yellow, red, black, yellow and red. A white circle bearing a hoist-side facing grey red-crested crane is superimposed in the center of the field.",
         "currencies": "Ugandan shilling",
         "area": 241550,
+        "populationDensity": 190,
         "languages": "English, Swahili",
         "car": {
           "signs": [
@@ -3713,6 +3850,7 @@
         "flagAlt": "The flag of Niger features three equal horizontal bands of orange, white and green, with an orange circle centered in the white band.",
         "currencies": "West African CFA franc",
         "area": 1267000,
+        "populationDensity": 21,
         "languages": "French",
         "car": {
           "signs": [
@@ -3740,6 +3878,7 @@
         "flagAlt": "Flag of Christmas Island",
         "currencies": "Australian dollar",
         "area": 135,
+        "populationDensity": 13,
         "languages": "English",
         "car": {
           "signs": [
@@ -3767,6 +3906,7 @@
         "flagAlt": "The flag of Myanmar is composed of three equal horizontal bands of yellow, green and red, with a large five-pointed white star superimposed at the center of the field.",
         "currencies": "Burmese kyat",
         "area": 676578,
+        "populationDensity": 76,
         "languages": "Burmese",
         "car": {
           "signs": [
@@ -3794,6 +3934,7 @@
         "flagAlt": "The flag of Poland is composed of two equal horizontal bands of white and red.",
         "currencies": "Polish złoty",
         "area": 312679,
+        "populationDensity": 120,
         "languages": "Polish",
         "car": {
           "signs": [
@@ -3821,6 +3962,7 @@
         "flagAlt": "The flag of Jordan is composed of three equal horizontal bands of black, white and green, with a red isosceles triangle superimposed on the hoist side of the field. This triangle has its base on the hoist end, spans about half the width of the field and bears a small seven-pointed white star at its center.",
         "currencies": "Jordanian dinar",
         "area": 89342,
+        "populationDensity": 131,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -3848,6 +3990,7 @@
         "flagAlt": "Flag of Hong Kong",
         "currencies": "Hong Kong dollar",
         "area": 1104,
+        "populationDensity": 6818,
         "languages": "English, Chinese",
         "car": {
           "signs": [
@@ -3875,6 +4018,7 @@
         "flagAlt": "The flag of the Democratic Republic of the Congo has a sky-blue field with a yellow-edged red diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. A large five-pointed yellow star is situated above the diagonal band on the upper hoist side of the field.",
         "currencies": "Congolese franc",
         "area": 2344858,
+        "populationDensity": 48,
         "languages": "French, Kikongo, Lingala, Tshiluba, Swahili",
         "car": {
           "signs": [
@@ -3902,6 +4046,7 @@
         "flagAlt": "The flag of Eritrea comprises three triangles — a large red isosceles triangle with its base spanning the hoist end and its apex at the midpoint on the fly end, and a green and blue right-angled triangle above and beneath the red triangle. On the hoist side of the red triangle is a golden vertical olive branch encircled by a golden olive wreath.",
         "currencies": "Eritrean nakfa",
         "area": 117600,
+        "populationDensity": 31,
         "languages": "Arabic, English, Tigrinya",
         "car": {
           "signs": [
@@ -3929,6 +4074,7 @@
         "flagAlt": "The flag of Kiribati is divided into two halves. While the upper half has a red field, at the center of which is a yellow frigate bird flying over the top half of a rising yellow sun with seventeen visible rays, the lower half is composed of six horizontal wavy bands of white alternating with blue to depict the ocean.",
         "currencies": "Australian dollar, Kiribati dollar",
         "area": 811,
+        "populationDensity": 149,
         "languages": "English, Gilbertese",
         "car": {
           "signs": [
@@ -3956,6 +4102,7 @@
         "flagAlt": "The flag of Marshall Islands has a blue field with two broadening adjacent diagonal bands of orange and white that extend from the lower hoist-side corner to the upper fly-side corner of the field. A large white star with twenty-four rays — four large rays at the cardinal points and twenty smaller rays — is situated in the upper hoist-side corner above the diagonal bands.",
         "currencies": "United States dollar",
         "area": 181,
+        "populationDensity": 234,
         "languages": "English, Marshallese",
         "car": {
           "signs": [
@@ -3983,6 +4130,7 @@
         "flagAlt": "The flag of Burkina Faso features two equal horizontal bands of red and green, with a yellow five-pointed star in the center.",
         "currencies": "West African CFA franc",
         "area": 272967,
+        "populationDensity": 88,
         "languages": "French",
         "car": {
           "signs": [
@@ -4010,6 +4158,7 @@
         "flagAlt": "The flag of Zimbabwe is composed of seven equal horizontal bands of green, yellow, red, black, red, yellow and green, with a white isosceles triangle superimposed on the hoist side of the field. This triangle is edged in black, spans about one-fourth the width of the field and has its base on the hoist end. A yellow Zimbabwe bird superimposed on a five-pointed red star is centered in the triangle.",
         "currencies": "Zimbabwean dollar",
         "area": 390757,
+        "populationDensity": 44,
         "languages": "Chibarwe, English, Kalanga, Khoisan, Ndau, Northern Ndebele, Chewa, Shona, Sotho, Tonga, Tswana, Tsonga, Venda, Xhosa, Zimbabwean Sign Language",
         "car": {
           "signs": [
@@ -4037,6 +4186,7 @@
         "flagAlt": "The flag of Kenya is composed of three equal horizontal bands of black, red with white top and bottom edges, and green. An emblem comprising a red, black and white Maasai shield covering two crossed white spears is superimposed at the center of the field.",
         "currencies": "Kenyan shilling",
         "area": 580367,
+        "populationDensity": 92,
         "languages": "English, Swahili",
         "car": {
           "signs": [
@@ -4064,6 +4214,7 @@
         "flagAlt": "The flag of Comoros is composed of four equal horizontal bands of yellow, white, red and blue, with a green isosceles triangle superimposed on the hoist side of the field. This triangle has its base on the hoist end, spans about two-fifth the width of the field and bears a fly-side facing white crescent and four five-pointed white stars arranged in a vertical line along the opening of the crescent.",
         "currencies": "Comorian franc",
         "area": 1862,
+        "populationDensity": 494,
         "languages": "Arabic, French, Comorian",
         "car": {
           "signs": [
@@ -4091,6 +4242,7 @@
         "flagAlt": "Flag of Gibraltar",
         "currencies": "Gibraltar pound",
         "area": 6,
+        "populationDensity": 6333,
         "languages": "English",
         "car": {
           "signs": [
@@ -4118,6 +4270,7 @@
         "flagAlt": "The flag of Brunei has a yellow field with two adjoining diagonal bands of white and black that extend from the upper hoist side of the field to the lower fly side. The red emblem of Brunei is centered on the field.",
         "currencies": "Brunei dollar, Singapore dollar",
         "area": 5765,
+        "populationDensity": 79,
         "languages": "Malay",
         "car": {
           "signs": [
@@ -4145,6 +4298,7 @@
         "flagAlt": "The flag of Sweden has a blue field with a large golden-yellow cross that extend to the edges of the field. The vertical part of this cross is offset towards the hoist side.",
         "currencies": "Swedish krona",
         "area": 450295,
+        "populationDensity": 24,
         "languages": "Swedish",
         "car": {
           "signs": [
@@ -4172,6 +4326,7 @@
         "flagAlt": "The flag of Lesotho is composed of three horizontal bands of blue, white and green in the ratio of 3:4:3. A black mokorotlo — a Basotho hat — is centered in the white band.",
         "currencies": "Lesotho loti, South African rand",
         "area": 30355,
+        "populationDensity": 70,
         "languages": "English, Sotho",
         "car": {
           "signs": [
@@ -4199,6 +4354,7 @@
         "flagAlt": "Flag of Isle of Man",
         "currencies": "British pound, Manx pound",
         "area": 572,
+        "populationDensity": 148,
         "languages": "English, Manx",
         "car": {
           "signs": [
@@ -4226,6 +4382,7 @@
         "flagAlt": "The flag of Micronesia has a light blue field, at the center of which are four five-pointed white stars arranged in the shape of a diamond.",
         "currencies": "United States dollar",
         "area": 702,
+        "populationDensity": 150,
         "languages": "English",
         "car": {
           "signs": [
@@ -4253,6 +4410,7 @@
         "flagAlt": "The flag of Tanzania features a yellow-edged black diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. Above and beneath this band are a green and light blue triangle respectively.",
         "currencies": "Tanzanian shilling",
         "area": 947303,
+        "populationDensity": 72,
         "languages": "English, Swahili",
         "car": {
           "signs": [
@@ -4280,6 +4438,7 @@
         "flagAlt": "The flag of Cape Verde is composed of five horizontal bands of blue, white, red, white and blue in the ratio of 6:1:1:1:3. A ring of ten five-pointed yellow stars is centered at three-eighth of the height from the bottom edge and three-eighth of the width from the hoist end of the field.",
         "currencies": "Cape Verdean escudo",
         "area": 4033,
+        "populationDensity": 122,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -4307,6 +4466,7 @@
         "flagAlt": "The flag of the Islamic Emirate of Afghanistan has a white field with Arabic inscriptions — the Shahada — in black across its center.",
         "currencies": "Afghan afghani",
         "area": 652230,
+        "populationDensity": 67,
         "languages": "Dari, Pashto, Turkmen",
         "car": {
           "signs": [
@@ -4334,6 +4494,7 @@
         "flagAlt": "The flag of Andorra features three equal vertical bands of blue, yellow and red, with the coat of arms of Andorra centered in the yellow band.",
         "currencies": "Euro",
         "area": 468,
+        "populationDensity": 189,
         "languages": "Catalan",
         "car": {
           "signs": [
@@ -4361,6 +4522,7 @@
         "flagAlt": "The flag of Greece is composed of nine equal horizontal bands of blue alternating with white. A blue square bearing a white cross is superimposed in the canton.",
         "currencies": "Euro",
         "area": 131990,
+        "populationDensity": 79,
         "languages": "Greek",
         "car": {
           "signs": [
@@ -4388,6 +4550,7 @@
         "flagAlt": "The flag of Vietnam features a large five-pointed yellow star on a red field.",
         "currencies": "Vietnamese đồng",
         "area": 331212,
+        "populationDensity": 306,
         "languages": "Vietnamese",
         "car": {
           "signs": [
@@ -4415,6 +4578,7 @@
         "flagAlt": "Flag of French Southern and Antarctic Lands",
         "currencies": "Euro",
         "area": 7747,
+        "populationDensity": 0,
         "languages": "French",
         "car": {
           "signs": [
@@ -4442,6 +4606,7 @@
         "flagAlt": "The flag of Iraq is composed of three equal horizontal bands of red, white and black. In the central white band are Arabic inscriptions in green.",
         "currencies": "Iraqi dinar",
         "area": 438317,
+        "populationDensity": 105,
         "languages": "Arabic, Aramaic, Sorani",
         "car": {
           "signs": [
@@ -4469,6 +4634,7 @@
         "flagAlt": "The flag of Libya is composed of three horizontal bands of red, black and green, with the black band twice the height of the other two bands. At the center of the black band is a fly-side facing white crescent and a five-pointed white star placed just outside the crescent opening.",
         "currencies": "Libyan dinar",
         "area": 1759540,
+        "populationDensity": 4,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -4496,6 +4662,7 @@
         "flagAlt": "The flag of Portugal is composed of two vertical bands of green and red in the ratio of 2:3, with the coat of arms of Portugal centered over the two-color boundary.",
         "currencies": "Euro",
         "area": 92090,
+        "populationDensity": 117,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -4523,6 +4690,7 @@
         "flagAlt": "The flag of Pakistan is composed of a white vertical band on its hoist side that takes up about one-fourth the width of the field and a dark green rectangular area that spans the rest of the field. A white fly-side facing crescent and five-pointed star are centered in the dark green area.",
         "currencies": "Pakistani rupee",
         "area": 796095,
+        "populationDensity": 303,
         "languages": "English, Urdu",
         "car": {
           "signs": [
@@ -4550,6 +4718,7 @@
         "flagAlt": "The flag of Maldives has a red field, at the center of which is a large green rectangle bearing a fly-side facing white crescent.",
         "currencies": "Maldivian rufiyaa",
         "area": 300,
+        "populationDensity": 1717,
         "languages": "Maldivian",
         "car": {
           "signs": [
@@ -4577,6 +4746,7 @@
         "flagAlt": "The flag of Morocco features a green pentagram — a five-pointed linear star — centered on a red field.",
         "currencies": "Moroccan dirham",
         "area": 446550,
+        "populationDensity": 82,
         "languages": "Arabic, Berber",
         "car": {
           "signs": [
@@ -4604,6 +4774,7 @@
         "flagAlt": "The flag of Bosnia and Herzegovina has a blue field, at the center of which is a large yellow hoist-side facing right-angled triangle that is based on the top edge and spans the height of the field. Adjacent to the hypotenuse of this triangle are nine adjoining five-pointed white stars with the top and bottom stars cut in half by the edges of the field.",
         "currencies": "Bosnia and Herzegovina convertible mark",
         "area": 51209,
+        "populationDensity": 67,
         "languages": "Bosnian, Croatian, Serbian",
         "car": {
           "signs": [
@@ -4631,6 +4802,7 @@
         "flagAlt": "The flag of Samoa has a red field. A blue rectangle, bearing a representation of the Southern Cross made up of five large and one smaller five-pointed white stars, is superimposed in the canton.",
         "currencies": "Samoan tālā",
         "area": 2842,
+        "populationDensity": 72,
         "languages": "English, Samoan",
         "car": {
           "signs": [
@@ -4658,6 +4830,7 @@
         "flagAlt": "Flag of Palestine",
         "currencies": "Egyptian pound, Israeli new shekel, Jordanian dinar",
         "area": 6220,
+        "populationDensity": 882,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -4685,6 +4858,7 @@
         "flagAlt": "The flag of Oman features a red vertical band on the hoist side that takes up about one-fourth the width of the field, and three equal horizontal bands of white, red and green adjoining the vertical band. At the top of the vertical band is the white emblem of Oman.",
         "currencies": "Omani rial",
         "area": 309500,
+        "populationDensity": 17,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -4712,6 +4886,7 @@
         "flagAlt": "The flag of Bahrain has a red field. On the hoist side, it features a white vertical band that spans about one-third the width of the field and is separated from the rest of the field by five adjoining fly-side pointing white isosceles triangles that serve as a serrated line.",
         "currencies": "Bahraini dinar",
         "area": 765,
+        "populationDensity": 2085,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -4739,6 +4914,7 @@
         "flagAlt": "The flag of the United States of America is composed of thirteen equal horizontal bands of red alternating with white. A blue rectangle, bearing fifty small five-pointed white stars arranged in nine rows where rows of six stars alternate with rows of five stars, is superimposed in the canton.",
         "currencies": "United States dollar",
         "area": 9525067,
+        "populationDensity": 36,
         "languages": "English",
         "car": {
           "signs": [
@@ -4766,6 +4942,7 @@
         "flagAlt": "Flag of Puerto Rico",
         "currencies": "United States dollar",
         "area": 8870,
+        "populationDensity": 361,
         "languages": "English, Spanish",
         "car": {
           "signs": [
@@ -4793,6 +4970,7 @@
         "flagAlt": "Flag of British Indian Ocean Territory",
         "currencies": "United States dollar",
         "area": 60,
+        "populationDensity": 0,
         "languages": "English",
         "car": {
           "signs": [
@@ -4820,6 +4998,7 @@
         "flagAlt": "Flag of Jersey",
         "currencies": "British pound, Jersey pound",
         "area": 116,
+        "populationDensity": 890,
         "languages": "English, French, Jèrriais",
         "car": {
           "signs": [
@@ -4847,6 +5026,7 @@
         "flagAlt": "The flag of North Macedonia has a red field, at the center of which is a golden-yellow sun with eight broadening rays that extend to the edges of the field.",
         "currencies": "denar",
         "area": 25713,
+        "populationDensity": 71,
         "languages": "Macedonian",
         "car": {
           "signs": [
@@ -4874,6 +5054,7 @@
         "flagAlt": "The flag of Tunisia has a red field. A white circle bearing a five-pointed red star within a fly-side facing red crescent is situated at the center of the field.",
         "currencies": "Tunisian dinar",
         "area": 163610,
+        "populationDensity": 73,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -4901,6 +5082,7 @@
         "flagAlt": "The flag of Trinidad and Tobago has a red field with a white-edged black diagonal band that extends from the upper hoist-side corner to the lower fly-side corner of the field.",
         "currencies": "Trinidad and Tobago dollar",
         "area": 5130,
+        "populationDensity": 267,
         "languages": "English",
         "car": {
           "signs": [
@@ -4928,6 +5110,7 @@
         "flagAlt": "The flag of Estonia is composed of three equal horizontal bands of blue, black and white.",
         "currencies": "Euro",
         "area": 45227,
+        "populationDensity": 30,
         "languages": "Estonian",
         "car": {
           "signs": [
@@ -4955,6 +5138,7 @@
         "flagAlt": "The flag of Singapore is composed of two equal horizontal bands of red and white. On the hoist side of the red band is a fly-side facing white crescent which partially encloses five small five-pointed white stars arranged in the shape of a pentagon.",
         "currencies": "Singapore dollar",
         "area": 710,
+        "populationDensity": 8606,
         "languages": "English, Chinese, Malay, Tamil",
         "car": {
           "signs": [
@@ -4982,6 +5166,7 @@
         "flagAlt": "The flag of Panama is composed of four equal rectangular areas — a white rectangular area with a blue five-pointed star at its center, a red rectangular area, a white rectangular area with a red five-pointed star at its center, and a blue rectangular area — in the upper hoist side, upper fly side, lower fly side and lower hoist side respectively.",
         "currencies": "Panamanian balboa, United States dollar",
         "area": 75417,
+        "populationDensity": 54,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -5009,6 +5194,7 @@
         "flagAlt": "The flag of Switzerland is square shaped. It features a white Swiss cross centered on a red field.",
         "currencies": "Swiss franc",
         "area": 41284,
+        "populationDensity": 220,
         "languages": "French, Swiss German, Italian, Romansh",
         "car": {
           "signs": [
@@ -5036,6 +5222,7 @@
         "flagAlt": "The flag of Uruguay is composed of nine equal horizontal bands of white alternating with blue, with a white square superimposed in the canton. In the white square is a yellow sun bearing a human face — the Sun of May — from which sixteen rays extend. The sun's rays alternate between triangular and wavy.",
         "currencies": "Uruguayan peso",
         "area": 181034,
+        "populationDensity": 19,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -5063,6 +5250,7 @@
         "flagAlt": "The flag of Tajikistan is composed of three horizontal bands of red, white and green in the ratio of 2:3:2. A golden-yellow crown surmounted by an arc of seven five-pointed golden-yellow stars is centered in the white band.",
         "currencies": "Tajikistani somoni",
         "area": 143100,
+        "populationDensity": 73,
         "languages": "Russian, Tajik",
         "car": {
           "signs": [
@@ -5090,6 +5278,7 @@
         "flagAlt": "Flag of Taiwan",
         "currencies": "New Taiwan dollar",
         "area": 36197,
+        "populationDensity": 644,
         "languages": "Chinese",
         "car": {
           "signs": [
@@ -5117,6 +5306,7 @@
         "flagAlt": "The flag of South Africa is composed of two equal horizontal bands of red and blue, with a yellow-edged black isosceles triangle superimposed on the hoist side of the field. This triangle has its base centered on the hoist end, spans about two-fifth the width and two-third the height of the field, and is enclosed on its sides by the arms of a white-edged green horizontally oriented Y-shaped band which extends along the boundary of the red and blue bands to the fly end of the field.",
         "currencies": "South African rand",
         "area": 1221037,
+        "populationDensity": 52,
         "languages": "Afrikaans, English, Southern Ndebele, Northern Sotho, Southern Sotho, Swazi, Tswana, Tsonga, Venda, Xhosa, Zulu",
         "car": {
           "signs": [
@@ -5144,6 +5334,7 @@
         "flagAlt": "The flag of Liechtenstein is composed of two equal horizontal bands of blue and red, with a golden-yellow crown on the hoist side of the blue band.",
         "currencies": "Swiss franc",
         "area": 160,
+        "populationDensity": 256,
         "languages": "German",
         "car": {
           "signs": [
@@ -5171,6 +5362,7 @@
         "flagAlt": "The flag of Brazil has a green field with a large yellow rhombus in the center. Within the rhombus is a dark blue globe with twenty-seven small five-pointed white stars depicting a starry sky and a thin white convex horizontal band inscribed with the national motto 'Ordem e Progresso' across its center.",
         "currencies": "Brazilian real",
         "area": 8515767,
+        "populationDensity": 25,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -5198,6 +5390,7 @@
         "flagAlt": "The flag of Armenia is composed of three equal horizontal bands of red, blue and orange.",
         "currencies": "Armenian dram",
         "area": 29743,
+        "populationDensity": 103,
         "languages": "Armenian",
         "car": {
           "signs": [
@@ -5225,6 +5418,7 @@
         "flagAlt": "The flag of Georgia has a white field with a large centered red cross that extends to the edges and divides the field into four quarters. A small red Bolnur-Katskhuri cross is centered in each quarter.",
         "currencies": "lari",
         "area": 69700,
+        "populationDensity": 57,
         "languages": "Georgian",
         "car": {
           "signs": [
@@ -5252,6 +5446,7 @@
         "flagAlt": "Flag of Åland Islands",
         "currencies": "Euro",
         "area": 1580,
+        "populationDensity": 19,
         "languages": "Swedish",
         "car": {
           "signs": [
@@ -5279,6 +5474,7 @@
         "flagAlt": "The flag of Qatar has a maroon field, on the hoist side of which is a white vertical band that spans about one-third the width of the field and is separated from the rest of the field by nine adjoining fly-side pointing white isosceles triangles that serve as a serrated line.",
         "currencies": "Qatari riyal",
         "area": 11586,
+        "populationDensity": 274,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -5306,6 +5502,7 @@
         "flagAlt": "The flag of Dominica has a green field with a large centered tricolor cross. The vertical and horizontal parts of the cross each comprise three bands of yellow, black and white. A red circle, bearing a hoist-side facing purple Sisserou parrot standing on a twig and encircled by ten five-pointed yellow-edged green stars, is superimposed at the center of the cross.",
         "currencies": "Eastern Caribbean dollar",
         "area": 751,
+        "populationDensity": 90,
         "languages": "English",
         "car": {
           "signs": [
@@ -5333,6 +5530,7 @@
         "flagAlt": "The flag of Ukraine is composed of two equal horizontal bands of blue and yellow.",
         "currencies": "Ukrainian hryvnia",
         "area": 603550,
+        "populationDensity": 54,
         "languages": "Ukrainian",
         "car": {
           "signs": [
@@ -5360,6 +5558,7 @@
         "flagAlt": "The flag of Guinea is composed of three equal vertical bands of red, yellow and green.",
         "currencies": "Guinean franc",
         "area": 245857,
+        "populationDensity": 58,
         "languages": "French",
         "car": {
           "signs": [
@@ -5386,6 +5585,7 @@
         "flagAlt": "Flag of Macau",
         "currencies": "Macanese pataca",
         "area": 30,
+        "populationDensity": 22863,
         "languages": "Portuguese, Chinese",
         "car": {
           "signs": [
@@ -5413,6 +5613,7 @@
         "flagAlt": "Flag of Western Sahara",
         "currencies": "Algerian dinar, Moroccan dirham, Mauritanian ouguiya",
         "area": 266000,
+        "populationDensity": 2,
         "languages": "Berber, Hassaniya, Spanish",
         "car": {
           "signs": [
@@ -5440,6 +5641,7 @@
         "flagAlt": "The flag of Czechia is composed of two equal horizontal bands of white and red, with a blue isosceles triangle superimposed on the hoist side of the field. The triangle has its base on the hoist end and spans about two-fifth the width of the field.",
         "currencies": "Czech koruna",
         "area": 78865,
+        "populationDensity": 138,
         "languages": "Czech, Slovak",
         "car": {
           "signs": [
@@ -5467,6 +5669,7 @@
         "flagAlt": "The flag of Austria is composed of three equal horizontal bands of red, white and red.",
         "currencies": "Euro",
         "area": 83871,
+        "populationDensity": 110,
         "languages": "German",
         "car": {
           "signs": [
@@ -5494,6 +5697,7 @@
         "flagAlt": "The flag of Saint Kitts and Nevis features two large five-pointed white stars within a yellow-edged black diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. Above and beneath this band are a green and red triangle respectively.",
         "currencies": "Eastern Caribbean dollar",
         "area": 261,
+        "populationDensity": 197,
         "languages": "English",
         "car": {
           "signs": [
@@ -5521,6 +5725,7 @@
         "flagAlt": "The flag of Saint Lucia has a light blue field, at the center of which are two triangles which share a common base — a small golden-yellow isosceles triangle superimposed on a large white-edged black isosceles triangle.",
         "currencies": "Eastern Caribbean dollar",
         "area": 616,
+        "populationDensity": 299,
         "languages": "English",
         "car": {
           "signs": [
@@ -5548,6 +5753,7 @@
         "flagAlt": "The flag of Yemen is composed of three equal horizontal bands of red, white and black.",
         "currencies": "Yemeni rial",
         "area": 527968,
+        "populationDensity": 62,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -5575,6 +5781,7 @@
         "flagAlt": "The flag of Rwanda is composed of three horizontal bands of light blue, yellow and green. The light blue band is twice the height of the other two bands and bears a yellow sun with twenty-four rays on its fly side.",
         "currencies": "Rwandan franc",
         "area": 26338,
+        "populationDensity": 536,
         "languages": "English, French, Kinyarwanda",
         "car": {
           "signs": [
@@ -5602,6 +5809,7 @@
         "flagAlt": "The flag of Monaco is composed of two equal horizontal bands of red and white.",
         "currencies": "Euro",
         "area": 2.02,
+        "populationDensity": 19021,
         "languages": "French",
         "car": {
           "signs": [
@@ -5629,6 +5837,7 @@
         "flagAlt": "Flag of São Tomé and Príncipe",
         "currencies": "São Tomé and Príncipe dobra",
         "area": 964,
+        "populationDensity": 217,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -5656,6 +5865,7 @@
         "flagAlt": "The flag of the Republic of the Congo features a yellow diagonal band that extends from the lower hoist-side corner to the upper fly-side corner of the field. Above and beneath this band are a green and red triangle respectively.",
         "currencies": "Central African CFA franc",
         "area": 342000,
+        "populationDensity": 18,
         "languages": "French, Kikongo, Lingala",
         "car": {
           "signs": [
@@ -5683,6 +5893,7 @@
         "flagAlt": "The flag of Paraguay features three equal horizontal bands of red, white and blue, with an emblem centered in the white band. On the obverse side of the flag depicted, this emblem is the national coat of arms.",
         "currencies": "Paraguayan guaraní",
         "area": 406752,
+        "populationDensity": 15,
         "languages": "Guaraní, Spanish",
         "car": {
           "signs": [
@@ -5709,6 +5920,7 @@
         "flagAlt": "Flag of Bouvet Island",
         "currencies": "",
         "area": 49,
+        "populationDensity": 0,
         "languages": "Norwegian",
         "car": {
           "signs": [
@@ -5736,6 +5948,7 @@
         "flagAlt": "The flag of Mozambique is composed of three equal horizontal bands of teal, black with white top and bottom edges, and yellow. A red isosceles triangle spanning about two-fifth the width of the field is superimposed on the hoist side with its base on the hoist end. This triangle bears a crossed rifle and hoe in black superimposed on an open white book which is superimposed on a five-pointed yellow star.",
         "currencies": "Mozambican metical",
         "area": 801590,
+        "populationDensity": 43,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -5763,6 +5976,7 @@
         "flagAlt": "The flag of France is composed of three equal vertical bands of blue, white and red.",
         "currencies": "Euro",
         "area": 543908,
+        "populationDensity": 122,
         "languages": "French",
         "car": {
           "signs": [
@@ -5790,6 +6004,7 @@
         "flagAlt": "The flag of Eswatini is composed of three horizontal bands — a large central yellow-edged red band, and a light blue band above and beneath the red band. The red band is three times the height of the blue bands and bears a centered emblem made up of a large black and white Nguni shield covering two spears and a staff decorated with feather tassels, all placed horizontally.",
         "currencies": "Swazi lilangeni, South African rand",
         "area": 17364,
+        "populationDensity": 71,
         "languages": "English, Swazi",
         "car": {
           "signs": [
@@ -5817,6 +6032,7 @@
         "flagAlt": "The flag of Barbados is composed of three equal vertical bands of ultramarine, gold and ultramarine. The head of a black trident is centered in the gold band.",
         "currencies": "Barbadian dollar",
         "area": 430,
+        "populationDensity": 623,
         "languages": "English",
         "car": {
           "signs": [
@@ -5844,6 +6060,7 @@
         "flagAlt": "The flag of Spain is composed of three horizontal bands of red, yellow and red, with the yellow band twice the height of the red bands. In the yellow band is the national coat of arms offset slightly towards the hoist side of center.",
         "currencies": "Euro",
         "area": 505992,
+        "populationDensity": 97,
         "languages": "Spanish, Catalan, Basque, Galician",
         "car": {
           "signs": [
@@ -5871,6 +6088,7 @@
         "flagAlt": "The flag of Thailand is composed of five horizontal bands of red, white, blue, white and red, with the central blue band twice the height of the other four bands.",
         "currencies": "Thai baht",
         "area": 513120,
+        "populationDensity": 128,
         "languages": "Thai",
         "car": {
           "signs": [
@@ -5898,6 +6116,7 @@
         "flagAlt": "The flag of Guinea-Bissau features a red vertical band on its hoist side that takes up about two-fifth the width of the field, and two equal horizontal bands of yellow and green adjoining the vertical band. A five-pointed black star is centered in the vertical band.",
         "currencies": "West African CFA franc",
         "area": 36125,
+        "populationDensity": 49,
         "languages": "Portuguese, Upper Guinea Creole",
         "car": {
           "signs": [
@@ -5925,6 +6144,7 @@
         "flagAlt": "The flag of Angola features two equal horizontal bands of red and black, with a yellow emblem at its centre. This emblem consists of a five-pointed star within the hoist-side facing half of a cogwheel that is crossed on its lower end by a machete.",
         "currencies": "Angolan kwanza",
         "area": 1246700,
+        "populationDensity": 29,
         "languages": "Portuguese",
         "car": {
           "signs": [
@@ -5952,6 +6172,7 @@
         "flagAlt": "The flag of India is composed of three equal horizontal bands of saffron, white and green. A navy blue wheel with twenty-four spokes — the Ashoka Chakra — is centered in the white band.",
         "currencies": "Indian rupee",
         "area": 3287263,
+        "populationDensity": 431,
         "languages": "English, Hindi, Tamil",
         "car": {
           "signs": [
@@ -5979,6 +6200,7 @@
         "flagAlt": "Flag of Martinique",
         "currencies": "Euro",
         "area": 1128,
+        "populationDensity": 310,
         "languages": "French",
         "car": {
           "signs": [
@@ -6006,6 +6228,7 @@
         "flagAlt": "Flag of New Caledonia",
         "currencies": "CFP franc",
         "area": 18575,
+        "populationDensity": 14,
         "languages": "French",
         "car": {
           "signs": [
@@ -6033,6 +6256,7 @@
         "flagAlt": "The flag of Seychelles is composed of five broadening oblique bands of blue, yellow, red, white and green, which extend from the hoist side of the bottom edge to the top and fly edges of the field.",
         "currencies": "Seychellois rupee",
         "area": 452,
+        "populationDensity": 272,
         "languages": "Seychellois Creole, English, French",
         "car": {
           "signs": [
@@ -6060,6 +6284,7 @@
         "flagAlt": "Flag of Falkland Islands",
         "currencies": "Falkland Islands pound",
         "area": 12173,
+        "populationDensity": 0,
         "languages": "English",
         "car": {
           "signs": [
@@ -6087,6 +6312,7 @@
         "flagAlt": "The flag of the United Kingdom — the Union Jack — has a blue field. It features the white-edged red cross of Saint George superimposed on the diagonal red cross of Saint Patrick which is superimposed on the diagonal white cross of Saint Andrew.",
         "currencies": "British pound",
         "area": 244376,
+        "populationDensity": 284,
         "languages": "English",
         "car": {
           "signs": [
@@ -6114,6 +6340,7 @@
         "flagAlt": "The flag of Fiji has a light blue field. It features the flag of the United Kingdom — the Union Jack — in the canton and the shield of the national coat of arms centered in the fly half.",
         "currencies": "Fijian dollar",
         "area": 18272,
+        "populationDensity": 49,
         "languages": "English, Fijian, Fiji Hindi",
         "car": {
           "signs": [
@@ -6141,6 +6368,7 @@
         "flagAlt": "The flag of San Marino is composed of two equal horizontal bands of white and light blue, with the national coat of arms superimposed in the center.",
         "currencies": "Euro",
         "area": 61,
+        "populationDensity": 560,
         "languages": "Italian",
         "car": {
           "signs": [
@@ -6168,6 +6396,7 @@
         "flagAlt": "The flag of Mali is composed of three equal vertical bands of green, yellow and red.",
         "currencies": "West African CFA franc",
         "area": 1240192,
+        "populationDensity": 18,
         "languages": "French",
         "car": {
           "signs": [
@@ -6195,6 +6424,7 @@
         "flagAlt": "The flag of Canada is composed of a red vertical band on the hoist and fly sides and a central white square that is twice the width of the vertical bands. A large eleven-pointed red maple leaf is centered in the white square.",
         "currencies": "Canadian dollar",
         "area": 9984670,
+        "populationDensity": 4,
         "languages": "English, French",
         "car": {
           "signs": [
@@ -6222,6 +6452,7 @@
         "flagAlt": "The flag of Jamaica is divided by a gold diagonal cross into four alternating triangular areas of green at the top and bottom, and black on the hoist and fly sides",
         "currencies": "Jamaican dollar",
         "area": 10991,
+        "populationDensity": 257,
         "languages": "English, Jamaican Patois",
         "car": {
           "signs": [
@@ -6249,6 +6480,7 @@
         "flagAlt": "The flag of Nauru has a dark blue field with a thin yellow horizontal band across the center and a large white twelve-pointed star beneath the horizontal band on the hoist side of the field.",
         "currencies": "Australian dollar",
         "area": 21,
+        "populationDensity": 556,
         "languages": "English, Nauru",
         "car": {
           "signs": [
@@ -6276,6 +6508,7 @@
         "flagAlt": "The flag of Indonesia is composed of two equal horizontal bands of red and white.",
         "currencies": "Indonesian rupiah",
         "area": 1904569,
+        "populationDensity": 149,
         "languages": "Indonesian",
         "car": {
           "signs": [
@@ -6303,6 +6536,7 @@
         "flagAlt": "Flag of Guam",
         "currencies": "United States dollar",
         "area": 549,
+        "populationDensity": 280,
         "languages": "Chamorro, English, Spanish",
         "car": {
           "signs": [
@@ -6330,6 +6564,7 @@
         "flagAlt": "The flag of Ivory Coast is composed of three equal vertical bands of orange, white and green.",
         "currencies": "West African CFA franc",
         "area": 322463,
+        "populationDensity": 98,
         "languages": "French",
         "car": {
           "signs": [
@@ -6357,6 +6592,7 @@
         "flagAlt": "The flag of Kuwait is composed of three equal horizontal bands of green, white and red, with a black trapezium superimposed on the hoist side of the field. This trapezium has its base on the hoist end and spans about one-fourth the width of the field.",
         "currencies": "Kuwaiti dinar",
         "area": 17818,
+        "populationDensity": 274,
         "languages": "Arabic",
         "car": {
           "signs": [
@@ -6384,6 +6620,7 @@
         "flagAlt": "The flag of Philippines is composed of two equal horizontal bands of blue and red, with a white equilateral triangle superimposed on the hoist side of the field. This triangle has its base on the hoist end, spans about two-fifth the width of the field and bears a central golden-yellow sun with eight rays and a five-pointed golden-yellow star at each vertex.",
         "currencies": "Philippine peso",
         "area": 342353,
+        "populationDensity": 333,
         "languages": "English, Filipino",
         "car": {
           "signs": [
@@ -6411,6 +6648,7 @@
         "flagAlt": "The flag of Guyana has a green field with two isosceles triangles which share a common base on the hoist end. The smaller black-edged red triangle spanning half the width of the field is superimposed on the larger white-edged yellow triangle which spans the full width of the field.",
         "currencies": "Guyanese dollar",
         "area": 214969,
+        "populationDensity": 4,
         "languages": "English",
         "car": {
           "signs": [
@@ -6438,6 +6676,7 @@
         "flagAlt": "The flag of Hungary is composed of three equal horizontal bands of red, white and green.",
         "currencies": "Hungarian forint",
         "area": 93028,
+        "populationDensity": 103,
         "languages": "Hungarian",
         "car": {
           "signs": [
@@ -6465,6 +6704,7 @@
         "flagAlt": "The flag of Mexico is composed of three equal vertical bands of green, white and red, with the national coat of arms centered in the white band.",
         "currencies": "Mexican peso",
         "area": 1964375,
+        "populationDensity": 66,
         "languages": "Spanish",
         "car": {
           "signs": [
@@ -6492,6 +6732,7 @@
         "flagAlt": "The flag of North Korea is composed of three horizontal bands — a large central white-edged red band, and a blue band above and beneath the red band. On the hoist side of the red band is a red five-pointed star within a white circle.",
         "currencies": "North Korean won",
         "area": 120538,
+        "populationDensity": 215,
         "languages": "Korean",
         "car": {
           "signs": [
@@ -6519,6 +6760,7 @@
         "flagAlt": "The flag of Romania is composed of three equal vertical bands of navy blue, yellow and red.",
         "currencies": "Romanian leu",
         "area": 238391,
+        "populationDensity": 80,
         "languages": "Romanian",
         "car": {
           "signs": [
@@ -6546,6 +6788,7 @@
         "flagAlt": "The flag of Suriname is composed of five horizontal bands of green, white, red, white and green in the ratio of 2:1:4:1:2. A large five-pointed yellow star is centered in the red band.",
         "currencies": "Surinamese dollar",
         "area": 163820,
+        "populationDensity": 4,
         "languages": "Dutch",
         "car": {
           "signs": [
@@ -6573,6 +6816,7 @@
         "flagAlt": "Flag of American Samoa",
         "currencies": "United States dollar",
         "area": 199,
+        "populationDensity": 250,
         "languages": "English, Samoan",
         "car": {
           "signs": [
@@ -6600,6 +6844,7 @@
         "flagAlt": "The flag of Nepal is the world's only non-quadrilateral flag of a sovereign country. It takes the shape of two adjoining right-angled triangles and has a crimson red field with deep blue edges. Within the smaller upper triangle is an emblem of the upper half of a white sun resting on an upward facing white crescent. The lower triangle bears a white sun with twelve rays.",
         "currencies": "Nepalese rupee",
         "area": 147181,
+        "populationDensity": 203,
         "languages": "Nepali",
         "car": {
           "signs": [
@@ -6627,6 +6872,7 @@
         "flagAlt": "The flag of Chad is composed of three equal vertical bands of blue, gold and red.",
         "currencies": "Central African CFA franc",
         "area": 1284000,
+        "populationDensity": 15,
         "languages": "Arabic, French",
         "car": {
           "signs": [
@@ -6655,6 +6901,7 @@
         "flagAlt": "The flag of Serbia is composed of three equal horizontal bands of red, blue and white. The coat of arms of Serbia is superimposed at the center of the field slightly towards the hoist side.",
         "currencies": "Serbian dinar",
         "area": 77589,
+        "populationDensity": 85,
         "languages": "Serbian",
         "car": {
           "signs": [
@@ -6682,6 +6929,7 @@
         "flagAlt": "The flag of Cambodia features three horizontal bands of blue, red and blue, with a white depiction of the temple complex, Angkor Wat centered in the red band.",
         "currencies": "Cambodian riel, United States dollar",
         "area": 181035,
+        "populationDensity": 97,
         "languages": "Khmer",
         "car": {
           "signs": [
@@ -6709,6 +6957,7 @@
         "flagAlt": "The flag of Malaysia is composed of fourteen equal horizontal bands of red alternating with white. A blue rectangle, bearing a fly-side facing yellow crescent and a fourteen-pointed yellow star placed just outside the crescent opening, is superimposed in the canton.",
         "currencies": "Malaysian ringgit",
         "area": 330803,
+        "populationDensity": 103,
         "languages": "English, Malay",
         "car": {
           "signs": [
@@ -6736,6 +6985,7 @@
         "flagAlt": "The flag of Cyprus has a white field, at the center of which is a copper-colored silhouette of the Island of Cyprus above two green olive branches crossed at the stem.",
         "currencies": "Euro",
         "area": 9251,
+        "populationDensity": 156,
         "languages": "Greek, Turkish",
         "car": {
           "signs": [
