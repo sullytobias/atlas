@@ -54,7 +54,9 @@ export const createCountryPopup = (
                     " />
                 <div style="flex: 1;">
                     <a target="_blank" 
-                       href="https://en.wikipedia.org/wiki/${encodeURIComponent(country)}"
+                       href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                           country
+                       )}"
                        style="
                            color: white;
                            font-size: 16px;
@@ -97,7 +99,11 @@ export const createCountryPopup = (
                             Population
                         </div>
                         <div style="color: #2c3e50; font-size: 13px; font-weight: 700;">
-                            ${population ? Number(population).toLocaleString() : "N/A"}
+                            ${
+                                population
+                                    ? Number(population).toLocaleString()
+                                    : "N/A"
+                            }
                         </div>
                     </div>
                     <div style="
@@ -111,7 +117,11 @@ export const createCountryPopup = (
                             Area
                         </div>
                         <div style="color: #2c3e50; font-size: 13px; font-weight: 700;">
-                            ${area ? `${Number(area).toLocaleString()} km²` : "N/A"}
+                            ${
+                                area
+                                    ? `${Number(area).toLocaleString()} km²`
+                                    : "N/A"
+                            }
                         </div>
                     </div>
                 </div>
@@ -132,7 +142,9 @@ export const createCountryPopup = (
                                     Capital
                                 </div>
                                 <a target="_blank" 
-                                   href="https://en.wikipedia.org/wiki/${encodeURIComponent(capital)}"
+                                   href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                       capital
+                                   )}"
                                    style="color: #2c3e50; font-size: 12px; font-weight: 500;  display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                    onmouseover="this.style.color='#667eea'"
                                    onmouseout="this.style.color='#2c3e50'"
@@ -149,7 +161,11 @@ export const createCountryPopup = (
                                     Languages
                                 </div>
                                 <div style="color: #2c3e50; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                    ${languages ? formatLanguages(languages) : "N/A"}
+                                    ${
+                                        languages
+                                            ? formatLanguages(languages)
+                                            : "N/A"
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -163,7 +179,9 @@ export const createCountryPopup = (
                                     Currency
                                 </div>
                                 <a target="_blank" 
-                                   href="https://en.wikipedia.org/wiki/${encodeURIComponent(currencies)}"
+                                   href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                                       currencies
+                                   )}"
                                    style="color: #2c3e50; font-size: 12px; font-weight: 500; text-decoration: none; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                    onmouseover="this.style.color='#667eea'"
                                    onmouseout="this.style.color='#2c3e50'"
@@ -180,7 +198,13 @@ export const createCountryPopup = (
                                     Driving Side
                                 </div>
                                 <div style="color: #2c3e50; font-size: 12px; font-weight: 500;">
-                                    ${car?.side === "right" ? "Right 🡢" : car?.side === "left" ? "Left 🡠" : "N/A"}
+                                    ${
+                                        car?.side === "right"
+                                            ? "Right 🡢"
+                                            : car?.side === "left"
+                                            ? "Left 🡠"
+                                            : "N/A"
+                                    }
                                 </div>
                             </div>
                         </div>

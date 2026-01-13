@@ -38,7 +38,6 @@ fs.createReadStream("airports.csv")
         );
         console.log(`✅ Converted ${airports.features.length} airports`);
 
-        // Log type distribution
         const typeCounts = airports.features.reduce((acc, feature) => {
             const type = feature.properties.type;
             acc[type] = (acc[type] || 0) + 1;

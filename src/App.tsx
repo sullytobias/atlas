@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Map from "./components/Map";
-import LayerToggles from "./components/LayerToggle/LayerToggle";
+import MapControls from "./components/MapControls/MapControls";
 import Legend from "./components/Legend/Legend";
-import AdvancedFilters from "./components/AdvancedFilters/AdvancedFilters";
 import { CONTINENTS } from "./constants/continents";
 
 const colors = [
@@ -31,18 +30,33 @@ export default function App() {
         balloonport: false,
     });
     const [showGlobe, setShowGlobe] = useState(false);
+    const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+        {}
+    );
 
-    const continentsOffset = 0;
-    const heatmapOffset = showContinents ? 1 : 0;
+    const handleLoadingComplete = useCallback((key: string) => {
+        if (key === "all") {
+            setLoadingStates({});
+        } else {
+            setLoadingStates((prev) => ({ ...prev, [key]: false }));
+        }
+    }, []);
 
-    return (
-        <>
-            <Legend
-                title="Continents"
-                isVisible={showContinents}
-                offset={continentsOffset}
-                closedIcon={"🗺️"}
-            >
+    const handleToggleWithLoading = (
+        key: string,
+        toggleFn: (value: boolean) => void,
+        currentValue: boolean
+    ) => {
+        setLoadingStates((prev) => ({ ...prev, [key]: true }));
+        toggleFn(!currentValue);
+    };
+
+    const legendSections = [
+        {
+            title: "Continents",
+            icon: "🗺️",
+            isVisible: showContinents,
+            content: (
                 <div
                     style={{
                         display: "flex",
@@ -57,32 +71,25 @@ export default function App() {
                                 style={{
                                     display: "flex",
                                     alignItems: "center",
-                                    padding: "8px 10px",
-                                    borderRadius: "6px",
-                                    backgroundColor: "rgba(0,0,0,0.03)",
-                                    transition: "background-color 0.15s ease",
+                                    padding: "10px 12px",
+                                    borderRadius: "8px",
+                                    backgroundColor: "#f9fafb",
+                                    transition: "all 0.2s ease",
                                     textDecoration: "none",
+                                    border: "1px solid #e5e7eb",
                                 }}
                                 href={continent.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                onMouseOver={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                        "rgba(0,0,0,0.08)";
-                                }}
-                                onMouseOut={(e) => {
-                                    e.currentTarget.style.backgroundColor =
-                                        "rgba(0,0,0,0.03)";
-                                }}
                             >
                                 <span
                                     style={{
                                         display: "inline-block",
-                                        width: "16px",
-                                        height: "16px",
+                                        width: "18px",
+                                        height: "18px",
                                         backgroundColor: continent.color,
-                                        borderRadius: "3px",
-                                        marginRight: "10px",
+                                        borderRadius: "4px",
+                                        marginRight: "12px",
                                         border: "1px solid rgba(0,0,0,0.1)",
                                     }}
                                 ></span>
@@ -91,64 +98,129 @@ export default function App() {
                                         fontSize: "14px",
                                         fontWeight: "500",
                                         marginRight: "auto",
+                                        color: "#374151",
                                     }}
                                 >
                                     {continent.name}
                                 </span>
-                                🔗
+                                <span
+                                    style={{
+                                        fontSize: "14px",
+                                        color: "#6b7280",
+                                    }}
+                                >
+                                    🔗
+                                </span>
                             </a>
                         )
                     )}
                 </div>
-            </Legend>
-
-            <Legend
-                title="Population"
-                isVisible={showHeatmap}
-                offset={heatmapOffset}
-                closedIcon={"🔥"}
-            >
-                {colors.map((item) => (
-                    <div
-                        key={item.label}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                            marginBottom: "6px",
-                        }}
-                    >
+            ),
+        },
+        {
+            title: "Population Density",
+            icon: "🔥",
+            isVisible: showHeatmap,
+            content: (
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "8px",
+                    }}
+                >
+                    {colors.map((item) => (
                         <div
+                            key={item.label}
                             style={{
-                                width: "20px",
-                                height: "20px",
-                                backgroundColor: item.color,
-                                borderRadius: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
                             }}
-                        />
-                        <span style={{ fontSize: "12px" }}>{item.label}</span>
-                    </div>
-                ))}
-            </Legend>
+                        >
+                            <div
+                                style={{
+                                    width: "24px",
+                                    height: "24px",
+                                    backgroundColor: item.color,
+                                    borderRadius: "6px",
+                                    border: "1px solid rgba(0,0,0,0.1)",
+                                    flexShrink: 0,
+                                }}
+                            />
+                            <span
+                                style={{
+                                    fontSize: "13px",
+                                    color: "#374151",
+                                    fontWeight: "500",
+                                }}
+                            >
+                                {item.label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            ),
+        },
+    ];
 
-            <LayerToggles
-                onToggleHeatmap={setShowHeatmap}
-                showHeatmap={showHeatmap}
-                showContinents={showContinents}
-                onToggleContinents={setShowContinents}
+    return (
+        <>
+            <Legend sections={legendSections} />
+
+            <MapControls
                 showCoastlines={showCoastlines}
-                onToggleCoastlines={setShowCoastlines}
+                onToggleCoastlines={() =>
+                    handleToggleWithLoading(
+                        "coastlines",
+                        setShowCoastlines,
+                        showCoastlines
+                    )
+                }
                 showSatellite={showSatellite}
-                onToggleSatellite={setShowSatellite}
+                onToggleSatellite={() =>
+                    handleToggleWithLoading(
+                        "satellite",
+                        setShowSatellite,
+                        showSatellite
+                    )
+                }
                 showCapitals={showCapitals}
-                onToggleCapitals={setShowCapitals}
-            />
-
-            <AdvancedFilters
+                onToggleCapitals={() =>
+                    handleToggleWithLoading(
+                        "capitals",
+                        setShowCapitals,
+                        showCapitals
+                    )
+                }
+                showContinents={showContinents}
+                onToggleContinents={() =>
+                    handleToggleWithLoading(
+                        "continents",
+                        setShowContinents,
+                        showContinents
+                    )
+                }
+                showHeatmap={showHeatmap}
+                onToggleHeatmap={() =>
+                    handleToggleWithLoading(
+                        "heatmap",
+                        setShowHeatmap,
+                        showHeatmap
+                    )
+                }
                 showAirports={showAirports}
                 onToggleAirports={setShowAirports}
                 showTerrain={showTerrain}
-                onToggleTerrain={setShowTerrain}
+                onToggleTerrain={() =>
+                    handleToggleWithLoading(
+                        "terrain",
+                        setShowTerrain,
+                        showTerrain
+                    )
+                }
+                loadingStates={loadingStates}
+                setLoadingStates={setLoadingStates}
             />
 
             <Map
@@ -160,47 +232,30 @@ export default function App() {
                 showGlobe={showGlobe}
                 showAirports={showAirports}
                 showTerrain={showTerrain}
+                onLoadingComplete={handleLoadingComplete}
             />
 
             <button
                 onClick={() => setShowGlobe(!showGlobe)}
                 style={{
                     position: "absolute",
-                    bottom: "20px",
+                    bottom: "30px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 10,
-                    backgroundColor: showGlobe ? "#4169E1" : "#fff",
-                    color: showGlobe ? "#fff" : "#333",
+                    fontSize: "50px",
+                    backgroundColor: "transparent",
                     border: "none",
                     borderRadius: "50%",
                     width: "56px",
                     height: "56px",
-                    fontSize: "24px",
-                    fontWeight: "600",
                     cursor: "pointer",
-                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     transition: "all 0.3s ease",
-                    backdropFilter: "blur(10px)",
                 }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.transform =
-                        "translateX(-50%) scale(1.1) translateY(-4px)";
-                    e.currentTarget.style.boxShadow =
-                        "0 12px 28px rgba(0, 0, 0, 0.3)";
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.transform =
-                        "translateX(-50%) scale(1) translateY(0)";
-                    e.currentTarget.style.boxShadow =
-                        "0 8px 20px rgba(0, 0, 0, 0.2)";
-                }}
-                title={
-                    showGlobe ? "Switch to Flat Map" : "Switch to Globe View"
-                }
             >
                 {showGlobe ? "🗺️" : "🌍"}
             </button>

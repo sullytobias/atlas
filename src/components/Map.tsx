@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useCallback, useState } from "react";
+import { useMemo, useRef, useEffect, useCallback } from "react";
 import type { StyleSpecification } from "maplibre-gl";
 import { Popup, MapMouseEvent } from "maplibre-gl";
 
@@ -10,7 +10,7 @@ import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import countryData from "../data/data.json";
-import Loader from "./Loader/Loader";
+import SimpleLoader from "./SimpleLoader/SimpleLoader";
 import {
     createCountryPopup,
     createAirportPopup,
@@ -23,8 +23,7 @@ type Props = {
     showContinents: boolean;
     showHeatmap: boolean;
     showGlobe?: boolean;
-    show3DBuildings?: boolean;
-    showTerrain?: boolean; // Add this
+    showTerrain?: boolean;
     showAirports?: {
         large?: boolean;
         medium?: boolean;
@@ -75,8 +74,7 @@ export default function Map({
     showContinents = false,
     showHeatmap = false,
     showGlobe = false,
-    show3DBuildings = false,
-    showTerrain = false, // Add this
+    showTerrain = false,
     showAirports = {
         large: false,
         medium: false,
@@ -86,11 +84,11 @@ export default function Map({
         closed: false,
         balloonport: false,
     },
-}: Props) {
+    onLoadingComplete,
+}: Props & { onLoadingComplete?: (key: string) => void }) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -102,6 +100,23 @@ export default function Map({
     );
 
     const mapRef = useMapInstance(containerRef, style);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map || !onLoadingComplete) return;
+
+        const handleIdle = () => {
+            if (onLoadingComplete) {
+                onLoadingComplete("all");
+            }
+        };
+
+        map.on("idle", handleIdle);
+
+        return () => {
+            map.off("idle", handleIdle);
+        };
+    }, [onLoadingComplete]);
 
     const visibilityConfigs = useMemo(
         () => [
@@ -387,7 +402,6 @@ export default function Map({
         const onLoad = () => {
             map.on("click", handleClick);
             map.on("mousemove", handleMouseMove);
-            setIsLoading(false);
         };
 
         if (map.isStyleLoaded()) {
@@ -448,7 +462,7 @@ export default function Map({
 
     return (
         <>
-            <Loader isLoading={isLoading} />
+            <SimpleLoader map={mapRef.current} />
             <div ref={containerRef} className="map" />
         </>
     );
