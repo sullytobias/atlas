@@ -2,6 +2,7 @@ import { useState } from "react";
 import Map from "./components/Map";
 import LayerToggles from "./components/LayerToggles";
 import Legend from "./components/Legend";
+import AdvancedFilters from "./components/AdvancedFilters";
 import { CONTINENTS } from "./constants/continents";
 
 const colors = [
@@ -19,6 +20,15 @@ export default function App() {
     const [showCapitals, setShowCapitals] = useState(false);
     const [showContinents, setShowContinents] = useState(false);
     const [showHeatmap, setShowHeatmap] = useState(false);
+    const [showAirports, setShowAirports] = useState({
+        large: false,
+        medium: false,
+        small: false,
+        heliport: false,
+        seaplane: false,
+        closed: false,
+        balloonport: false,
+    });
 
     const continentsOffset = 0;
     const heatmapOffset = showContinents ? 1 : 0;
@@ -131,12 +141,19 @@ export default function App() {
                 showCapitals={showCapitals}
                 onToggleCapitals={setShowCapitals}
             />
+
+            <AdvancedFilters
+                showAirports={showAirports}
+                onToggleAirports={setShowAirports}
+            />
+
             <Map
                 showHeatmap={showHeatmap}
                 showCoastlines={showCoastlines}
                 showSatellite={showSatellite}
                 showCapitals={showCapitals}
                 showContinents={showContinents}
+                showAirports={showAirports}
             />
         </>
     );

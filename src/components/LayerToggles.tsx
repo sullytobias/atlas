@@ -2,15 +2,15 @@ import { useState } from "react";
 
 type Props = {
     showCoastlines: boolean;
-    onToggleCoastlines: (value: boolean) => void;
+    onToggleCoastlines: (show: boolean) => void;
     showSatellite: boolean;
-    onToggleSatellite: (value: boolean) => void;
+    onToggleSatellite: (show: boolean) => void;
     showCapitals: boolean;
-    onToggleCapitals: (value: boolean) => void;
+    onToggleCapitals: (show: boolean) => void;
     showContinents: boolean;
-    onToggleContinents: (value: boolean) => void;
+    onToggleContinents: (show: boolean) => void;
     showHeatmap: boolean;
-    onToggleHeatmap: (value: boolean) => void;
+    onToggleHeatmap: (show: boolean) => void;
 };
 
 type LayerItem = {

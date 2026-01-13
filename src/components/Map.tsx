@@ -18,6 +18,15 @@ type Props = {
     showCapitals: boolean;
     showContinents: boolean;
     showHeatmap: boolean;
+    showAirports?: {
+        large?: boolean;
+        medium?: boolean;
+        small?: boolean;
+        heliport?: boolean;
+        seaplane?: boolean;
+        closed?: boolean;
+        balloonport?: boolean;
+    };
 };
 
 type CountryProps = {
@@ -58,6 +67,15 @@ export default function Map({
     showCapitals = false,
     showContinents = false,
     showHeatmap = false,
+    showAirports = {
+        large: false,
+        medium: false,
+        small: false,
+        heliport: false,
+        seaplane: false,
+        closed: false,
+        balloonport: false,
+    },
 }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
@@ -93,6 +111,42 @@ export default function Map({
                 layerId: "population-choropleth",
                 condition: showHeatmap,
             },
+            {
+                layerId: "airports-large",
+                condition: showAirports.large ?? false,
+            },
+            {
+                layerId: "airports-medium",
+                condition: showAirports.medium ?? false,
+            },
+            {
+                layerId: "airports-small",
+                condition: showAirports.small ?? false,
+            },
+            {
+                layerId: "airports-heliport",
+                condition: showAirports.heliport ?? false,
+            },
+            {
+                layerId: "airports-seaplane",
+                condition: showAirports.seaplane ?? false,
+            },
+            {
+                layerId: "airports-closed",
+                condition: showAirports.closed ?? false,
+            },
+            {
+                layerId: "airports-balloonport",
+                condition: showAirports.balloonport ?? false,
+            },
+            {
+                layerId: "airports-labels-large",
+                condition: showAirports.large ?? false,
+            },
+            {
+                layerId: "airports-labels-medium",
+                condition: showAirports.medium ?? false,
+            },
         ],
         [
             showCoastlines,
@@ -100,6 +154,7 @@ export default function Map({
             showCapitals,
             showContinents,
             showHeatmap,
+            showAirports,
         ]
     );
 

@@ -1,6 +1,7 @@
 import type { SourceSpecification } from "maplibre-gl";
 import countriesData from "../data/data.json";
 import continentsData from "../data/continents.json";
+import airportsData from "../data/airports.json";
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     countriesData: {
@@ -31,4 +32,11 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         type: "geojson",
         data: continentsData as any,
     },
+    airports: {
+        type: "geojson",
+        data: airportsData as any,
+    },
 };
+
+
+    
