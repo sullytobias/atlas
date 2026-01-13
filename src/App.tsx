@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Map from "./components/Map";
-import LayerToggles from "./components/LayerToggles";
-import Legend from "./components/Legend";
-import AdvancedFilters from "./components/AdvancedFilters";
+import LayerToggles from "./components/LayerToggle/LayerToggle";
+import Legend from "./components/Legend/Legend";
+import AdvancedFilters from "./components/AdvancedFilters/AdvancedFilters";
 import { CONTINENTS } from "./constants/continents";
 
 const colors = [
@@ -20,6 +20,7 @@ export default function App() {
     const [showCapitals, setShowCapitals] = useState(false);
     const [showContinents, setShowContinents] = useState(false);
     const [showHeatmap, setShowHeatmap] = useState(false);
+    const [showTerrain, setShowTerrain] = useState(false);
     const [showAirports, setShowAirports] = useState({
         large: false,
         medium: false,
@@ -29,6 +30,7 @@ export default function App() {
         closed: false,
         balloonport: false,
     });
+    const [showGlobe, setShowGlobe] = useState(false);
 
     const continentsOffset = 0;
     const heatmapOffset = showContinents ? 1 : 0;
@@ -145,16 +147,63 @@ export default function App() {
             <AdvancedFilters
                 showAirports={showAirports}
                 onToggleAirports={setShowAirports}
+                showTerrain={showTerrain}
+                onToggleTerrain={setShowTerrain}
             />
 
             <Map
-                showHeatmap={showHeatmap}
                 showCoastlines={showCoastlines}
                 showSatellite={showSatellite}
                 showCapitals={showCapitals}
                 showContinents={showContinents}
+                showHeatmap={showHeatmap}
+                showGlobe={showGlobe}
                 showAirports={showAirports}
+                showTerrain={showTerrain}
             />
+
+            <button
+                onClick={() => setShowGlobe(!showGlobe)}
+                style={{
+                    position: "absolute",
+                    bottom: "20px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: 10,
+                    backgroundColor: showGlobe ? "#4169E1" : "#fff",
+                    color: showGlobe ? "#fff" : "#333",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: "56px",
+                    height: "56px",
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.3s ease",
+                    backdropFilter: "blur(10px)",
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.transform =
+                        "translateX(-50%) scale(1.1) translateY(-4px)";
+                    e.currentTarget.style.boxShadow =
+                        "0 12px 28px rgba(0, 0, 0, 0.3)";
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.transform =
+                        "translateX(-50%) scale(1) translateY(0)";
+                    e.currentTarget.style.boxShadow =
+                        "0 8px 20px rgba(0, 0, 0, 0.2)";
+                }}
+                title={
+                    showGlobe ? "Switch to Flat Map" : "Switch to Globe View"
+                }
+            >
+                {showGlobe ? "🗺️" : "🌍"}
+            </button>
         </>
     );
 }

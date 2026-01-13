@@ -10,7 +10,11 @@ import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import countryData from "../data/data.json";
-import Loader from "./Loader";
+import Loader from "./Loader/Loader";
+import {
+    createCountryPopup,
+    createAirportPopup,
+} from "../utils/popupTemplates";
 
 type Props = {
     showCoastlines: boolean;
@@ -18,6 +22,9 @@ type Props = {
     showCapitals: boolean;
     showContinents: boolean;
     showHeatmap: boolean;
+    showGlobe?: boolean;
+    show3DBuildings?: boolean;
+    showTerrain?: boolean; // Add this
     showAirports?: {
         large?: boolean;
         medium?: boolean;
@@ -67,6 +74,9 @@ export default function Map({
     showCapitals = false,
     showContinents = false,
     showHeatmap = false,
+    showGlobe = false,
+    show3DBuildings = false,
+    showTerrain = false, // Add this
     showAirports = {
         large: false,
         medium: false,
@@ -97,6 +107,7 @@ export default function Map({
         () => [
             { layerId: "satellite-base", condition: showSatellite },
             { layerId: "basic-base", condition: !showSatellite },
+            { layerId: "hillshade", condition: showTerrain },
             { layerId: "coastline", condition: showCoastlines },
             { layerId: "capitals-points", condition: showCapitals },
             {
@@ -154,6 +165,7 @@ export default function Map({
             showCapitals,
             showContinents,
             showHeatmap,
+            showTerrain,
             showAirports,
         ]
     );
@@ -228,70 +240,6 @@ export default function Map({
             .join(", ");
     }, []);
 
-    const createPopupContent = useCallback(
-        (props: CountryProps): string => {
-            const {
-                capital,
-                country,
-                population,
-                flag,
-                flagAlt,
-                currencies,
-                area,
-                languages,
-                car,
-                continents,
-            } = props;
-
-            return `
-            <div style="padding: 12px; max-width: 320px;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-                    <img src="${flag}" alt="${flagAlt || `${country} flag`}" 
-                         style="width: 40px; height: 30px; object-fit: cover; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" />
-                    <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
-                        country
-                    )}" style="margin: 0; font-size: 18px; font-weight: bold;">${
-                country || "N/A"
-            }</a>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <p style="margin: 0; font-size: 14px;"><strong>Capital:</strong> 
-                        <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
-                            capital
-                        )}">${capital || "N/A"}</a>
-                    </p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Population:</strong> ${
-                        population ? Number(population).toLocaleString() : "N/A"
-                    }</p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Area:</strong> ${
-                        area ? `${Number(area).toLocaleString()} km²` : "N/A"
-                    }</p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Languages:</strong> ${
-                        languages ? formatLanguages(languages) : "N/A"
-                    }</p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Currencies:</strong> <a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
-                        currencies
-                    )}">${currencies || "N/A"}</a></p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Driving Side:</strong> ${
-                        car?.side || "N/A"
-                    }</p>
-                    <p style="margin: 0; font-size: 14px;"><strong>Continent:</strong> ${
-                        continents
-                            .map(
-                                (continent) =>
-                                    `<a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
-                                        continent
-                                    )}">${continent}</a>`
-                            )
-                            .join(", ") || "N/A"
-                    }</p>
-                </div>
-            </div>
-        `;
-        },
-        [formatLanguages]
-    );
-
     const clearHoveredCountry = useCallback(() => {
         const map = mapRef.current;
         if (!map || hoveredCountryId.current === null) return;
@@ -327,6 +275,38 @@ export default function Map({
             const map = mapRef.current;
             if (!map) return;
 
+            const airportFeatures = map.queryRenderedFeatures(e.point, {
+                layers: [
+                    "airports-large",
+                    "airports-medium",
+                    "airports-small",
+                    "airports-heliport",
+                    "airports-seaplane",
+                    "airports-closed",
+                    "airports-balloonport",
+                ],
+            });
+
+            if (airportFeatures.length > 0) {
+                const airport = airportFeatures[0].properties;
+
+                const airportPopupContent = createAirportPopup({
+                    name: airport?.name || "Unknown Airport",
+                    link: airport?.wikipedia_link,
+                });
+
+                popupRef.current?.remove();
+                popupRef.current = new Popup({
+                    closeButton: true,
+                    closeOnClick: false,
+                    maxWidth: "none",
+                })
+                    .setLngLat(e.lngLat)
+                    .setHTML(airportPopupContent)
+                    .addTo(map);
+                return;
+            }
+
             const features = map.queryRenderedFeatures(e.point, {
                 layers: ["countries-fill"],
             });
@@ -356,7 +336,10 @@ export default function Map({
                 continents: [CONTINENT],
             };
 
-            const popupContent = createPopupContent(enrichedProperties);
+            const popupContent = createCountryPopup(
+                enrichedProperties,
+                formatLanguages
+            );
 
             popupRef.current?.remove();
             popupRef.current = new Popup({
@@ -367,7 +350,7 @@ export default function Map({
                 .setHTML(popupContent)
                 .addTo(map);
         },
-        [createPopupContent]
+        [formatLanguages]
     );
 
     const handleMouseMove = useCallback(
@@ -419,6 +402,49 @@ export default function Map({
             popupRef.current?.remove();
         };
     }, [handleClick, handleMouseMove]);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const applyProjection = () => {
+            if (showGlobe) {
+                map.setProjection({ type: "globe" });
+                map.setZoom(1.3);
+                map.easeTo({ center: [0, 20], duration: 1000 });
+            } else {
+                map.setProjection({ type: "mercator" });
+            }
+        };
+
+        if (map.isStyleLoaded()) {
+            applyProjection();
+        } else {
+            map.once("load", applyProjection);
+        }
+    }, [showGlobe]);
+
+    useEffect(() => {
+        const map = mapRef.current;
+        if (!map) return;
+
+        const applyTerrain = () => {
+            if (showTerrain) {
+                map.setTerrain({
+                    source: "terrainSource",
+                    exaggeration: 1.5,
+                });
+            } else {
+                map.setTerrain(null);
+            }
+        };
+
+        if (map.isStyleLoaded()) {
+            applyTerrain();
+        } else {
+            map.once("load", applyTerrain);
+        }
+    }, [showTerrain]);
 
     return (
         <>

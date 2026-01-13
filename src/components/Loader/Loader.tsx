@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../styles/loader.css";
+import "./Loader.css";
 
 type Props = {
     isLoading: boolean;

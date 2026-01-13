@@ -13,6 +13,16 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "satellite",
     },
     {
+        id: "hillshade",
+        type: "hillshade",
+        source: "terrainSource",
+
+        paint: {
+            "hillshade-exaggeration": 0.4,
+            "hillshade-shadow-color": "#000000",
+        },
+    },
+    {
         id: "population-choropleth",
         type: "fill",
         source: "countries",
@@ -117,7 +127,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "fill-opacity": 0.4,
         },
     },
-    // Large airports
     {
         id: "airports-large",
         type: "circle",
@@ -130,7 +139,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Medium airports
     {
         id: "airports-medium",
         type: "circle",
@@ -143,7 +151,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Small airports
     {
         id: "airports-small",
         type: "circle",
@@ -156,7 +163,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Heliports
     {
         id: "airports-heliport",
         type: "circle",
@@ -169,7 +175,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Seaplane bases
     {
         id: "airports-seaplane",
         type: "circle",
@@ -182,7 +187,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Balloonports
     {
         id: "airports-balloonport",
         type: "circle",
@@ -195,7 +199,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-stroke-color": "#ffffff",
         },
     },
-    // Closed airports
     {
         id: "airports-closed",
         type: "circle",
@@ -209,7 +212,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "circle-opacity": 0.6,
         },
     },
-    // Large airport labels
     {
         id: "airports-labels-large",
         type: "symbol",
@@ -228,7 +230,6 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "text-halo-width": 2,
         },
     },
-    // Medium airport labels
     {
         id: "airports-labels-medium",
         type: "symbol",

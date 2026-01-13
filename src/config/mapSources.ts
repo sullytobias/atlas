@@ -36,6 +36,15 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         type: "geojson",
         data: airportsData as any,
     },
+    terrainSource: {
+        type: "raster-dem",
+        tiles: [
+            "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+        ],
+        encoding: "terrarium",
+        tileSize: 256,
+        maxzoom: 15,
+    },
 };
 
 

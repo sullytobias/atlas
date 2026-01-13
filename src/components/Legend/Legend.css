@@ -1,0 +1,117 @@
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    position: absolute;
+    bottom: 20px;
+    z-index: 1000;
+}
+
+.legendPanel {
+    position: absolute;
+    bottom: 68px;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    animation: fadeIn 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.legendTitle {
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.legendOrb {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.legendOrb.closed {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    filter: grayscale(0.3);
+}
+
+.legendOrb.open {
+    background-color: #9370db;
+    border: 2px solid #9370db;
+    box-shadow: 0 4px 20px rgba(147, 112, 219, 0.6),
+        0 0 40px rgba(147, 112, 219, 0.3);
+}
+
+.legendOrb:hover {
+    transform: scale(1.15);
+}
+
+.legendOrb.closed:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.legendOrb.open:hover {
+    box-shadow: 0 6px 24px rgba(147, 112, 219, 0.7),
+        0 0 50px rgba(147, 112, 219, 0.4);
+}
+
+.legendOrb::before {
+    content: attr(data-title);
+    position: absolute;
+    bottom: 58px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+.legendOrb:hover::before {
+    opacity: 1;
+}
+
+.icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.icon.closed {
+    transform: rotate(0deg);
+}
+
+.icon.open {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transform: rotate(180deg);
+}
