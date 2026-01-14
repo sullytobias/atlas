@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import Map from "./components/Map";
 import MapControls from "./components/MapControls/MapControls";
 import Legend from "./components/Legend/Legend";
 import { CONTINENTS } from "./constants/continents";
+import { useLoadingStore, useMapStore } from "./store/loadingStore";
 
 const colors = [
     { color: "#87CEEB", label: "< 1M" },
@@ -14,42 +15,19 @@ const colors = [
 ];
 
 export default function App() {
-    const [showCoastlines, setShowCoastlines] = useState(false);
-    const [showSatellite, setShowSatellite] = useState(false);
-    const [showCapitals, setShowCapitals] = useState(false);
-    const [showContinents, setShowContinents] = useState(false);
-    const [showHeatmap, setShowHeatmap] = useState(false);
-    const [showTerrain, setShowTerrain] = useState(false);
-    const [showAirports, setShowAirports] = useState({
-        large: false,
-        medium: false,
-        small: false,
-        heliport: false,
-        seaplane: false,
-        closed: false,
-        balloonport: false,
-    });
-    const [showGlobe, setShowGlobe] = useState(false);
-    const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
-        {}
+    const { clearLoading, clearAllLoading } = useLoadingStore();
+    const { showContinents, showHeatmap } = useMapStore();
+
+    const handleLoadingComplete = useCallback(
+        (key: string) => {
+            if (key === "all") {
+                clearAllLoading();
+            } else {
+                clearLoading(key);
+            }
+        },
+        [clearLoading, clearAllLoading]
     );
-
-    const handleLoadingComplete = useCallback((key: string) => {
-        if (key === "all") {
-            setLoadingStates({});
-        } else {
-            setLoadingStates((prev) => ({ ...prev, [key]: false }));
-        }
-    }, []);
-
-    const handleToggleWithLoading = (
-        key: string,
-        toggleFn: (value: boolean) => void,
-        currentValue: boolean
-    ) => {
-        setLoadingStates((prev) => ({ ...prev, [key]: true }));
-        toggleFn(!currentValue);
-    };
 
     const legendSections = [
         {
@@ -168,97 +146,9 @@ export default function App() {
         <>
             <Legend sections={legendSections} />
 
-            <MapControls
-                showCoastlines={showCoastlines}
-                onToggleCoastlines={() =>
-                    handleToggleWithLoading(
-                        "coastlines",
-                        setShowCoastlines,
-                        showCoastlines
-                    )
-                }
-                showSatellite={showSatellite}
-                onToggleSatellite={() =>
-                    handleToggleWithLoading(
-                        "satellite",
-                        setShowSatellite,
-                        showSatellite
-                    )
-                }
-                showCapitals={showCapitals}
-                onToggleCapitals={() =>
-                    handleToggleWithLoading(
-                        "capitals",
-                        setShowCapitals,
-                        showCapitals
-                    )
-                }
-                showContinents={showContinents}
-                onToggleContinents={() =>
-                    handleToggleWithLoading(
-                        "continents",
-                        setShowContinents,
-                        showContinents
-                    )
-                }
-                showHeatmap={showHeatmap}
-                onToggleHeatmap={() =>
-                    handleToggleWithLoading(
-                        "heatmap",
-                        setShowHeatmap,
-                        showHeatmap
-                    )
-                }
-                showAirports={showAirports}
-                onToggleAirports={setShowAirports}
-                showTerrain={showTerrain}
-                onToggleTerrain={() =>
-                    handleToggleWithLoading(
-                        "terrain",
-                        setShowTerrain,
-                        showTerrain
-                    )
-                }
-                loadingStates={loadingStates}
-                setLoadingStates={setLoadingStates}
-            />
+            <MapControls />
 
-            <Map
-                showCoastlines={showCoastlines}
-                showSatellite={showSatellite}
-                showCapitals={showCapitals}
-                showContinents={showContinents}
-                showHeatmap={showHeatmap}
-                showGlobe={showGlobe}
-                showAirports={showAirports}
-                showTerrain={showTerrain}
-                onLoadingComplete={handleLoadingComplete}
-            />
-
-            <button
-                onClick={() => setShowGlobe(!showGlobe)}
-                style={{
-                    position: "absolute",
-                    bottom: "30px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    zIndex: 10,
-                    fontSize: "50px",
-                    backgroundColor: "transparent",
-                    border: "none",
-                    borderRadius: "50%",
-                    width: "56px",
-                    height: "56px",
-                    cursor: "pointer",
-                    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.12)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transition: "all 0.3s ease",
-                }}
-            >
-                {showGlobe ? "🗺️" : "🌍"}
-            </button>
+            <Map onLoadingComplete={handleLoadingComplete} />
         </>
     );
 }

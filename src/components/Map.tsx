@@ -2,13 +2,11 @@ import { useMemo, useRef, useEffect, useCallback } from "react";
 import type { StyleSpecification } from "maplibre-gl";
 import { Popup, MapMouseEvent } from "maplibre-gl";
 
-import "maplibre-gl/dist/maplibre-gl.css";
-import "../styles/map.css";
-
 import { MAP_SOURCES } from "../config/mapSources";
 import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
+import { useMapStore } from "../store/loadingStore";
 import countryData from "../data/data.json";
 import SimpleLoader from "./SimpleLoader/SimpleLoader";
 import {
@@ -16,23 +14,11 @@ import {
     createAirportPopup,
 } from "../utils/popupTemplates";
 
+import "maplibre-gl/dist/maplibre-gl.css";
+import "../styles/map.css";
+
 type Props = {
-    showCoastlines: boolean;
-    showSatellite: boolean;
-    showCapitals: boolean;
-    showContinents: boolean;
-    showHeatmap: boolean;
-    showGlobe?: boolean;
-    showTerrain?: boolean;
-    showAirports?: {
-        large?: boolean;
-        medium?: boolean;
-        small?: boolean;
-        heliport?: boolean;
-        seaplane?: boolean;
-        closed?: boolean;
-        balloonport?: boolean;
-    };
+    onLoadingComplete?: (key: string) => void;
 };
 
 type CountryProps = {
@@ -64,31 +50,43 @@ type CountryDataFeature = {
 };
 
 const CODE_MAPPING: Record<string, string> = {
-    SDS: "SSD",
+    SSD: "SDS",
+    UNK: "KOS",
+    PSE: "PSX",
+    ESH: "SAH",
 };
 
-export default function Map({
-    showCoastlines,
-    showSatellite,
-    showCapitals = false,
-    showContinents = false,
-    showHeatmap = false,
-    showGlobe = false,
-    showTerrain = false,
-    showAirports = {
-        large: false,
-        medium: false,
-        small: false,
-        heliport: false,
-        seaplane: false,
-        closed: false,
-        balloonport: false,
-    },
-    onLoadingComplete,
-}: Props & { onLoadingComplete?: (key: string) => void }) {
+const ADDITIONAL_TERRITORIES: Record<string, string[]> = {
+    CYP: ["CYN"],
+    SOM: ["SOL"],
+    AFG: ["KAB"],
+};
+
+const REVERSE_CODE_MAPPING: Record<string, string> = {
+    SDS: "SSD",
+    KOS: "UNK",
+    PSX: "PSE",
+    SAH: "ESH",
+    CYN: "CYP",
+    SOL: "SOM",
+    KAB: "AFG",
+};
+
+export default function Map({ onLoadingComplete }: Props) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
+
+    const {
+        showCoastlines,
+        showSatellite,
+        showCapitals,
+        showContinents,
+        showHeatmap,
+        showGlobe,
+        showTerrain,
+        showAirports,
+    } = useMapStore();
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -201,6 +199,7 @@ export default function Map({
                     CODE_MAPPING[feature.properties.cca3] ||
                     feature.properties.cca3;
 
+                // Set population for main territory
                 const countryFeatures = map.querySourceFeatures("countries", {
                     sourceLayer: "countries",
                     filter: ["==", "ADM0_A3", cca3],
@@ -220,6 +219,36 @@ export default function Map({
                         );
                     }
                 });
+
+                const additionalTerritories =
+                    ADDITIONAL_TERRITORIES[feature.properties.cca3];
+                if (additionalTerritories) {
+                    additionalTerritories.forEach((territoryCode) => {
+                        const additionalFeatures = map.querySourceFeatures(
+                            "countries",
+                            {
+                                sourceLayer: "countries",
+                                filter: ["==", "ADM0_A3", territoryCode],
+                            }
+                        );
+
+                        additionalFeatures.forEach((f) => {
+                            if (f.id !== undefined) {
+                                map.setFeatureState(
+                                    {
+                                        source: "countries",
+                                        sourceLayer: "countries",
+                                        id: f.id,
+                                    },
+                                    {
+                                        population:
+                                            feature.properties.population,
+                                    }
+                                );
+                            }
+                        });
+                    });
+                }
             });
         };
 
@@ -333,7 +362,7 @@ export default function Map({
             }
 
             const { ADM0_A3, CONTINENT } = features[0].properties || {};
-            const mappedCode = CODE_MAPPING[ADM0_A3] || ADM0_A3;
+            const mappedCode = REVERSE_CODE_MAPPING[ADM0_A3] || ADM0_A3;
 
             if (!mappedCode) return;
 
