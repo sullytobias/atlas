@@ -30,6 +30,7 @@ type Props = {
 };
 
 export default function SearchBar({ onLocationSelect }: Props) {
+    const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [results, setResults] = useState<SearchResult[]>([]);
     const [showResults, setShowResults] = useState(false);
@@ -52,8 +53,12 @@ export default function SearchBar({ onLocationSelect }: Props) {
 
         countries.forEach((country) => {
             const { properties, geometry } = country;
-            
-            if (!properties.capital || !geometry.coordinates || geometry.coordinates.length !== 2) {
+
+            if (
+                !properties.capital ||
+                !geometry.coordinates ||
+                geometry.coordinates.length !== 2
+            ) {
                 return;
             }
 
@@ -69,8 +74,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
                     coordinates: coords,
                     matchType: "country",
                 });
-            }
-            else if (capitalName.includes(searchLower)) {
+            } else if (capitalName.includes(searchLower)) {
                 filteredResults.push({
                     country: properties.country,
                     capital: properties.capital,
@@ -101,7 +105,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
             return aCountry.localeCompare(bCountry);
         });
 
-        setResults(filteredResults.slice(0, 10)); 
+        setResults(filteredResults.slice(0, 10));
         setShowResults(true);
     }, [searchTerm, countries]);
 
@@ -122,10 +126,10 @@ export default function SearchBar({ onLocationSelect }: Props) {
     }, []);
 
     const handleResultClick = (result: SearchResult) => {
-        const zoom = 6; 
+        const zoom = 6;
         onLocationSelect(result.coordinates, zoom);
         setSearchTerm("");
-        setShowResults(false);
+        setIsOpen(false);
     };
 
     const handleClear = () => {
@@ -134,63 +138,107 @@ export default function SearchBar({ onLocationSelect }: Props) {
         setShowResults(false);
     };
 
+    const handleToggle = () => {
+        setIsOpen(!isOpen);
+        if (isOpen) {
+            setSearchTerm("");
+            setResults([]);
+            setShowResults(false);
+        }
+    };
+
+    // For transition: add a class when open/closed
+    const wrapperClass = isOpen
+        ? "search-bar-wrapper search-bar-wrapper-enter-active"
+        : "search-bar-wrapper search-bar-wrapper-exit-active";
 
     return (
         <div className="search-bar-container" ref={searchBarRef}>
-            <div className="search-bar-wrapper">
-                <div className="search-bar-input-container">
-                    <span className="search-bar-icon">🔍</span>
-                    <input
-                        type="text"
-                        className="search-bar-input"
-                        placeholder="Search for a country or capital..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        onFocus={() => {
-                            if (results.length > 0) setShowResults(true);
-                        }}
-                    />
-                    {searchTerm && (
-                        <button
-                            className="search-bar-clear"
-                            onClick={handleClear}
-                            aria-label="Clear search"
-                        >
-                            ✕
-                        </button>
-                    )}
-                </div>
+            {!isOpen && (
+                <button
+                    className="search-bar-trigger"
+                    onClick={handleToggle}
+                    aria-label="Open search"
+                >
+                    🔍
+                </button>
+            )}
 
-                {showResults && results.length > 0 && (
-                    <div className="search-bar-results">
-                        {results.map((result, index) => (
-                            <div
-                                key={`${result.country}-${index}`}
-                                className="search-bar-result-item"
-                                onClick={() => handleResultClick(result)}
+            <div
+                className={wrapperClass}
+                style={{
+                    pointerEvents: isOpen ? "auto" : "none",
+                    opacity: isOpen ? 1 : 0,
+                }}
+            >
+                {isOpen && (
+                    <>
+                        <div className="search-bar-input-container">
+                            <span className="search-bar-icon">🔍</span>
+                            <input
+                                type="text"
+                                className="search-bar-input"
+                                placeholder="Search for a country or capital..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onFocus={() => {
+                                    if (results.length > 0)
+                                        setShowResults(true);
+                                }}
+                                autoFocus
+                            />
+                            {searchTerm && (
+                                <button
+                                    className="search-bar-clear"
+                                    onClick={handleClear}
+                                    aria-label="Clear search"
+                                >
+                                    ✕
+                                </button>
+                            )}
+                            <button
+                                className="search-bar-close"
+                                onClick={handleToggle}
+                                aria-label="Close search"
                             >
-                                <div className="search-bar-result-item-main">
-                                    <span className="search-bar-result-flag">
-                                        🌍
-                                    </span>
-                                    <span className="search-bar-result-country">
-                                        {result.country}
-                                    </span>
-                                </div>
-                                <div className="search-bar-result-capital">
-                                    Capital: {result.capital}
+                                ✕
+                            </button>
+                        </div>
+
+                        {showResults && results.length > 0 && (
+                            <div className="search-bar-results">
+                                {results.map((result, index) => (
+                                    <div
+                                        key={`${result.country}-${index}`}
+                                        className="search-bar-result-item"
+                                        onClick={() =>
+                                            handleResultClick(result)
+                                        }
+                                    >
+                                        <div className="search-bar-result-item-main">
+                                            <span className="search-bar-result-flag">
+                                                🌍
+                                            </span>
+                                            <span className="search-bar-result-country">
+                                                {result.country}
+                                            </span>
+                                        </div>
+                                        <div className="search-bar-result-capital">
+                                            Capital: {result.capital}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {showResults && results.length === 0 && searchTerm && (
+                            <div className="search-bar-results">
+                                <div className="search-bar-no-results">
+                                    No countries or capitals found
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                )}
-
-                {showResults && results.length === 0 && searchTerm && (
-                    <div className="search-bar-results">
-                        <div className="search-bar-no-results">
-                            No countries or capitals found
-                        </div>
-                    </div>
+                        )}
+                    </>
                 )}
             </div>
         </div>

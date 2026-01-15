@@ -8,11 +8,57 @@
     z-index: 1000;
 }
 
+.search-bar-trigger {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    margin: 0 auto;
+}
+
+.search-bar-trigger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+.search-bar-trigger:active {
+    transform: scale(0.95);
+}
+
 .search-bar-wrapper {
     position: relative;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-bar-wrapper-enter {
+    opacity: 0;
+    transform: scale(0.95);
+}
+.search-bar-wrapper-enter-active {
+    opacity: 1;
+    transform: scale(1);
+}
+.search-bar-wrapper-exit {
+    opacity: 1;
+    transform: scale(1);
+}
+.search-bar-wrapper-exit-active {
+    opacity: 0;
+    transform: scale(0.95);
 }
 
 .search-bar-input-container {
@@ -55,6 +101,24 @@
 
 .search-bar-clear:hover {
     color: #6b7280;
+}
+
+.search-bar-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #9ca3af;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    margin-left: 4px;
+}
+
+.search-bar-close:hover {
+    color: #ef4444;
 }
 
 .search-bar-results {
@@ -147,7 +211,7 @@
 
 @media (max-width: 640px) {
     .search-bar-container {
-        width: calc(100% - 32px);
+        width: calc(85% - 32px);
         max-width: none;
     }
 }
