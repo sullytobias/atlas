@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import "./Legend.css";
 
 type LegendSection = {
@@ -15,7 +15,43 @@ type Props = {
 export default function Legend({ sections }: Props) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const hasVisibleSections = sections.some((section) => section.isVisible);
+    const hasVisibleSections = useMemo(
+        () => sections.some((section) => section.isVisible),
+        [sections]
+    );
+
+    const handleOpen = useCallback(() => setIsOpen(true), []);
+    const handleClose = useCallback(() => setIsOpen(false), []);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsOpen(false);
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen]);
+
+    const visibleSections = useMemo(
+        () => sections.filter((s) => s.isVisible),
+        [sections]
+    );
+
+    const LegendSectionItem: React.FC<{
+        section: LegendSection;
+        isLast: boolean;
+    }> = ({ section, isLast }) => (
+        <div>
+            <div className="legend-section">
+                <div className="legend-section-title">
+                    <span className="legend-section-icon">{section.icon}</span>
+                    {section.title}
+                </div>
+                {section.content}
+            </div>
+            {!isLast && <div className="legend-divider" />}
+        </div>
+    );
 
     if (!hasVisibleSections && !isOpen) return null;
 
@@ -24,8 +60,9 @@ export default function Legend({ sections }: Props) {
             {!isOpen && (
                 <button
                     className="legend-trigger"
-                    onClick={() => setIsOpen(true)}
+                    onClick={handleOpen}
                     style={{ top: "50%", transform: "translateY(-50%)" }}
+                    aria-label="Open legend"
                 >
                     <span className="legend-trigger-text">Legend</span>
                 </button>
@@ -35,7 +72,10 @@ export default function Legend({ sections }: Props) {
             {isOpen && (
                 <div
                     className="legend-overlay"
-                    onClick={() => setIsOpen(false)}
+                    onClick={handleClose}
+                    aria-label="Close legend overlay"
+                    tabIndex={-1}
+                    role="presentation"
                 />
             )}
 
@@ -49,35 +89,21 @@ export default function Legend({ sections }: Props) {
                         </div>
                         <button
                             className="legend-close-button"
-                            onClick={() => setIsOpen(false)}
+                            onClick={handleClose}
+                            aria-label="Close legend"
                         >
                             ✕
                         </button>
                     </div>
 
                     <div className="legend-drawer-content">
-                        {sections.map(
-                            (section, index) =>
-                                section.isVisible && (
-                                    <div key={section.title}>
-                                        <div className="legend-section">
-                                            <div className="legend-section-title">
-                                                <span className="legend-section-icon">
-                                                    {section.icon}
-                                                </span>
-                                                {section.title}
-                                            </div>
-                                            {section.content}
-                                        </div>
-                                        {index <
-                                            sections.filter((s) => s.isVisible)
-                                                .length -
-                                                1 && (
-                                            <div className="legend-divider" />
-                                        )}
-                                    </div>
-                                )
-                        )}
+                        {visibleSections.map((section, index) => (
+                            <LegendSectionItem
+                                key={section.title}
+                                section={section}
+                                isLast={index === visibleSections.length - 1}
+                            />
+                        ))}
                     </div>
                 </div>
             )}
