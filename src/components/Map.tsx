@@ -1,4 +1,11 @@
-import { useMemo, useRef, useEffect, useCallback } from "react";
+import {
+    useMemo,
+    useRef,
+    useEffect,
+    useCallback,
+    useImperativeHandle,
+    forwardRef,
+} from "react";
 import type { StyleSpecification } from "maplibre-gl";
 import { Popup, MapMouseEvent } from "maplibre-gl";
 
@@ -19,6 +26,10 @@ import "../styles/map.css";
 
 type Props = {
     onLoadingComplete?: (key: string) => void;
+};
+
+export type MapRef = {
+    flyToLocation: (coordinates: [number, number], zoom?: number) => void;
 };
 
 type CountryProps = {
@@ -72,7 +83,10 @@ const REVERSE_CODE_MAPPING: Record<string, string> = {
     KAB: "AFG",
 };
 
-export default function Map({ onLoadingComplete }: Props) {
+export default forwardRef<MapRef, Props>(function Map(
+    { onLoadingComplete },
+    ref
+) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const popupRef = useRef<Popup | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
@@ -98,6 +112,28 @@ export default function Map({ onLoadingComplete }: Props) {
     );
 
     const mapRef = useMapInstance(containerRef, style);
+
+    // Expose flyToLocation method via ref
+    useImperativeHandle(
+        ref,
+        () => ({
+            flyToLocation: (
+                coordinates: [number, number],
+                zoom: number = 6
+            ) => {
+                const map = mapRef.current;
+                if (!map) return;
+
+                map.flyTo({
+                    center: coordinates,
+                    zoom: zoom,
+                    duration: 2000,
+                    essential: true,
+                });
+            },
+        }),
+        [mapRef]
+    );
 
     useEffect(() => {
         const map = mapRef.current;
@@ -199,7 +235,6 @@ export default function Map({ onLoadingComplete }: Props) {
                     CODE_MAPPING[feature.properties.cca3] ||
                     feature.properties.cca3;
 
-                // Set population for main territory
                 const countryFeatures = map.querySourceFeatures("countries", {
                     sourceLayer: "countries",
                     filter: ["==", "ADM0_A3", cca3],
@@ -495,4 +530,4 @@ export default function Map({ onLoadingComplete }: Props) {
             <div ref={containerRef} className="map" />
         </>
     );
-}
+});

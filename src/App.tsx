@@ -1,7 +1,8 @@
-import { useCallback } from "react";
-import Map from "./components/Map";
+import { useCallback, useRef } from "react";
+import Map, { MapRef } from "./components/Map";
 import MapControls from "./components/MapControls/MapControls";
 import Legend from "./components/Legend/Legend";
+import SearchBar from "./components/SearchBar/SearchBar";
 import { CONTINENTS } from "./constants/continents";
 import { useLoadingStore, useMapStore } from "./store/loadingStore";
 
@@ -17,6 +18,7 @@ const colors = [
 export default function App() {
     const { clearLoading, clearAllLoading } = useLoadingStore();
     const { showContinents, showHeatmap } = useMapStore();
+    const mapRef = useRef<MapRef>(null);
 
     const handleLoadingComplete = useCallback(
         (key: string) => {
@@ -27,6 +29,15 @@ export default function App() {
             }
         },
         [clearLoading, clearAllLoading]
+    );
+
+    const handleLocationSelect = useCallback(
+        (coordinates: [number, number], zoom?: number) => {
+            if (mapRef.current) {
+                mapRef.current.flyToLocation(coordinates, zoom);
+            }
+        },
+        []
     );
 
     const legendSections = [
@@ -144,11 +155,13 @@ export default function App() {
 
     return (
         <>
+            <SearchBar onLocationSelect={handleLocationSelect} />
+
             <Legend sections={legendSections} />
 
             <MapControls />
 
-            <Map onLoadingComplete={handleLoadingComplete} />
+            <Map ref={mapRef} onLoadingComplete={handleLoadingComplete} />
         </>
     );
 }

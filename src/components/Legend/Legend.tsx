@@ -27,7 +27,7 @@ export default function Legend({ sections }: Props) {
                 <button
                     className="legend-trigger"
                     onClick={() => setIsOpen(true)}
-                    style={{ bottom: "20px" }}
+                    style={{ top: "50%", transform: "translateY(-50%)" }}
                 >
                     <span className="legend-trigger-text">Legend</span>
                 </button>
