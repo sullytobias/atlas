@@ -147,7 +147,6 @@ export default function SearchBar({ onLocationSelect }: Props) {
         }
     };
 
-    // For transition: add a class when open/closed
     const wrapperClass = isOpen
         ? "search-bar-wrapper search-bar-wrapper-enter-active"
         : "search-bar-wrapper search-bar-wrapper-exit-active";

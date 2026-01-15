@@ -17,8 +17,6 @@ export default function Legend({ sections }: Props) {
 
     const hasVisibleSections = sections.some((section) => section.isVisible);
 
-    const showHint = hasVisibleSections && !isOpen;
-
     if (!hasVisibleSections && !isOpen) return null;
 
     return (
