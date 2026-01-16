@@ -4,6 +4,10 @@
   background-color: #111827;
 }
 
+.maplibregl-popup {
+  z-index: 1000;
+}
+
 .maplibregl-popup-content {
   padding: 0;
   border-radius: 10px;

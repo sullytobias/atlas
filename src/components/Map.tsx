@@ -111,7 +111,6 @@ export { REVERSE_CODE_MAPPING };
 
         const mapRef = useMapInstance(containerRef, style);
 
-        // Expose flyToLocation method via ref
         useImperativeHandle(
             ref,
             () => ({
