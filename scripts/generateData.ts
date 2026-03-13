@@ -4,43 +4,112 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+type RestCountryCurrency = {
+    name: string;
+};
+
+type RestCountry = {
+    name: {
+        common: string;
+    };
+    capital?: string[];
+    capitalInfo?: {
+        latlng?: [number, number];
+    };
+    population: number;
+    flags: {
+        svg?: string;
+        png?: string;
+        alt?: string;
+    };
+    currencies?: Record<string, RestCountryCurrency>;
+    area: number;
+    car?: {
+        signs?: string[];
+        side?: "left" | "right";
+    };
+    languages?: Record<string, string>;
+    cca3?: string;
+};
+
+type CountryFeature = {
+    type: "Feature";
+    geometry: {
+        type: "Point";
+        coordinates: [number, number];
+    };
+    properties: {
+        capital: string;
+        country: string;
+        population: number;
+        flag: string;
+        flagAlt: string;
+        currencies: string;
+        area: number;
+        populationDensity: number;
+        languages: string;
+        car: {
+            signs: string[];
+            side: "left" | "right";
+        };
+        cca3: string;
+    };
+};
+
 async function generateData() {
     const response = await fetch(
         "https://restcountries.com/v3.1/all?fields=name,capital,capitalInfo,population,flags,currencies,area,car,languages,cca3"
     );
-    const countries = await response.json();
+    if (!response.ok) {
+        throw new Error(
+            `REST Countries request failed with status ${response.status}`
+        );
+    }
+
+    const countries = (await response.json()) as RestCountry[];
 
     const features = countries
-        .filter((c: any) => c.capital && c.capitalInfo?.latlng)
-        .map((c: any) => ({
+        .filter(
+            (
+                country
+            ): country is RestCountry & {
+                capital: [string, ...string[]];
+                capitalInfo: { latlng: [number, number] };
+            } => Boolean(country.capital?.[0] && country.capitalInfo?.latlng)
+        )
+        .map((country): CountryFeature => ({
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [c.capitalInfo.latlng[1], c.capitalInfo.latlng[0]],
+                coordinates: [
+                    country.capitalInfo.latlng[1],
+                    country.capitalInfo.latlng[0],
+                ],
             },
             properties: {
-                capital: c.capital[0],
-                country: c.name.common,
-                population: c.population,
-                flag: c.flags.svg || c.flags.png,
-                flagAlt: c.flags.alt || `Flag of ${c.name.common}`,
-                currencies: c.currencies
-                    ? Object.values(c.currencies)
-                          .map((cur: any) => cur.name)
+                capital: country.capital[0],
+                country: country.name.common,
+                population: country.population,
+                flag: country.flags.svg || country.flags.png || "",
+                flagAlt:
+                    country.flags.alt || `Flag of ${country.name.common}`,
+                currencies: country.currencies
+                    ? Object.values(country.currencies)
+                          .map((currency) => currency.name)
                           .join(", ")
                     : "N/A",
-                area: c.area,
-                populationDensity: c.area
-                    ? Math.round(c.population / c.area)
+                area: country.area,
+                populationDensity: country.area
+                    ? Math.round(country.population / country.area)
                     : 0,
-                languages: c.languages
-                    ? Object.values(c.languages).join(", ")
+                languages: country.languages
+                    ? Object.values(country.languages).join(", ")
                     : "N/A",
                 car: {
-                    signs: c.car?.signs || [],
-                    side: c.car?.side || "right",
+                    signs: country.car?.signs || [],
+                    side: country.car?.side || "right",
                 },
-                cca3: c.cca3 || "N/A",
+                cca3: country.cca3 || "N/A",
             },
         }));
 
@@ -57,4 +126,9 @@ async function generateData() {
     console.log(`Saved to ${outputPath}`);
 }
 
-generateData();
+generateData().catch((error: unknown) => {
+    const message =
+        error instanceof Error ? error.message : "Unknown data generation error";
+    console.error(message);
+    process.exitCode = 1;
+});

@@ -1,34 +1,23 @@
-import { useCallback, useRef } from "react";
-import Map, { MapRef } from "./components/Map";
-import MapControls from "./components/MapControls/MapControls";
-import Legend from "./components/Legend/Legend";
-import SearchBar from "./components/SearchBar/SearchBar";
-import { CONTINENTS } from "./constants/continents";
+import { lazy, Suspense, useCallback, useRef } from "react";
+import type { MapRef } from "./components/Map";
+import { buildLegendSections } from "./components/Legend/LegendSections";
 import { useLoadingStore, useMapStore } from "./store/loadingStore";
 
-const colors = [
-    { color: "#87CEEB", label: "< 1M" },
-    { color: "#4169E1", label: "1-10M" },
-    { color: "#FFA500", label: "10-50M" },
-    { color: "#FF4500", label: "50-100M" },
-    { color: "#DC143C", label: "100-500M" },
-    { color: "#8B008B", label: "> 500M" },
-];
+const Map = lazy(() => import("./components/Map"));
+const MapControls = lazy(() => import("./components/MapControls/MapControls"));
+const Legend = lazy(() => import("./components/Legend/Legend"));
+const SearchBar = lazy(() => import("./components/SearchBar/SearchBar"));
 
 export default function App() {
-    const { clearLoading, clearAllLoading } = useLoadingStore();
+    const { clearLoading } = useLoadingStore();
     const { showContinents, showHeatmap } = useMapStore();
     const mapRef = useRef<MapRef>(null);
 
     const handleLoadingComplete = useCallback(
         (key: string) => {
-            if (key === "all") {
-                clearAllLoading();
-            } else {
-                clearLoading(key);
-            }
+            clearLoading(key);
         },
-        [clearLoading, clearAllLoading]
+        [clearLoading]
     );
 
     const handleLocationSelect = useCallback(
@@ -40,128 +29,19 @@ export default function App() {
         []
     );
 
-    const legendSections = [
-        {
-            title: "Continents",
-            icon: "🗺️",
-            isVisible: showContinents,
-            content: (
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                    }}
-                >
-                    {CONTINENTS.filter((c) => c.name !== "Antarctica").map(
-                        (continent) => (
-                            <a
-                                key={continent.name}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "10px 12px",
-                                    borderRadius: "8px",
-                                    backgroundColor: "#f9fafb",
-                                    transition: "all 0.2s ease",
-                                    textDecoration: "none",
-                                    border: "1px solid #e5e7eb",
-                                }}
-                                href={continent.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <span
-                                    style={{
-                                        display: "inline-block",
-                                        width: "18px",
-                                        height: "18px",
-                                        backgroundColor: continent.color,
-                                        borderRadius: "4px",
-                                        marginRight: "12px",
-                                        border: "1px solid rgba(0,0,0,0.1)",
-                                    }}
-                                ></span>
-                                <span
-                                    style={{
-                                        fontSize: "14px",
-                                        fontWeight: "500",
-                                        marginRight: "auto",
-                                        color: "#374151",
-                                    }}
-                                >
-                                    {continent.name}
-                                </span>
-                                <span
-                                    style={{
-                                        fontSize: "14px",
-                                        color: "#6b7280",
-                                    }}
-                                >
-                                    🔗
-                                </span>
-                            </a>
-                        )
-                    )}
-                </div>
-            ),
-        },
-        {
-            title: "Population Density",
-            icon: "🔥",
-            isVisible: showHeatmap,
-            content: (
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "8px",
-                    }}
-                >
-                    {colors.map((item) => (
-                        <div
-                            key={item.label}
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "10px",
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width: "24px",
-                                    height: "24px",
-                                    backgroundColor: item.color,
-                                    borderRadius: "6px",
-                                    border: "1px solid rgba(0,0,0,0.1)",
-                                    flexShrink: 0,
-                                }}
-                            />
-                            <span
-                                style={{
-                                    fontSize: "13px",
-                                    color: "#374151",
-                                    fontWeight: "500",
-                                }}
-                            >
-                                {item.label}
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            ),
-        },
-    ];
+    const legendSections = buildLegendSections(showContinents, showHeatmap);
 
     return (
         <>
-            <SearchBar onLocationSelect={handleLocationSelect} />
-
-            <Legend sections={legendSections} />
-
-            <MapControls />
-
-            <Map ref={mapRef} onLoadingComplete={handleLoadingComplete} />
+            <Suspense fallback={null}>
+                <SearchBar onLocationSelect={handleLocationSelect} />
+                <Legend sections={legendSections} />
+                <MapControls />
+                <Map
+                    ref={mapRef}
+                    onLoadingComplete={handleLoadingComplete}
+                />
+            </Suspense>
         </>
     );
 }

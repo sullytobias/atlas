@@ -14,7 +14,6 @@ import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import { useMapStore } from "../store/loadingStore";
-import countryData from "../data/data.json";
 import SimpleLoader from "./SimpleLoader/SimpleLoader";
 import { useMapPopups } from "../hooks/useMapPopups";
 
@@ -29,6 +28,15 @@ export type MapRef = {
     flyToLocation: (coordinates: [number, number], zoom?: number) => void;
 };
 
+function escapeHtml(value: string): string {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
+
 type CountryProps = {
     capital: string;
     country: string;
@@ -41,46 +49,6 @@ type CountryProps = {
     car: { side: string };
     continents: string[];
 };
-
-type CountryDataFeature = {
-    properties: {
-        cca3: string;
-        capital: string;
-        country: string;
-        population: number;
-        flag: string;
-        flagAlt: string;
-        currencies: string;
-        area: number;
-        languages: string;
-        car: { side: string };
-    };
-};
-
-const CODE_MAPPING: Record<string, string> = {
-    SSD: "SDS",
-    UNK: "KOS",
-    PSE: "PSX",
-    ESH: "SAH",
-};
-
-const ADDITIONAL_TERRITORIES: Record<string, string[]> = {
-    CYP: ["CYN"],
-    SOM: ["SOL"],
-    AFG: ["KAB"],
-};
-
-const REVERSE_CODE_MAPPING: Record<string, string> = {
-    SDS: "SSD",
-    KOS: "UNK",
-    PSX: "PSE",
-    SAH: "ESH",
-    CYN: "CYP",
-    SOL: "SOM",
-    KAB: "AFG",
-};
-
-export { REVERSE_CODE_MAPPING };
 
     export default forwardRef<MapRef, Props>(function Map(
         { onLoadingComplete },
@@ -132,77 +100,91 @@ export { REVERSE_CODE_MAPPING };
             [mapRef]
         );
 
-        useEffect(() => {
-            const map = mapRef.current;
-            if (!map || !onLoadingComplete) return;
-
-            const handleIdle = () => {
-                if (onLoadingComplete) {
-                    onLoadingComplete("all");
-                }
-            };
-
-            map.on("idle", handleIdle);
-
-            return () => {
-                map.off("idle", handleIdle);
-            };
-        }, [onLoadingComplete]);
-
         const visibilityConfigs = useMemo(
             () => [
-                { layerId: "satellite-base", condition: showSatellite },
-                { layerId: "basic-base", condition: !showSatellite },
-                { layerId: "hillshade", condition: showTerrain },
-                { layerId: "coastline", condition: showCoastlines },
-                { layerId: "capitals-points", condition: showCapitals },
+                {
+                    layerId: "satellite-base",
+                    condition: showSatellite,
+                    loadingKey: "satellite",
+                },
+                {
+                    layerId: "basic-base",
+                    condition: !showSatellite,
+                    loadingKey: "satellite",
+                },
+                {
+                    layerId: "hillshade",
+                    condition: showTerrain,
+                },
+                {
+                    layerId: "coastline",
+                    condition: showCoastlines,
+                    loadingKey: "coastlines",
+                },
+                {
+                    layerId: "capitals-points",
+                    condition: showCapitals,
+                    loadingKey: "capitals",
+                },
                 {
                     layerId: "capitals-labels",
                     condition: showCapitals && showSatellite,
+                    loadingKey: "capitals",
                 },
                 {
                     layerId: "continents-fill",
                     condition: showContinents,
+                    loadingKey: "continents",
                 },
                 {
                     layerId: "population-choropleth",
                     condition: showHeatmap,
+                    loadingKey: "heatmap",
                 },
                 {
                     layerId: "airports-large",
                     condition: showAirports.large ?? false,
+                    loadingKey: "airport-large",
                 },
                 {
                     layerId: "airports-medium",
                     condition: showAirports.medium ?? false,
+                    loadingKey: "airport-medium",
                 },
                 {
                     layerId: "airports-small",
                     condition: showAirports.small ?? false,
+                    loadingKey: "airport-small",
                 },
                 {
                     layerId: "airports-heliport",
                     condition: showAirports.heliport ?? false,
+                    loadingKey: "airport-heliport",
                 },
                 {
                     layerId: "airports-seaplane",
                     condition: showAirports.seaplane ?? false,
+                    loadingKey: "airport-seaplane",
                 },
                 {
                     layerId: "airports-closed",
                     condition: showAirports.closed ?? false,
+                    loadingKey: "airport-closed",
                 },
                 {
                     layerId: "airports-balloonport",
                     condition: showAirports.balloonport ?? false,
+                    loadingKey: "airport-balloonport",
                 },
                 {
                     layerId: "airports-labels-large",
                     condition: showAirports.large ?? false,
+                    loadingKey: "airport-large",
                 },
                 {
                     layerId: "airports-labels-medium",
                     condition: showAirports.medium ?? false,
+                    loadingKey: "airport-medium",
                 },
             ],
             [
@@ -216,95 +198,7 @@ export { REVERSE_CODE_MAPPING };
             ]
         );
 
-        useLayerVisibility(mapRef, visibilityConfigs);
-
-        useEffect(() => {
-            const map = mapRef.current;
-            if (!map) return;
-
-            const loadPopulationData = () => {
-                const countriesDataTyped = countryData as {
-                    features: CountryDataFeature[];
-                };
-
-                countriesDataTyped.features.forEach((feature) => {
-                    const cca3 =
-                        CODE_MAPPING[feature.properties.cca3] ||
-                        feature.properties.cca3;
-
-                    const countryFeatures = map.querySourceFeatures(
-                        "countries",
-                        {
-                            sourceLayer: "countries",
-                            filter: ["==", "ADM0_A3", cca3],
-                        }
-                    );
-
-                    countryFeatures.forEach((f) => {
-                        if (f.id !== undefined) {
-                            map.setFeatureState(
-                                {
-                                    source: "countries",
-                                    sourceLayer: "countries",
-                                    id: f.id,
-                                },
-                                {
-                                    population: feature.properties.population,
-                                }
-                            );
-                        }
-                    });
-
-                    const additionalTerritories =
-                        ADDITIONAL_TERRITORIES[feature.properties.cca3];
-                    if (additionalTerritories) {
-                        additionalTerritories.forEach((territoryCode) => {
-                            const additionalFeatures = map.querySourceFeatures(
-                                "countries",
-                                {
-                                    sourceLayer: "countries",
-                                    filter: ["==", "ADM0_A3", territoryCode],
-                                }
-                            );
-
-                            additionalFeatures.forEach((f) => {
-                                if (f.id !== undefined) {
-                                    map.setFeatureState(
-                                        {
-                                            source: "countries",
-                                            sourceLayer: "countries",
-                                            id: f.id,
-                                        },
-                                        {
-                                            population:
-                                                feature.properties.population,
-                                        }
-                                    );
-                                }
-                            });
-                        });
-                    }
-                });
-            };
-
-            const onStyleLoad = () => {
-                if (map.isSourceLoaded("countries")) {
-                    loadPopulationData();
-                } else {
-                    map.once("sourcedata", (e) => {
-                        if (e.sourceId === "countries" && e.isSourceLoaded) {
-                            loadPopulationData();
-                        }
-                    });
-                }
-            };
-
-            if (map.isStyleLoaded()) {
-                onStyleLoad();
-            } else {
-                map.once("load", onStyleLoad);
-            }
-        }, []);
+        useLayerVisibility(mapRef, visibilityConfigs, onLoadingComplete);
 
         const formatLanguages = useCallback((languages: string): string => {
             return languages
@@ -312,9 +206,9 @@ export { REVERSE_CODE_MAPPING };
                 .map((lang) => lang.trim())
                 .map(
                     (lang) =>
-                        `<a target="_blank" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
+                        `<a target="_blank" rel="noopener noreferrer" href="https://en.wikipedia.org/wiki/${encodeURIComponent(
                             lang
-                        )}_language">${lang}</a>`
+                        )}_language">${escapeHtml(lang)}</a>`
                 )
                 .join(", ");
         }, []);
@@ -415,6 +309,15 @@ export { REVERSE_CODE_MAPPING };
                 } else {
                     map.setProjection({ type: "mercator" });
                 }
+
+                if (onLoadingComplete) {
+                    const clearGlobe = () => onLoadingComplete("globe");
+                    if (map.loaded()) {
+                        clearGlobe();
+                    } else {
+                        map.once("idle", clearGlobe);
+                    }
+                }
             };
 
             if (map.isStyleLoaded()) {
@@ -422,7 +325,7 @@ export { REVERSE_CODE_MAPPING };
             } else {
                 map.once("load", applyProjection);
             }
-        }, [showGlobe]);
+        }, [showGlobe, onLoadingComplete]);
 
         useEffect(() => {
             const map = mapRef.current;
@@ -437,6 +340,15 @@ export { REVERSE_CODE_MAPPING };
                 } else {
                     map.setTerrain(null);
                 }
+
+                if (onLoadingComplete) {
+                    const clearTerrain = () => onLoadingComplete("terrain");
+                    if (map.loaded()) {
+                        clearTerrain();
+                    } else {
+                        map.once("idle", clearTerrain);
+                    }
+                }
             };
 
             if (map.isStyleLoaded()) {
@@ -444,7 +356,7 @@ export { REVERSE_CODE_MAPPING };
             } else {
                 map.once("load", applyTerrain);
             }
-        }, [showTerrain]);
+        }, [showTerrain, onLoadingComplete]);
 
         return (
             <>

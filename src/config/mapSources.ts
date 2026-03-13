@@ -1,16 +1,18 @@
 import type { SourceSpecification } from "maplibre-gl";
 import countriesData from "../data/data.json";
-import continentsData from "../data/continents.json";
-import airportsData from "../data/airports.json";
+
+const continentsDataUrl = new URL("../data/continents.json", import.meta.url)
+    .href;
+const airportsDataUrl = new URL("../data/airports.json", import.meta.url).href;
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     countriesData: {
         type: "geojson",
-        data: countriesData as any,
+        data: countriesData,
     },
     populationHeatmap: {
         type: "geojson",
-        data: countriesData as any,
+        data: countriesData,
     },
     satellite: {
         type: "raster",
@@ -30,11 +32,11 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
     },
     continents: {
         type: "geojson",
-        data: continentsData as any,
+        data: continentsDataUrl,
     },
     airports: {
         type: "geojson",
-        data: airportsData as any,
+        data: airportsDataUrl,
     },
     terrainSource: {
         type: "raster-dem",
@@ -46,6 +48,3 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         maxzoom: 15,
     },
 };
-
-
-    

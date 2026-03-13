@@ -1,30 +1,11 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import countryData from "../../data/data.json";
+import {
+    getSearchResults,
+    type CountryDataItem,
+    type SearchResult,
+} from "./searchResults";
 import "./SearchBar.css";
-
-type CountryDataItem = {
-    properties: {
-        capital?: string;
-        country: string;
-        population: number;
-        flag: string;
-        flagAlt: string;
-        cca3: string;
-    };
-    geometry: {
-        type: string;
-        coordinates: [number, number] | null[];
-    };
-};
-
-type SearchResult = {
-    country: string;
-    capital: string;
-    flag: string;
-    flagAlt?: string;
-    coordinates: [number, number];
-    matchType: "country" | "capital";
-};
 
 type Props = {
     onLocationSelect: (coordinates: [number, number], zoom?: number) => void;
@@ -34,16 +15,17 @@ const SearchResultItem: React.FC<{
     result: SearchResult;
     onClick: () => void;
     isFocused: boolean;
-}> = ({ result, onClick, isFocused }) => (
-    <div
+    id: string;
+}> = ({ result, onClick, isFocused, id }) => (
+    <button
+        id={id}
+        type="button"
         className={`search-bar-result-item${isFocused ? " focused" : ""}`}
         onClick={onClick}
-        tabIndex={0}
         aria-label={`Select ${result.country} (${result.capital})`}
-        role="button"
-        onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") onClick();
-        }}
+        role="option"
+        aria-selected={isFocused}
+        tabIndex={-1}
     >
         <div className="search-bar-result-item-main">
             <img
@@ -58,7 +40,7 @@ const SearchResultItem: React.FC<{
         <div className="search-bar-result-capital">
             Capital: {result.capital}
         </div>
-    </div>
+    </button>
 );
 
 export default function SearchBar({ onLocationSelect }: Props) {
@@ -75,54 +57,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
     }, []);
 
     const results = useMemo(() => {
-        if (!searchTerm.trim()) return [];
-        const searchLower = searchTerm.toLowerCase();
-        const filteredResults: SearchResult[] = [];
-        countries.forEach((country) => {
-            const { properties, geometry } = country;
-            if (
-                !properties.capital ||
-                !geometry.coordinates ||
-                geometry.coordinates.length !== 2
-            )
-                return;
-            const countryName = properties.country.toLowerCase();
-            const capitalName = properties.capital.toLowerCase();
-            const coords = geometry.coordinates as [number, number];
-            if (countryName.includes(searchLower)) {
-                filteredResults.push({
-                    country: properties.country,
-                    capital: properties.capital,
-                    flag: properties.flag,
-                    coordinates: coords,
-                    matchType: "country",
-                });
-            } else if (capitalName.includes(searchLower)) {
-                filteredResults.push({
-                    country: properties.country,
-                    capital: properties.capital,
-                    flag: properties.flag,
-                    coordinates: coords,
-                    matchType: "capital",
-                });
-            }
-        });
-        filteredResults.sort((a, b) => {
-            const aCountry = a.country.toLowerCase();
-            const bCountry = b.country.toLowerCase();
-            const aCapital = a.capital.toLowerCase();
-            const bCapital = b.capital.toLowerCase();
-            if (aCountry === searchLower && bCountry !== searchLower) return -1;
-            if (bCountry === searchLower && aCountry !== searchLower) return 1;
-            if (aCapital === searchLower && bCapital !== searchLower) return -1;
-            if (bCapital === searchLower && aCapital !== searchLower) return 1;
-            if (a.matchType === "country" && b.matchType === "capital")
-                return -1;
-            if (a.matchType === "capital" && b.matchType === "country")
-                return 1;
-            return aCountry.localeCompare(bCountry);
-        });
-        return filteredResults.slice(0, 10);
+        return getSearchResults(countries, searchTerm);
     }, [searchTerm, countries]);
 
     useEffect(() => {
@@ -153,6 +88,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
             setSearchTerm("");
             setIsOpen(false);
             setShowResults(false);
+            setFocusedIndex(-1);
         },
         [onLocationSelect]
     );
@@ -160,13 +96,16 @@ export default function SearchBar({ onLocationSelect }: Props) {
     const handleClear = useCallback(() => {
         setSearchTerm("");
         setShowResults(false);
+        setFocusedIndex(-1);
     }, []);
 
     const handleToggle = useCallback(() => {
-        setIsOpen((prev) => !prev);
-        if (isOpen) {
+        const nextIsOpen = !isOpen;
+        setIsOpen(nextIsOpen);
+        if (!nextIsOpen) {
             setSearchTerm("");
             setShowResults(false);
+            setFocusedIndex(-1);
         } else {
             setTimeout(() => {
                 inputRef.current?.focus();
@@ -239,8 +178,11 @@ export default function SearchBar({ onLocationSelect }: Props) {
                                 ref={inputRef}
                                 onKeyDown={handleInputKeyDown}
                                 aria-label="Search countries or capitals"
+                                role="combobox"
                                 aria-autocomplete="list"
+                                aria-expanded={showResults}
                                 aria-controls="search-bar-results-list"
+                                aria-haspopup="listbox"
                                 aria-activedescendant={
                                     focusedIndex >= 0
                                         ? `search-bar-result-${focusedIndex}`
@@ -275,6 +217,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
                                     ? results.map((result, index) => (
                                           <SearchResultItem
                                               key={`${result.country}-${index}`}
+                                              id={`search-bar-result-${index}`}
                                               result={result}
                                               onClick={() =>
                                                   handleResultClick(result)

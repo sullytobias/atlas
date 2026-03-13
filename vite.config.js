@@ -5,4 +5,26 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
     plugins: [react()],
     base: "/atlas/",
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes("node_modules/maplibre-gl")) {
+                        return "maplibre";
+                    }
+
+                    if (
+                        id.includes("node_modules/react") ||
+                        id.includes("node_modules/react-dom")
+                    ) {
+                        return "react-vendor";
+                    }
+
+                    if (id.includes("node_modules/zustand")) {
+                        return "state";
+                    }
+                },
+            },
+        },
+    },
 });

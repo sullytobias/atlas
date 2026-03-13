@@ -1,5 +1,49 @@
 import type { LayerSpecification } from "maplibre-gl";
 import { getContinentColorExpression } from "../constants/continents";
+import countryData from "../data/data.json";
+import {
+    ADDITIONAL_TERRITORIES,
+    CODE_MAPPING,
+} from "../utils/countryCodeMappings";
+
+type CountryDataFeature = {
+    properties: {
+        cca3: string;
+        population: number;
+    };
+};
+
+function buildPopulationExpression() {
+    const populationByCode = new Map<string, number>();
+    const countries = (countryData as { features: CountryDataFeature[] })
+        .features;
+
+    countries.forEach((feature) => {
+        const sourceCode =
+            CODE_MAPPING[feature.properties.cca3] || feature.properties.cca3;
+        const population = feature.properties.population;
+
+        populationByCode.set(sourceCode, population);
+
+        const additionalTerritories =
+            ADDITIONAL_TERRITORIES[feature.properties.cca3] || [];
+        additionalTerritories.forEach((territoryCode) => {
+            populationByCode.set(territoryCode, population);
+        });
+    });
+
+    return [
+        "match",
+        ["get", "ADM0_A3"],
+        ...Array.from(populationByCode.entries()).flatMap(([code, value]) => [
+            code,
+            value,
+        ]),
+        -1,
+    ] as const;
+}
+
+const POPULATION_EXPRESSION = buildPopulationExpression();
 
 export const MAP_LAYERS: LayerSpecification[] = [
     {
@@ -30,11 +74,11 @@ export const MAP_LAYERS: LayerSpecification[] = [
         paint: {
             "fill-color": [
                 "case",
-                ["!=", ["feature-state", "population"], null],
+                [">=", POPULATION_EXPRESSION, 0],
                 [
                     "interpolate",
                     ["linear"],
-                    ["feature-state", "population"],
+                    POPULATION_EXPRESSION,
                     0,
                     "#E0F3FF",
                     1000000,
