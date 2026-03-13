@@ -20,7 +20,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(244, 241, 235, 0.94);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -38,7 +38,7 @@
   text-align: center;
   padding: 28px 32px;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.7);
+  background: color-mix(in srgb, var(--surface-strong) 84%, transparent);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);
 }
@@ -47,7 +47,7 @@
   width: 52px;
   height: 52px;
   margin: 0 auto 18px;
-  border: 3px solid rgba(23, 23, 23, 0.1);
+  border: 3px solid color-mix(in srgb, var(--text) 12%, transparent);
   border-top-color: var(--surface-inverse);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
