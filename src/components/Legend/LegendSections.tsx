@@ -66,13 +66,13 @@ export function buildLegendSections(
     return [
         {
             title: "Continents",
-            icon: "🗺️",
+            icon: "",
             isVisible: showContinents,
             content: <ContinentsLegendContent />,
         },
         {
-            title: "Population Density",
-            icon: "🔥",
+            title: "Population",
+            icon: "",
             isVisible: showHeatmap,
             content: <PopulationLegendContent />,
         },

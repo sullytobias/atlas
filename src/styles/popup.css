@@ -1,19 +1,20 @@
 .popup-container {
   padding: 0;
   max-width: 280px;
-  background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 10px;
+  background: var(--surface-strong);
+  border-radius: 16px;
   overflow: hidden;
   z-index: 1000;
+  border: 1px solid var(--border);
 }
 
 .popup-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--surface-muted);
   padding: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .popup-flag {
@@ -21,22 +22,20 @@
   height: 30px;
   object-fit: cover;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 1px solid var(--border);
 }
 
 .popup-title {
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
   text-decoration: none;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   display: block;
   transition: opacity 0.2s;
 }
 
 .popup-continents {
-  color: rgba(255,255,255,0.9);
+  color: var(--text-muted);
   font-size: 11px;
   margin-top: 2px;
 }
@@ -53,15 +52,14 @@
 }
 
 .popup-stat {
-  background: white;
+  background: rgba(255, 255, 255, 0.02);
   padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .popup-stat-label {
-  color: #6c757d;
+  color: var(--text-faint);
   font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
@@ -70,17 +68,16 @@
 }
 
 .popup-stat-value {
-  color: #2c3e50;
+  color: var(--text);
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .popup-details {
-  background: white;
+  background: rgba(255, 255, 255, 0.02);
   padding: 10px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  border: 1px solid var(--border);
 }
 
 .popup-detail-row {
@@ -90,7 +87,7 @@
 }
 
 .popup-detail-label {
-  color: #6c757d;
+  color: var(--text-faint);
   font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
@@ -98,7 +95,7 @@
 }
 
 .popup-detail-value {
-  color: #2c3e50;
+  color: var(--text);
   font-size: 12px;
   font-weight: 500;
   display: block;
@@ -109,26 +106,24 @@
 
 .popup-divider {
   height: 1px;
-  background: #e9ecef;
+  background: var(--border);
 }
 
 .popup-airport-header {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: var(--surface-muted);
   padding: 12px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .popup-airport-icon {
-  color: white;
-  font-size: 20px;
-  margin-bottom: 4px;
+  color: var(--text-muted);
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 
 .popup-airport-title {
-  color: white;
+  color: var(--text);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   display: block;
 }

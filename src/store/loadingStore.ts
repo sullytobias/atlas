@@ -40,6 +40,7 @@ interface MapState {
     showTerrain: boolean;
     showGlobe: boolean;
     showAirports: AirportState;
+    theme: "dark" | "light";
     
     toggleCoastlines: () => void;
     toggleSatellite: () => void;
@@ -50,6 +51,7 @@ interface MapState {
     toggleGlobe: () => void;
     toggleAirport: (type: keyof AirportState) => void;
     setAllAirports: (value: boolean) => void;
+    toggleTheme: () => void;
 }
 
 export const useMapStore = create<MapState>((set) => ({
@@ -60,6 +62,7 @@ export const useMapStore = create<MapState>((set) => ({
     showHeatmap: false,
     showTerrain: false,
     showGlobe: false,
+    theme: "dark",
     showAirports: {
         large: false,
         medium: false,
@@ -124,4 +127,8 @@ export const useMapStore = create<MapState>((set) => ({
             },
         }));
     },
+    toggleTheme: () =>
+        set((state) => ({
+            theme: state.theme === "dark" ? "light" : "dark",
+        })),
 }));

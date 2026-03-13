@@ -37,19 +37,6 @@ function escapeHtml(value: string): string {
         .replaceAll("'", "&#39;");
 }
 
-type CountryProps = {
-    capital: string;
-    country: string;
-    population: number;
-    flag: string;
-    flagAlt: string;
-    currencies: string;
-    area: number;
-    languages: string;
-    car: { side: string };
-    continents: string[];
-};
-
     export default forwardRef<MapRef, Props>(function Map(
         { onLoadingComplete },
         ref

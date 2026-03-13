@@ -1,6 +1,84 @@
-body {
+:root {
+    font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: #f3f1ea;
+    background: #121212;
+    color-scheme: dark;
+    --surface: rgba(28, 28, 28, 0.88);
+    --surface-strong: #1c1c1c;
+    --surface-muted: #252525;
+    --panel: rgba(20, 20, 20, 0.96);
+    --surface-inverse: #f3f1ea;
+    --text-on-inverse: #171717;
+    --border: rgba(243, 241, 234, 0.1);
+    --border-strong: rgba(243, 241, 234, 0.18);
+    --text: #f3f1ea;
+    --text-muted: #b4aea2;
+    --text-faint: #837d73;
+    --accent: #f3f1ea;
+    --shadow-soft: 0 18px 34px rgba(0, 0, 0, 0.32);
+    --shadow-flat: 0 6px 16px rgba(0, 0, 0, 0.22);
+    --radius-lg: 18px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+}
+
+:root[data-theme="light"] {
+    color: #171717;
+    background: #f3f1ec;
+    color-scheme: light;
+    --surface: rgba(255, 255, 255, 0.9);
+    --surface-strong: #ffffff;
+    --surface-muted: #f6f4ee;
+    --panel: rgba(247, 245, 239, 0.98);
+    --surface-inverse: #171717;
+    --text-on-inverse: #f3f1ea;
+    --border: rgba(23, 23, 23, 0.12);
+    --border-strong: rgba(23, 23, 23, 0.2);
+    --text: #171717;
+    --text-muted: #666256;
+    --text-faint: #8f8a7d;
+    --accent: #1f1f1f;
+    --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.08);
+    --shadow-flat: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
     margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    min-height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.03), transparent 24%),
+        linear-gradient(180deg, #111111 0%, #161616 100%);
+    color: var(--text);
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+:root[data-theme="light"] body {
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.75), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.35), transparent 24%),
+        linear-gradient(180deg, #f7f5ef 0%, #f0eee8 100%);
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+a {
+    color: inherit;
 }

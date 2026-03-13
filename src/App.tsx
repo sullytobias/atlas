@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useRef } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import type { MapRef } from "./components/Map";
 import { buildLegendSections } from "./components/Legend/LegendSections";
 import { useLoadingStore, useMapStore } from "./store/loadingStore";
@@ -10,7 +10,7 @@ const SearchBar = lazy(() => import("./components/SearchBar/SearchBar"));
 
 export default function App() {
     const { clearLoading } = useLoadingStore();
-    const { showContinents, showHeatmap } = useMapStore();
+    const { showContinents, showHeatmap, theme } = useMapStore();
     const mapRef = useRef<MapRef>(null);
 
     const handleLoadingComplete = useCallback(
@@ -30,6 +30,10 @@ export default function App() {
     );
 
     const legendSections = buildLegendSections(showContinents, showHeatmap);
+
+    useEffect(() => {
+        document.documentElement.dataset.theme = theme;
+    }, [theme]);
 
     return (
         <>

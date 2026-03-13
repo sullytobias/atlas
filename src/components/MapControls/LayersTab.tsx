@@ -78,7 +78,7 @@ export default function LayersTab() {
         () => [
             {
                 label: "Coastlines",
-                icon: "🌊",
+                icon: "",
                 checked: showCoastlines,
                 onChange: toggleCoastlines,
                 color: "#06b6d4",
@@ -86,7 +86,7 @@ export default function LayersTab() {
             },
             {
                 label: "Capitals",
-                icon: "🏛️",
+                icon: "",
                 checked: showCapitals,
                 onChange: toggleCapitals,
                 color: "#ef4444",
@@ -94,7 +94,7 @@ export default function LayersTab() {
             },
             {
                 label: "Satellite",
-                icon: "🛰️",
+                icon: "",
                 checked: showSatellite,
                 onChange: toggleSatellite,
                 color: "#f59e0b",
@@ -102,7 +102,7 @@ export default function LayersTab() {
             },
             {
                 label: "Population",
-                icon: "🔥",
+                icon: "",
                 checked: showHeatmap,
                 onChange: toggleHeatmap,
                 color: "#f97316",
@@ -110,7 +110,7 @@ export default function LayersTab() {
             },
             {
                 label: "Continents",
-                icon: "🗺️",
+                icon: "",
                 checked: showContinents,
                 onChange: toggleContinents,
                 color: "#10b981",
@@ -150,7 +150,7 @@ export default function LayersTab() {
     return (
         <div className="tab-content">
             <div className="section-header">
-                <h3 className="section-title">🗺️ Map Layers</h3>
+                <h3 className="section-title">Map Layers</h3>
                 <div className="section-controls">
                     <button
                         onClick={handleSelectAll}

@@ -21,6 +21,7 @@ beforeEach(() => {
         showHeatmap: false,
         showTerrain: false,
         showGlobe: false,
+        theme: "dark",
         showAirports: initialAirports,
     });
 });
@@ -51,5 +52,11 @@ describe("useMapStore", () => {
         expect(
             useLoadingStore.getState().loadingStates["airport-balloonport"]
         ).toBe(true);
+    });
+
+    it("toggles the theme state", () => {
+        useMapStore.getState().toggleTheme();
+
+        expect(useMapStore.getState().theme).toBe("light");
     });
 });

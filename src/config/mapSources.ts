@@ -1,18 +1,23 @@
+import type { FeatureCollection, Point } from "geojson";
 import type { SourceSpecification } from "maplibre-gl";
 import countriesData from "../data/data.json";
 
 const continentsDataUrl = new URL("../data/continents.json", import.meta.url)
     .href;
 const airportsDataUrl = new URL("../data/airports.json", import.meta.url).href;
+const countriesGeoJson = countriesData as FeatureCollection<
+    Point,
+    Record<string, unknown>
+>;
 
 export const MAP_SOURCES: Record<string, SourceSpecification> = {
     countriesData: {
         type: "geojson",
-        data: countriesData,
+        data: countriesGeoJson,
     },
     populationHeatmap: {
         type: "geojson",
-        data: countriesData,
+        data: countriesGeoJson,
     },
     satellite: {
         type: "raster",

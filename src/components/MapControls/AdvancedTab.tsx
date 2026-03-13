@@ -79,13 +79,6 @@ const AIRPORT_TYPES: AirportType[] = [
     },
 ];
 
-function hexToRgba(hex: string, opacity: number = 0.2) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-}
-
 interface LayerButtonProps {
     label: string;
     icon: React.ReactNode;
@@ -149,7 +142,6 @@ const AirportCard: React.FC<AirportCardProps> = ({
         style={
             {
                 "--card-color": airport.color,
-                "--card-shadow": hexToRgba(airport.color, 0.2),
             } as React.CSSProperties
         }
         aria-pressed={isActive}
@@ -218,12 +210,12 @@ export default function AdvancedTab() {
             {/* 3D Visualization */}
             <div className="section">
                 <div className="section-header">
-                    <h3 className="section-title">🌍 3D Visualization</h3>
+                    <h3 className="section-title">3D View</h3>
                 </div>
                 <div className="layer-list">
                     <LayerButton
                         label="3D Terrain"
-                        icon="⛰️"
+                        icon={null}
                         active={showTerrain}
                         loading={!!loadingStates["terrain"]}
                         onClick={toggleTerrain}
@@ -232,7 +224,7 @@ export default function AdvancedTab() {
                     />
                     <LayerButton
                         label="Globe Projection"
-                        icon={showGlobe ? "🗺️" : "🌍"}
+                        icon={null}
                         active={showGlobe}
                         loading={!!loadingStates["globe"]}
                         onClick={toggleGlobe}
@@ -245,7 +237,7 @@ export default function AdvancedTab() {
             {/* Airports */}
             <div className="section">
                 <div className="section-header">
-                    <h3 className="section-title">✈️ Airports</h3>
+                    <h3 className="section-title">Airports</h3>
                     <div className="section-controls">
                         <button
                             onClick={handleSelectAllAirports}

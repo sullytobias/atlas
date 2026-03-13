@@ -46,6 +46,8 @@ export default function MapControls() {
         showAirports,
         showTerrain,
         showGlobe,
+        theme,
+        toggleTheme,
     } = useMapStore();
 
     const activeLayersCount = useMemo(
@@ -127,19 +129,37 @@ export default function MapControls() {
             <div className={`controls-panel${isOpen ? " open" : " closed"}`}>
                 <div className="controls-header">
                     <h2 className="controls-title">Map Controls</h2>
-                    <button
-                        className="controls-close"
-                        onClick={handleCloseClick}
-                        aria-label="Close map controls"
-                    >
-                        ✕
-                    </button>
+                    <div className="controls-actions">
+                        <button
+                            className="theme-toggle"
+                            onClick={toggleTheme}
+                            aria-label={`Switch to ${
+                                theme === "dark" ? "light" : "dark"
+                            } theme`}
+                        >
+                            <span className="theme-toggle-track">
+                                <span
+                                    className={`theme-toggle-thumb theme-${theme}`}
+                                />
+                            </span>
+                            <span className="theme-toggle-label">
+                                {theme === "dark" ? "Dark" : "Light"}
+                            </span>
+                        </button>
+                        <button
+                            className="controls-close"
+                            onClick={handleCloseClick}
+                            aria-label="Close map controls"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
 
                 <div className="controls-tabs">
                     <TabButton
                         label="Layers"
-                        icon="🗺️"
+                        icon={null}
                         active={activeTab === "layers"}
                         badge={activeLayersCount}
                         onClick={handleLayersTabClick}
@@ -147,7 +167,7 @@ export default function MapControls() {
                     />
                     <TabButton
                         label="Advanced"
-                        icon="✈️"
+                        icon={null}
                         active={activeTab === "advanced"}
                         badge={activeAirportsCount + active3DCount}
                         onClick={handleAdvancedTabClick}

@@ -1,4 +1,7 @@
-import type { LayerSpecification } from "maplibre-gl";
+import type {
+    ExpressionSpecification,
+    LayerSpecification,
+} from "maplibre-gl";
 import { getContinentColorExpression } from "../constants/continents";
 import countryData from "../data/data.json";
 import {
@@ -13,7 +16,7 @@ type CountryDataFeature = {
     };
 };
 
-function buildPopulationExpression() {
+function buildPopulationExpression(): ExpressionSpecification {
     const populationByCode = new Map<string, number>();
     const countries = (countryData as { features: CountryDataFeature[] })
         .features;
@@ -40,7 +43,7 @@ function buildPopulationExpression() {
             value,
         ]),
         -1,
-    ] as const;
+    ] as unknown as ExpressionSpecification;
 }
 
 const POPULATION_EXPRESSION = buildPopulationExpression();

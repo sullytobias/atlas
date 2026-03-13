@@ -84,7 +84,6 @@ export default function Legend({ sections }: Props) {
                 <div className="legend-drawer">
                     <div className="legend-drawer-header">
                         <div className="legend-drawer-title">
-                            <span className="legend-drawer-title-icon">📍</span>
                             <span>Map Legend</span>
                         </div>
                         <button
