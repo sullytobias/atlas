@@ -89,7 +89,7 @@
     left: 0;
     width: 320px;
     max-width: 85vw;
-    background: rgba(247, 245, 239, 0.98);
+    background: var(--panel);
     border-right: 1px solid var(--border);
     box-shadow: var(--shadow-soft);
     display: flex;
@@ -173,7 +173,7 @@
 
 .legend-divider {
     height: 1px;
-    background: rgba(23, 23, 23, 0.08);
+    background: var(--border);
     margin: 20px 0;
 }
 
@@ -209,7 +209,7 @@
     height: 18px;
     border-radius: 4px;
     margin-right: 12px;
-    border: 1px solid rgba(23, 23, 23, 0.08);
+    border: 1px solid var(--border);
     flex-shrink: 0;
 }
 
@@ -235,7 +235,7 @@
     width: 24px;
     height: 24px;
     border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
     flex-shrink: 0;
 }
 
@@ -255,7 +255,7 @@
 }
 
 .legend-drawer-content::-webkit-scrollbar-thumb {
-    background-color: rgba(23, 23, 23, 0.18);
+    background-color: var(--border-strong);
     border-radius: 3px;
 }
 

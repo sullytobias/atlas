@@ -12,33 +12,36 @@ import {
 type CountryDataFeature = {
     properties: {
         cca3: string;
+        populationDensity?: number;
         population: number;
     };
 };
 
-function buildPopulationExpression(): ExpressionSpecification {
-    const populationByCode = new Map<string, number>();
+function buildCountryMetricExpression(
+    metricSelector: (feature: CountryDataFeature["properties"]) => number,
+): ExpressionSpecification {
+    const metricByCode = new Map<string, number>();
     const countries = (countryData as { features: CountryDataFeature[] })
         .features;
 
     countries.forEach((feature) => {
         const sourceCode =
             CODE_MAPPING[feature.properties.cca3] || feature.properties.cca3;
-        const population = feature.properties.population;
+        const metric = metricSelector(feature.properties);
 
-        populationByCode.set(sourceCode, population);
+        metricByCode.set(sourceCode, metric);
 
         const additionalTerritories =
             ADDITIONAL_TERRITORIES[feature.properties.cca3] || [];
         additionalTerritories.forEach((territoryCode) => {
-            populationByCode.set(territoryCode, population);
+            metricByCode.set(territoryCode, metric);
         });
     });
 
     return [
         "match",
         ["get", "ADM0_A3"],
-        ...Array.from(populationByCode.entries()).flatMap(([code, value]) => [
+        ...Array.from(metricByCode.entries()).flatMap(([code, value]) => [
             code,
             value,
         ]),
@@ -46,7 +49,12 @@ function buildPopulationExpression(): ExpressionSpecification {
     ] as unknown as ExpressionSpecification;
 }
 
-const POPULATION_EXPRESSION = buildPopulationExpression();
+const POPULATION_EXPRESSION = buildCountryMetricExpression(
+    (properties) => properties.population,
+);
+const DENSITY_EXPRESSION = buildCountryMetricExpression(
+    (properties) => properties.populationDensity ?? -1,
+);
 
 export const MAP_LAYERS: LayerSpecification[] = [
     {
@@ -67,6 +75,37 @@ export const MAP_LAYERS: LayerSpecification[] = [
         paint: {
             "hillshade-exaggeration": 0.4,
             "hillshade-shadow-color": "#000000",
+        },
+    },
+    {
+        id: "density-choropleth",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "fill-color": [
+                "case",
+                [">=", DENSITY_EXPRESSION, 0],
+                [
+                    "interpolate",
+                    ["linear"],
+                    DENSITY_EXPRESSION,
+                    0,
+                    "#ECFDF5",
+                    25,
+                    "#A7F3D0",
+                    100,
+                    "#34D399",
+                    250,
+                    "#10B981",
+                    500,
+                    "#059669",
+                    1000,
+                    "#065F46",
+                ],
+                "transparent",
+            ],
+            "fill-opacity": 0.5,
         },
     },
     {

@@ -180,9 +180,11 @@ export default function AdvancedTab() {
     const { loadingStates } = useLoadingStore();
     const {
         showAirports,
+        showStreetViewPicker,
         showTerrain,
         showGlobe,
         toggleAirport,
+        toggleStreetViewPicker,
         toggleTerrain,
         toggleGlobe,
         setAllAirports,
@@ -230,6 +232,23 @@ export default function AdvancedTab() {
                         onClick={toggleGlobe}
                         color="#3b82f6"
                         ariaLabel="Toggle Globe Projection"
+                    />
+                </div>
+            </div>
+
+            <div className="section">
+                <div className="section-header">
+                    <h3 className="section-title">Map Tools</h3>
+                </div>
+                <div className="layer-list">
+                    <LayerButton
+                        label="Street View Picker"
+                        icon={null}
+                        active={showStreetViewPicker}
+                        loading={false}
+                        onClick={toggleStreetViewPicker}
+                        color="#2563eb"
+                        ariaLabel="Toggle Street View picker"
                     />
                 </div>
             </div>

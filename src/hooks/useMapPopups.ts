@@ -1,9 +1,8 @@
-import { useRef, useCallback } from "react";
+import { useCallback } from "react";
 import type { Map as MLMap, MapMouseEvent } from "maplibre-gl";
-import { Popup } from "maplibre-gl";
 import countryData from "../data/data.json";
-import { createCountryPopup, createAirportPopup } from "../utils/popupTemplates";
 import { REVERSE_CODE_MAPPING } from "../utils/countryCodeMappings";
+import { useMapStore } from "../store/loadingStore";
 
 type CountryFeature = {
     properties: {
@@ -21,15 +20,29 @@ type CountryFeature = {
 };
 
 export function useMapPopups(
-    mapRef: React.RefObject<MLMap | null>,
-    formatLanguages: (languages: string) => string
+    mapRef: React.RefObject<MLMap | null>
 ) {
-    const popupRef = useRef<Popup | null>(null);
+    const showStreetViewPicker = useMapStore(
+        (state) => state.showStreetViewPicker
+    );
+    const setSelectedCountry = useMapStore((state) => state.setSelectedCountry);
+    const setSelectedAirport = useMapStore((state) => state.setSelectedAirport);
+    const setSelectedLocation = useMapStore(
+        (state) => state.setSelectedLocation
+    );
 
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
+
+            if (showStreetViewPicker) {
+                setSelectedLocation({
+                    latitude: e.lngLat.lat,
+                    longitude: e.lngLat.lng,
+                });
+                return;
+            }
 
             const airportFeatures = map.queryRenderedFeatures(e.point, {
                 layers: [
@@ -45,19 +58,15 @@ export function useMapPopups(
 
             if (airportFeatures.length > 0) {
                 const airport = airportFeatures[0].properties;
-                const airportPopupContent = createAirportPopup({
+                setSelectedAirport({
+                    city: airport?.city,
+                    code: airport?.code,
+                    country: airport?.country,
+                    homeLink: airport?.home_link,
                     name: airport?.name || "Unknown Airport",
-                    link: airport?.wikipedia_link,
+                    type: airport?.type,
+                    wikipediaLink: airport?.wikipedia_link,
                 });
-                popupRef.current?.remove();
-                popupRef.current = new Popup({
-                    closeButton: true,
-                    closeOnClick: false,
-                    maxWidth: "none",
-                })
-                    .setLngLat(e.lngLat)
-                    .setHTML(airportPopupContent)
-                    .addTo(map);
                 return;
             }
 
@@ -66,8 +75,10 @@ export function useMapPopups(
             });
 
             if (features.length === 0) {
-                popupRef.current?.remove();
-                popupRef.current = null;
+                setSelectedLocation({
+                    latitude: e.lngLat.lat,
+                    longitude: e.lngLat.lng,
+                });
                 return;
             }
 
@@ -84,25 +95,21 @@ export function useMapPopups(
             }
             const enrichedProperties = {
                 ...countryFeature.properties,
+                continent: CONTINENT,
                 continents: [CONTINENT],
             };
-            const popupContent = createCountryPopup(enrichedProperties, formatLanguages);
-            popupRef.current?.remove();
-            popupRef.current = new Popup({
-                closeButton: true,
-                closeOnClick: false,
-            })
-                .setLngLat(e.lngLat)
-                .setHTML(popupContent)
-                .addTo(map);
+            setSelectedCountry(enrichedProperties);
         },
-        [formatLanguages, mapRef]
+        [
+            mapRef,
+            setSelectedAirport,
+            setSelectedCountry,
+            setSelectedLocation,
+            showStreetViewPicker,
+        ]
     );
 
-    const removePopup = useCallback(() => {
-        popupRef.current?.remove();
-        popupRef.current = null;
-    }, []);
+    const removePopup = useCallback(() => {}, []);
 
     return { handleClick, removePopup };
 }

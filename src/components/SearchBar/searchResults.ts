@@ -14,6 +14,7 @@ export type CountryDataItem = {
 };
 
 export type SearchResult = {
+    cca3: string;
     country: string;
     capital: string;
     flag: string;
@@ -47,6 +48,7 @@ export function getSearchResults(
 
         if (countryName.includes(searchLower)) {
             filteredResults.push({
+                cca3: properties.cca3,
                 country: properties.country,
                 capital: properties.capital,
                 flag: properties.flag,
@@ -56,6 +58,7 @@ export function getSearchResults(
             });
         } else if (capitalName.includes(searchLower)) {
             filteredResults.push({
+                cca3: properties.cca3,
                 country: properties.country,
                 capital: properties.capital,
                 flag: properties.flag,

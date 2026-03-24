@@ -31,26 +31,66 @@ interface AirportState {
     balloonport: boolean;
 }
 
+export interface SelectedCountry {
+    area: number;
+    capital: string;
+    car: { side: string };
+    cca3: string;
+    continent?: string;
+    country: string;
+    currencies: string;
+    flag: string;
+    flagAlt: string;
+    languages: string;
+    population: number;
+    populationDensity?: number;
+}
+
+export interface SelectedAirport {
+    city?: string;
+    code?: string;
+    country?: string;
+    homeLink?: string;
+    name: string;
+    type?: string;
+    wikipediaLink?: string;
+}
+
+export interface SelectedLocation {
+    latitude: number;
+    longitude: number;
+}
+
 interface MapState {
     showCoastlines: boolean;
     showSatellite: boolean;
     showCapitals: boolean;
     showContinents: boolean;
+    showDensity: boolean;
     showHeatmap: boolean;
+    showStreetViewPicker: boolean;
     showTerrain: boolean;
     showGlobe: boolean;
     showAirports: AirportState;
+    selectedAirport: SelectedAirport | null;
+    selectedCountry: SelectedCountry | null;
+    selectedLocation: SelectedLocation | null;
     theme: "dark" | "light";
     
     toggleCoastlines: () => void;
     toggleSatellite: () => void;
     toggleCapitals: () => void;
     toggleContinents: () => void;
+    toggleDensity: () => void;
     toggleHeatmap: () => void;
+    toggleStreetViewPicker: () => void;
     toggleTerrain: () => void;
     toggleGlobe: () => void;
     toggleAirport: (type: keyof AirportState) => void;
     setAllAirports: (value: boolean) => void;
+    setSelectedAirport: (airport: SelectedAirport | null) => void;
+    setSelectedCountry: (country: SelectedCountry | null) => void;
+    setSelectedLocation: (location: SelectedLocation | null) => void;
     toggleTheme: () => void;
 }
 
@@ -59,9 +99,14 @@ export const useMapStore = create<MapState>((set) => ({
     showSatellite: false,
     showCapitals: false,
     showContinents: false,
+    showDensity: false,
     showHeatmap: false,
+    showStreetViewPicker: false,
     showTerrain: false,
     showGlobe: false,
+    selectedAirport: null,
+    selectedCountry: null,
+    selectedLocation: null,
     theme: "dark",
     showAirports: {
         large: false,
@@ -89,10 +134,18 @@ export const useMapStore = create<MapState>((set) => ({
         useLoadingStore.getState().setLoading('continents', true);
         set((state) => ({ showContinents: !state.showContinents }));
     },
+    toggleDensity: () => {
+        useLoadingStore.getState().setLoading('density', true);
+        set((state) => ({ showDensity: !state.showDensity }));
+    },
     toggleHeatmap: () => {
         useLoadingStore.getState().setLoading('heatmap', true);
         set((state) => ({ showHeatmap: !state.showHeatmap }));
     },
+    toggleStreetViewPicker: () =>
+        set((state) => ({
+            showStreetViewPicker: !state.showStreetViewPicker,
+        })),
     toggleTerrain: () => {
         useLoadingStore.getState().setLoading('terrain', true);
         set((state) => ({ showTerrain: !state.showTerrain }));
@@ -127,6 +180,24 @@ export const useMapStore = create<MapState>((set) => ({
             },
         }));
     },
+    setSelectedAirport: (airport) =>
+        set({
+            selectedAirport: airport,
+            selectedCountry: airport ? null : useMapStore.getState().selectedCountry,
+            selectedLocation: airport ? null : useMapStore.getState().selectedLocation,
+        }),
+    setSelectedCountry: (country) =>
+        set({
+            selectedAirport: country ? null : useMapStore.getState().selectedAirport,
+            selectedCountry: country,
+            selectedLocation: country ? null : useMapStore.getState().selectedLocation,
+        }),
+    setSelectedLocation: (location) =>
+        set({
+            selectedAirport: location ? null : useMapStore.getState().selectedAirport,
+            selectedCountry: location ? null : useMapStore.getState().selectedCountry,
+            selectedLocation: location,
+        }),
     toggleTheme: () =>
         set((state) => ({
             theme: state.theme === "dark" ? "light" : "dark",

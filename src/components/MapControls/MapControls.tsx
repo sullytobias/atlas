@@ -42,8 +42,10 @@ export default function MapControls() {
         showSatellite,
         showCapitals,
         showContinents,
+        showDensity,
         showHeatmap,
         showAirports,
+        showStreetViewPicker,
         showTerrain,
         showGlobe,
         theme,
@@ -57,6 +59,7 @@ export default function MapControls() {
                 showSatellite,
                 showCapitals,
                 showContinents,
+                showDensity,
                 showHeatmap,
             ].filter(Boolean).length,
         [
@@ -64,6 +67,7 @@ export default function MapControls() {
             showSatellite,
             showCapitals,
             showContinents,
+            showDensity,
             showHeatmap,
         ]
     );
@@ -73,8 +77,11 @@ export default function MapControls() {
         [showAirports]
     );
     const active3DCount = useMemo(
-        () => (showTerrain ? 1 : 0) + (showGlobe ? 1 : 0),
-        [showTerrain, showGlobe]
+        () =>
+            (showTerrain ? 1 : 0) +
+            (showGlobe ? 1 : 0) +
+            (showStreetViewPicker ? 1 : 0),
+        [showTerrain, showGlobe, showStreetViewPicker]
     );
     const totalActiveCount = useMemo(
         () => activeLayersCount + activeAirportsCount + active3DCount,

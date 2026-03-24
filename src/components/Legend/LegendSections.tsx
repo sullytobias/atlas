@@ -16,6 +16,15 @@ const POPULATION_COLORS = [
     { color: "#8B008B", label: "> 500M" },
 ];
 
+const DENSITY_COLORS = [
+    { color: "#ECFDF5", label: "< 25 / km²" },
+    { color: "#A7F3D0", label: "25-100 / km²" },
+    { color: "#34D399", label: "100-250 / km²" },
+    { color: "#10B981", label: "250-500 / km²" },
+    { color: "#059669", label: "500-1K / km²" },
+    { color: "#065F46", label: "> 1K / km²" },
+];
+
 function ContinentsLegendContent() {
     return (
         <div className="legend-items">
@@ -59,9 +68,26 @@ function PopulationLegendContent() {
     );
 }
 
+function DensityLegendContent() {
+    return (
+        <div className="legend-items legend-items-compact">
+            {DENSITY_COLORS.map((item) => (
+                <div key={item.label} className="legend-scale-item">
+                    <div
+                        className="legend-scale-swatch"
+                        style={{ backgroundColor: item.color }}
+                    />
+                    <span className="legend-scale-label">{item.label}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export function buildLegendSections(
     showContinents: boolean,
-    showHeatmap: boolean
+    showHeatmap: boolean,
+    showDensity: boolean
 ): LegendSection[] {
     return [
         {
@@ -75,6 +101,12 @@ export function buildLegendSections(
             icon: "",
             isVisible: showHeatmap,
             content: <PopulationLegendContent />,
+        },
+        {
+            title: "Density",
+            icon: "",
+            isVisible: showDensity,
+            content: <DensityLegendContent />,
         },
     ];
 }

@@ -5,6 +5,7 @@ enum LayerKey {
     Coastlines = "coastlines",
     Capitals = "capitals",
     Satellite = "satellite",
+    Density = "density",
     Heatmap = "heatmap",
     Continents = "continents",
 }
@@ -66,11 +67,13 @@ export default function LayersTab() {
         showSatellite,
         showCapitals,
         showContinents,
+        showDensity,
         showHeatmap,
         toggleCoastlines,
         toggleSatellite,
         toggleCapitals,
         toggleContinents,
+        toggleDensity,
         toggleHeatmap,
     } = useMapStore();
 
@@ -101,6 +104,14 @@ export default function LayersTab() {
                 key: LayerKey.Satellite,
             },
             {
+                label: "Density",
+                icon: "",
+                checked: showDensity,
+                onChange: toggleDensity,
+                color: "#22c55e",
+                key: LayerKey.Density,
+            },
+            {
                 label: "Population",
                 icon: "",
                 checked: showHeatmap,
@@ -121,11 +132,13 @@ export default function LayersTab() {
             showCoastlines,
             showCapitals,
             showSatellite,
+            showDensity,
             showHeatmap,
             showContinents,
             toggleCoastlines,
             toggleCapitals,
             toggleSatellite,
+            toggleDensity,
             toggleHeatmap,
             toggleContinents,
         ]

@@ -54,6 +54,7 @@ describe("getSearchResults", () => {
         const results = getSearchResults(countries, "France");
 
         expect(results[0]).toMatchObject({
+            cca3: "FRA",
             country: "France",
             matchType: "country",
         });
@@ -64,6 +65,7 @@ describe("getSearchResults", () => {
 
         expect(results).toHaveLength(1);
         expect(results[0]).toMatchObject({
+            cca3: "FRA",
             country: "France",
             capital: "Paris",
             matchType: "capital",

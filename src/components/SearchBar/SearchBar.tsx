@@ -8,7 +8,11 @@ import {
 import "./SearchBar.css";
 
 type Props = {
-    onLocationSelect: (coordinates: [number, number], zoom?: number) => void;
+    onLocationSelect: (
+        coordinates: [number, number],
+        countryCode: string,
+        zoom?: number
+    ) => void;
 };
 
 const SearchResultItem: React.FC<{
@@ -84,7 +88,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
     const handleResultClick = useCallback(
         (result: SearchResult) => {
             const zoom = 6;
-            onLocationSelect(result.coordinates, zoom);
+            onLocationSelect(result.coordinates, result.cca3, zoom);
             setSearchTerm("");
             setIsOpen(false);
             setShowResults(false);
