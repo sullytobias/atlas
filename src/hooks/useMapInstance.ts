@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import maplibregl, { Map as MLMap } from "maplibre-gl";
 import type { StyleSpecification } from "maplibre-gl";
 
@@ -7,6 +7,7 @@ export function useMapInstance(
     style: StyleSpecification
 ) {
     const mapRef = useRef<MLMap | null>(null);
+    const [map, setMap] = useState<MLMap | null>(null);
 
     useEffect(() => {
         if (!containerRef.current || mapRef.current) return;
@@ -21,12 +22,14 @@ export function useMapInstance(
         map.addControl(new maplibregl.NavigationControl(), "top-right");
 
         mapRef.current = map;
+        setMap(map);
 
         return () => {
             map.remove();
             mapRef.current = null;
+            setMap(null);
         };
     }, [containerRef, style]);
 
-    return mapRef;
+    return { map, mapRef };
 }

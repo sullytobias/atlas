@@ -11,6 +11,8 @@ interface TabButtonProps {
     badge?: number;
     onClick: () => void;
     ariaLabel: string;
+    controlsId: string;
+    tabId: string;
 }
 
 const TabButton: React.FC<TabButtonProps> = ({
@@ -20,13 +22,19 @@ const TabButton: React.FC<TabButtonProps> = ({
     badge,
     onClick,
     ariaLabel,
+    controlsId,
+    tabId,
 }) => (
     <button
         className={`tab-button${active ? " active" : ""}`}
         onClick={onClick}
+        id={tabId}
+        role="tab"
         aria-selected={active}
+        aria-controls={controlsId}
         aria-label={ariaLabel}
         tabIndex={0}
+        type="button"
     >
         <span className="tab-icon">{icon}</span>
         <span className="tab-label">{label}</span>
@@ -42,9 +50,12 @@ export default function MapControls() {
         showSatellite,
         showCapitals,
         showContinents,
+        showTimezones,
         showDensity,
         showHeatmap,
         showAirports,
+        showCountryComparison,
+        showDistanceMeasure,
         showStreetViewPicker,
         showTerrain,
         showGlobe,
@@ -59,6 +70,7 @@ export default function MapControls() {
                 showSatellite,
                 showCapitals,
                 showContinents,
+                showTimezones,
                 showDensity,
                 showHeatmap,
             ].filter(Boolean).length,
@@ -67,9 +79,10 @@ export default function MapControls() {
             showSatellite,
             showCapitals,
             showContinents,
+            showTimezones,
             showDensity,
             showHeatmap,
-        ]
+        ],
     );
 
     const activeAirportsCount = useMemo(
@@ -80,8 +93,16 @@ export default function MapControls() {
         () =>
             (showTerrain ? 1 : 0) +
             (showGlobe ? 1 : 0) +
+            (showCountryComparison ? 1 : 0) +
+            (showDistanceMeasure ? 1 : 0) +
             (showStreetViewPicker ? 1 : 0),
-        [showTerrain, showGlobe, showStreetViewPicker]
+        [
+            showTerrain,
+            showGlobe,
+            showCountryComparison,
+            showDistanceMeasure,
+            showStreetViewPicker,
+        ],
     );
     const totalActiveCount = useMemo(
         () => activeLayersCount + activeAirportsCount + active3DCount,
@@ -135,7 +156,12 @@ export default function MapControls() {
 
             <div className={`controls-panel${isOpen ? " open" : " closed"}`}>
                 <div className="controls-header">
-                    <h2 className="controls-title">Map Controls</h2>
+                    <div className="controls-heading">
+                        <h2 className="controls-title">Map Controls</h2>
+                        <p className="controls-subtitle">
+                            Turn layers and tools on only when you need them.
+                        </p>
+                    </div>
                     <div className="controls-actions">
                         <button
                             className="theme-toggle"
@@ -162,8 +188,22 @@ export default function MapControls() {
                         </button>
                     </div>
                 </div>
+                <div className="controls-summary" aria-label="Active settings">
+                    <span className="summary-pill">
+                        {activeLayersCount} layer
+                        {activeLayersCount === 1 ? "" : "s"}
+                    </span>
+                    <span className="summary-pill">
+                        {activeAirportsCount} airport filter
+                        {activeAirportsCount === 1 ? "" : "s"}
+                    </span>
+                    <span className="summary-pill">
+                        {active3DCount} advanced tool
+                        {active3DCount === 1 ? "" : "s"}
+                    </span>
+                </div>
 
-                <div className="controls-tabs">
+                <div className="controls-tabs" role="tablist" aria-label="Settings tabs">
                     <TabButton
                         label="Layers"
                         icon={null}
@@ -171,6 +211,8 @@ export default function MapControls() {
                         badge={activeLayersCount}
                         onClick={handleLayersTabClick}
                         ariaLabel="Show layers tab"
+                        controlsId="layers-panel"
+                        tabId="layers-tab"
                     />
                     <TabButton
                         label="Advanced"
@@ -179,10 +221,19 @@ export default function MapControls() {
                         badge={activeAirportsCount + active3DCount}
                         onClick={handleAdvancedTabClick}
                         ariaLabel="Show advanced tab"
+                        controlsId="advanced-panel"
+                        tabId="advanced-tab"
                     />
                 </div>
 
-                <div className="controls-content">
+                <div
+                    className="controls-content"
+                    role="tabpanel"
+                    id={activeTab === "layers" ? "layers-panel" : "advanced-panel"}
+                    aria-labelledby={
+                        activeTab === "layers" ? "layers-tab" : "advanced-tab"
+                    }
+                >
                     {activeTab === "layers" ? <LayersTab /> : <AdvancedTab />}
                 </div>
             </div>

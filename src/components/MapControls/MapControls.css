@@ -75,7 +75,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(17, 17, 17, 0.18);
+    background-color: var(--overlay);
     backdrop-filter: blur(6px);
     z-index: 999;
     animation: fadeIn 0.2s ease;
@@ -115,16 +115,47 @@
     border-bottom: 1px solid var(--border);
 }
 
+.controls-heading {
+    min-width: 0;
+}
+
 .controls-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 20px;
+    font-weight: 700;
     margin: 0;
+}
+
+.controls-subtitle {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
 }
 
 .controls-actions {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.controls-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px 0;
+}
+
+.summary-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-strong);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .controls-close {
@@ -194,7 +225,7 @@
     display: flex;
     background: transparent;
     border-bottom: 1px solid var(--border);
-    padding: 8px 12px;
+    padding: 12px 20px 10px;
     gap: 8px;
 }
 
@@ -227,7 +258,7 @@
 }
 
 .tab-button:hover:not(.active) {
-    background: rgba(255, 255, 255, 0.45);
+    background: var(--accent-soft);
 }
 
 .tab-icon {
@@ -236,7 +267,7 @@
 
 .tab-label {
     font-size: 13px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.01em;
 }
 
 .tab-badge {
@@ -260,7 +291,7 @@
 .controls-content {
     flex: 1;
     overflow-y: auto;
-    padding: 18px;
+    padding: 20px;
 }
 
 .tab-content {
@@ -274,7 +305,8 @@
 .section-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
@@ -287,15 +319,24 @@
     letter-spacing: 0.08em;
 }
 
+.section-description {
+    margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-muted);
+    max-width: 28ch;
+}
+
 .section-controls {
     display: flex;
     gap: 8px;
 }
 
 .control-button {
+    min-height: 34px;
     padding: 7px 12px;
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     border-radius: 999px;
     border: 1px solid var(--border);
     cursor: pointer;
@@ -331,12 +372,14 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
+    min-height: 72px;
+    padding: 14px 16px;
     border-radius: 14px;
     border: 1px solid var(--border);
     background-color: var(--surface-strong);
     cursor: pointer;
     transition: all 0.2s ease;
+    text-align: left;
 }
 
 .layer-item.active {
@@ -368,15 +411,58 @@
 }
 
 .layer-label {
-    flex: 1;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text);
-    text-align: left;
 }
 
 .layer-item.active .layer-label {
     color: color-mix(in srgb, var(--layer-color) 68%, var(--text));
+}
+
+.layer-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.layer-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.layer-description {
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
+.layer-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 54px;
+    min-height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+}
+
+.layer-status.active {
+    border-color: color-mix(in srgb, var(--layer-color) 48%, var(--border-strong));
+    background: color-mix(in srgb, var(--layer-color) 12%, var(--surface));
+    color: color-mix(in srgb, var(--layer-color) 70%, var(--text));
 }
 
 .layer-checkbox {
@@ -406,7 +492,7 @@
 .spinner {
     width: 12px;
     height: 12px;
-    border: 2px solid rgba(23, 23, 23, 0.14);
+    border: 2px solid var(--border);
     border-top-color: var(--surface-inverse);
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
@@ -426,7 +512,8 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 14px;
+    min-height: 72px;
+    padding: 14px 16px;
     border-radius: 14px;
     border: 1px solid var(--border);
     background-color: var(--surface-strong);
@@ -469,8 +556,8 @@
 }
 
 .card-title {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--text);
     margin-bottom: 4px;
 }
@@ -488,7 +575,7 @@
 .card-indicator {
     display: inline-block;
     border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
 }
 
 .card-count {
@@ -541,12 +628,12 @@
 }
 
 .controls-content::-webkit-scrollbar-thumb {
-    background-color: rgba(23, 23, 23, 0.18);
+    background-color: var(--scrollbar-thumb);
     border-radius: 3px;
 }
 
 .controls-content::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(23, 23, 23, 0.28);
+    background-color: var(--border-strong);
 }
 
 button:disabled {
@@ -554,7 +641,22 @@ button:disabled {
     opacity: 0.6;
 }
 
+.controls-trigger:focus-visible,
+.controls-close:focus-visible,
+.theme-toggle:focus-visible,
+.tab-button:focus-visible,
+.control-button:focus-visible,
+.layer-item:focus-visible,
+.filter-card:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
 @media (max-width: 640px) {
+    .controls-header {
+        align-items: flex-start;
+    }
+
     .controls-actions {
         gap: 8px;
     }
@@ -568,5 +670,23 @@ button:disabled {
 @media (max-width: 768px) {
     .controls-panel {
         width: 320px;
+    }
+
+    .controls-content {
+        padding: 18px;
+    }
+
+    .layer-item,
+    .filter-card {
+        min-height: 78px;
+    }
+
+    .layer-body {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .layer-status {
+        min-width: 48px;
     }
 }

@@ -1,29 +1,7 @@
 .country-details-panel {
-    position: absolute;
     top: 92px;
     left: 18px;
     width: min(360px, calc(100vw - 36px));
-    z-index: 900;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(18px);
-    padding: 16px;
-}
-
-.country-details-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.country-details-identity {
-    display: flex;
-    gap: 12px;
-    min-width: 0;
 }
 
 .country-details-flag {
@@ -38,38 +16,12 @@
     height: 40px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: linear-gradient(135deg, #1b4d78, #0f273d);
-    color: #f3f1ea;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    flex-shrink: 0;
-}
-
-.country-details-eyebrow {
-    color: var(--text-faint);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 4px;
-}
-
-.country-details-title {
-    margin: 0;
-    color: var(--text);
-    font-size: 22px;
-    line-height: 1.1;
-}
-
-.country-details-close {
-    border: 1px solid var(--border);
-    background: var(--surface-muted);
-    color: var(--text);
-    width: 34px;
-    height: 34px;
-    border-radius: 999px;
-    cursor: pointer;
     flex-shrink: 0;
 }
 
@@ -78,6 +30,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     margin-bottom: 14px;
+}
+
+.country-details-stats-single {
+    grid-template-columns: 1fr;
 }
 
 .country-details-stat {
@@ -118,7 +74,7 @@
     gap: 12px;
     padding: 12px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--surface);
     border: 1px solid var(--border);
 }
 
@@ -147,6 +103,16 @@
     font-weight: 600;
 }
 
+.country-details-note {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
 @media (max-width: 768px) {
     .country-details-panel {
         top: auto;
@@ -154,16 +120,10 @@
         left: 16px;
         right: 16px;
         width: auto;
-        max-height: 42vh;
-        overflow-y: auto;
     }
 
     .country-details-stats {
         grid-template-columns: 1fr;
-    }
-
-    .country-details-title {
-        font-size: 18px;
     }
 
     .country-details-list-item {

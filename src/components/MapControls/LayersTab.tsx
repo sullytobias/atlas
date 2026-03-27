@@ -8,10 +8,12 @@ enum LayerKey {
     Density = "density",
     Heatmap = "heatmap",
     Continents = "continents",
+    Timezones = "timezones",
 }
 
 type Layer = {
     label: string;
+    description: string;
     icon: string;
     checked: boolean;
     onChange: () => void;
@@ -21,6 +23,7 @@ type Layer = {
 
 interface LayerButtonProps {
     label: string;
+    description: string;
     icon: string;
     checked: boolean;
     loading: boolean;
@@ -31,6 +34,7 @@ interface LayerButtonProps {
 
 const LayerButton: React.FC<LayerButtonProps> = ({
     label,
+    description,
     icon,
     checked,
     loading,
@@ -49,7 +53,15 @@ const LayerButton: React.FC<LayerButtonProps> = ({
         aria-label={ariaLabel}
     >
         <span className="layer-icon">{icon}</span>
-        <span className="layer-label">{label}</span>
+        <span className="layer-body">
+            <span className="layer-text">
+                <span className="layer-label">{label}</span>
+                <span className="layer-description">{description}</span>
+            </span>
+            <span className={`layer-status${checked ? " active" : ""}`}>
+                {loading ? "Updating" : checked ? "On" : "Off"}
+            </span>
+        </span>
         <div className={`layer-checkbox${checked ? " active" : ""}`}>
             {loading ? (
                 <span className="spinner"></span>
@@ -67,12 +79,14 @@ export default function LayersTab() {
         showSatellite,
         showCapitals,
         showContinents,
+        showTimezones,
         showDensity,
         showHeatmap,
         toggleCoastlines,
         toggleSatellite,
         toggleCapitals,
         toggleContinents,
+        toggleTimezones,
         toggleDensity,
         toggleHeatmap,
     } = useMapStore();
@@ -81,6 +95,7 @@ export default function LayersTab() {
         () => [
             {
                 label: "Coastlines",
+                description: "Add country boundary outlines for quick shape reading.",
                 icon: "",
                 checked: showCoastlines,
                 onChange: toggleCoastlines,
@@ -89,6 +104,7 @@ export default function LayersTab() {
             },
             {
                 label: "Capitals",
+                description: "Show capital markers and labels on the map.",
                 icon: "",
                 checked: showCapitals,
                 onChange: toggleCapitals,
@@ -97,6 +113,7 @@ export default function LayersTab() {
             },
             {
                 label: "Satellite",
+                description: "Switch the base map from streets to imagery.",
                 icon: "",
                 checked: showSatellite,
                 onChange: toggleSatellite,
@@ -105,6 +122,7 @@ export default function LayersTab() {
             },
             {
                 label: "Density",
+                description: "Color countries by population density.",
                 icon: "",
                 checked: showDensity,
                 onChange: toggleDensity,
@@ -113,6 +131,7 @@ export default function LayersTab() {
             },
             {
                 label: "Population",
+                description: "Color countries by total population.",
                 icon: "",
                 checked: showHeatmap,
                 onChange: toggleHeatmap,
@@ -121,11 +140,21 @@ export default function LayersTab() {
             },
             {
                 label: "Continents",
+                description: "Shade continent areas for region-level context.",
                 icon: "",
                 checked: showContinents,
                 onChange: toggleContinents,
                 color: "#10b981",
                 key: LayerKey.Continents,
+            },
+            {
+                label: "Timezones",
+                description: "Overlay simplified UTC bands and labels.",
+                icon: "",
+                checked: showTimezones,
+                onChange: toggleTimezones,
+                color: "#8b5cf6",
+                key: LayerKey.Timezones,
             },
         ],
         [
@@ -135,12 +164,14 @@ export default function LayersTab() {
             showDensity,
             showHeatmap,
             showContinents,
+            showTimezones,
             toggleCoastlines,
             toggleCapitals,
             toggleSatellite,
             toggleDensity,
             toggleHeatmap,
             toggleContinents,
+            toggleTimezones,
         ]
     );
 
@@ -163,12 +194,18 @@ export default function LayersTab() {
     return (
         <div className="tab-content">
             <div className="section-header">
-                <h3 className="section-title">Map Layers</h3>
+                <div>
+                    <h3 className="section-title">Map Layers</h3>
+                    <p className="section-description">
+                        Core overlays for reading geography, population, and time.
+                    </p>
+                </div>
                 <div className="section-controls">
                     <button
                         onClick={handleSelectAll}
                         className="control-button primary"
                         aria-label="Show all layers"
+                        type="button"
                     >
                         All
                     </button>
@@ -176,6 +213,7 @@ export default function LayersTab() {
                         onClick={handleClearAll}
                         className="control-button outline"
                         aria-label="Hide all layers"
+                        type="button"
                     >
                         None
                     </button>
@@ -186,6 +224,7 @@ export default function LayersTab() {
                     <LayerButton
                         key={layer.key}
                         label={layer.label}
+                        description={layer.description}
                         icon={layer.icon}
                         checked={layer.checked}
                         loading={!!loadingStates[layer.key]}

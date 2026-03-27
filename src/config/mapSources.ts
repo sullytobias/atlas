@@ -1,10 +1,12 @@
-import type { FeatureCollection, Point } from "geojson";
+import type { FeatureCollection, LineString, Point } from "geojson";
 import type { SourceSpecification } from "maplibre-gl";
 import countriesData from "../data/data.json";
 
 const continentsDataUrl = new URL("../data/continents.json", import.meta.url)
     .href;
 const airportsDataUrl = new URL("../data/airports.json", import.meta.url).href;
+const timezonePolygonsDataUrl = `${import.meta.env.BASE_URL}timezones-now.min.json`;
+const timezoneLabelsDataUrl = `${import.meta.env.BASE_URL}timezone-labels-now.json`;
 const countriesGeoJson = countriesData as FeatureCollection<
     Point,
     Record<string, unknown>
@@ -42,6 +44,35 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
     airports: {
         type: "geojson",
         data: airportsDataUrl,
+    },
+    timezones: {
+        type: "geojson",
+        data: timezonePolygonsDataUrl,
+    },
+    timezoneLabels: {
+        type: "geojson",
+        data: timezoneLabelsDataUrl,
+    },
+    measurementLine: {
+        type: "geojson",
+        data: {
+            type: "FeatureCollection",
+            features: [],
+        } as FeatureCollection<LineString, Record<string, never>>,
+    },
+    measurementPoints: {
+        type: "geojson",
+        data: {
+            type: "FeatureCollection",
+            features: [],
+        } as FeatureCollection<Point, Record<string, never>>,
+    },
+    measurementLabel: {
+        type: "geojson",
+        data: {
+            type: "FeatureCollection",
+            features: [],
+        } as FeatureCollection<Point, { label: string }>,
     },
     terrainSource: {
         type: "raster-dem",

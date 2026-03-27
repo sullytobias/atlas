@@ -10,7 +10,8 @@
         "test": "vitest run",
         "typecheck": "tsc --noEmit",
         "preview": "vite preview",
-        "generate:data": "node scripts/generateData.ts"
+        "generate:data": "node scripts/generateData.ts",
+        "generate:timezones": "node scripts/generateTimezones.mjs"
     },
     "dependencies": {
         "maplibre-gl": "^5.14.0",

@@ -81,6 +81,7 @@ const AIRPORT_TYPES: AirportType[] = [
 
 interface LayerButtonProps {
     label: string;
+    description: string;
     icon: React.ReactNode;
     active: boolean;
     loading: boolean;
@@ -91,6 +92,7 @@ interface LayerButtonProps {
 
 const LayerButton: React.FC<LayerButtonProps> = ({
     label,
+    description,
     icon,
     active,
     loading,
@@ -109,7 +111,15 @@ const LayerButton: React.FC<LayerButtonProps> = ({
         aria-label={ariaLabel}
     >
         <span className="layer-icon">{icon}</span>
-        <span className="layer-label">{label}</span>
+        <span className="layer-body">
+            <span className="layer-text">
+                <span className="layer-label">{label}</span>
+                <span className="layer-description">{description}</span>
+            </span>
+            <span className={`layer-status${active ? " active" : ""}`}>
+                {loading ? "Updating" : active ? "On" : "Off"}
+            </span>
+        </span>
         <div className={`layer-checkbox${active ? " active" : ""}`}>
             {loading ? (
                 <span className="spinner"></span>
@@ -180,10 +190,14 @@ export default function AdvancedTab() {
     const { loadingStates } = useLoadingStore();
     const {
         showAirports,
+        showCountryComparison,
+        showDistanceMeasure,
         showStreetViewPicker,
         showTerrain,
         showGlobe,
         toggleAirport,
+        toggleCountryComparison,
+        toggleDistanceMeasure,
         toggleStreetViewPicker,
         toggleTerrain,
         toggleGlobe,
@@ -212,11 +226,17 @@ export default function AdvancedTab() {
             {/* 3D Visualization */}
             <div className="section">
                 <div className="section-header">
-                    <h3 className="section-title">3D View</h3>
+                    <div>
+                        <h3 className="section-title">3D View</h3>
+                        <p className="section-description">
+                            Perspective and projection controls for terrain-heavy exploration.
+                        </p>
+                    </div>
                 </div>
                 <div className="layer-list">
                     <LayerButton
                         label="3D Terrain"
+                        description="Use elevation shading and terrain exaggeration."
                         icon={null}
                         active={showTerrain}
                         loading={!!loadingStates["terrain"]}
@@ -226,6 +246,7 @@ export default function AdvancedTab() {
                     />
                     <LayerButton
                         label="Globe Projection"
+                        description="Wrap the map into a globe for world-scale browsing."
                         icon={null}
                         active={showGlobe}
                         loading={!!loadingStates["globe"]}
@@ -238,11 +259,37 @@ export default function AdvancedTab() {
 
             <div className="section">
                 <div className="section-header">
-                    <h3 className="section-title">Map Tools</h3>
+                    <div>
+                        <h3 className="section-title">Map Tools</h3>
+                        <p className="section-description">
+                            Interaction tools for measuring and external street-level views.
+                        </p>
+                    </div>
                 </div>
                 <div className="layer-list">
                     <LayerButton
+                        label="Compare Countries"
+                        description="Pick two countries from the map or search to compare them."
+                        icon={null}
+                        active={showCountryComparison}
+                        loading={false}
+                        onClick={toggleCountryComparison}
+                        color="#9333ea"
+                        ariaLabel="Toggle country comparison"
+                    />
+                    <LayerButton
+                        label="Measure Distance"
+                        description="Click points on the map to measure travel distance."
+                        icon={null}
+                        active={showDistanceMeasure}
+                        loading={false}
+                        onClick={toggleDistanceMeasure}
+                        color="#0f766e"
+                        ariaLabel="Toggle distance measurement"
+                    />
+                    <LayerButton
                         label="Street View Picker"
+                        description="Open Google Street View from a clicked location."
                         icon={null}
                         active={showStreetViewPicker}
                         loading={false}
@@ -256,12 +303,18 @@ export default function AdvancedTab() {
             {/* Airports */}
             <div className="section">
                 <div className="section-header">
-                    <h3 className="section-title">Airports</h3>
+                    <div>
+                        <h3 className="section-title">Airports</h3>
+                        <p className="section-description">
+                            Filter airport markers by size and type.
+                        </p>
+                    </div>
                     <div className="section-controls">
                         <button
                             onClick={handleSelectAllAirports}
                             className="control-button primary"
                             aria-label="Show all airport types"
+                            type="button"
                         >
                             All
                         </button>
@@ -269,6 +322,7 @@ export default function AdvancedTab() {
                             onClick={handleClearAllAirports}
                             className="control-button outline"
                             aria-label="Hide all airport types"
+                            type="button"
                         >
                             None
                         </button>

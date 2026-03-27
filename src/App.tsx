@@ -1,7 +1,11 @@
 import { lazy, Suspense, useCallback, useEffect, useRef } from "react";
 import type { MapRef } from "./components/Map";
 import { buildLegendSections } from "./components/Legend/LegendSections";
-import { useLoadingStore, useMapStore } from "./store/loadingStore";
+import {
+    useLoadingStore,
+    useMapStore,
+    type SelectedCountry,
+} from "./store/loadingStore";
 import countryData from "./data/data.json";
 
 const Map = lazy(() => import("./components/Map"));
@@ -10,6 +14,9 @@ const Legend = lazy(() => import("./components/Legend/Legend"));
 const SearchBar = lazy(() => import("./components/SearchBar/SearchBar"));
 const CountryDetailsPanel = lazy(
     () => import("./components/CountryDetailsPanel/CountryDetailsPanel")
+);
+const CountryComparisonPanel = lazy(
+    () => import("./components/CountryComparisonPanel/CountryComparisonPanel")
 );
 
 type CountryFeature = {
@@ -34,7 +41,10 @@ export default function App() {
         showContinents,
         showDensity,
         showHeatmap,
+        showTimezones,
         theme,
+        showCountryComparison,
+        setComparisonCountry,
         setSelectedCountry,
     } =
         useMapStore();
@@ -60,19 +70,24 @@ export default function App() {
                     (country) => country.properties.cca3 === countryCode
                 )?.properties || null;
 
-            setSelectedCountry(selectedCountry);
+            if (selectedCountry && showCountryComparison) {
+                setComparisonCountry(selectedCountry as SelectedCountry);
+            } else {
+                setSelectedCountry(selectedCountry);
+            }
 
             if (mapRef.current) {
                 mapRef.current.flyToLocation(coordinates, zoom);
             }
         },
-        [setSelectedCountry]
+        [setComparisonCountry, setSelectedCountry, showCountryComparison]
     );
 
     const legendSections = buildLegendSections(
         showContinents,
         showHeatmap,
-        showDensity
+        showDensity,
+        showTimezones
     );
 
     useEffect(() => {
@@ -86,6 +101,7 @@ export default function App() {
                 <Legend sections={legendSections} />
                 <MapControls />
                 <CountryDetailsPanel />
+                <CountryComparisonPanel />
                 <Map
                     ref={mapRef}
                     onLoadingComplete={handleLoadingComplete}

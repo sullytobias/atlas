@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 import { useMapStore } from "../../store/loadingStore";
+import { formatDistance } from "../../utils/distanceMeasurement";
+import OverlayPanel from "../OverlayPanel/OverlayPanel";
 import "./CountryDetailsPanel.css";
 
 function formatNumber(value?: number): string {
@@ -42,8 +44,12 @@ function sanitizeUrl(value?: string): string | null {
 
 export default function CountryDetailsPanel() {
     const {
+        clearMeasurement,
+        showCountryComparison,
+        measurementStart,
         selectedAirport,
         selectedCountry,
+        selectedMeasurement,
         selectedLocation,
         setSelectedAirport,
         setSelectedCountry,
@@ -104,8 +110,18 @@ export default function CountryDetailsPanel() {
     const googleStreetViewLink = selectedLocation
         ? `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${selectedLocation.latitude},${selectedLocation.longitude}`
         : null;
+    const measurementDistanceLabel = selectedMeasurement
+        ? formatDistance(selectedMeasurement.distanceMeters)
+        : null;
 
-    if (!selectedCountry && !selectedAirport && !selectedLocation) {
+    if (
+        showCountryComparison ||
+        !selectedCountry &&
+        !selectedAirport &&
+        !selectedLocation &&
+        !measurementStart &&
+        !selectedMeasurement
+    ) {
         return null;
     }
 
@@ -113,54 +129,55 @@ export default function CountryDetailsPanel() {
         setSelectedAirport(null);
         setSelectedCountry(null);
         setSelectedLocation(null);
+        clearMeasurement();
     };
 
-    const panelTitle = selectedAirport
-        ? selectedAirport.name
-        : selectedCountry
-        ? selectedCountry.country
-        : "Picked Location";
-    const panelEyebrow = selectedAirport
-        ? "Airport"
-        : selectedCountry
-        ? selectedCountry.continent || "Country"
-        : "Street View";
+    const panelTitle =
+        selectedMeasurement || measurementStart
+            ? "Distance Measurement"
+            : selectedAirport
+              ? selectedAirport.name
+              : selectedCountry
+                ? selectedCountry.country
+                : "Picked Location";
+    const panelEyebrow = selectedMeasurement
+        ? "Map Tool"
+        : measurementStart
+          ? "Awaiting Second Point"
+          : selectedAirport
+            ? "Airport"
+            : selectedCountry
+              ? selectedCountry.continent || "Country"
+              : "Street View";
+
+    const leading = selectedCountry ? (
+        <img
+            className="country-details-flag"
+            src={selectedCountry.flag}
+            alt={selectedCountry.flagAlt || `Flag of ${selectedCountry.country}`}
+            width={56}
+            height={40}
+        />
+    ) : (
+        <div className="country-details-airport-icon">
+            {selectedMeasurement || measurementStart
+                ? "R"
+                : selectedLocation
+                  ? "⌖"
+                  : "✈"}
+        </div>
+    );
 
     return (
-        <aside className="country-details-panel" aria-label="Details panel">
-            <div className="country-details-header">
-                <div className="country-details-identity">
-                    {selectedCountry ? (
-                        <img
-                            className="country-details-flag"
-                            src={selectedCountry.flag}
-                            alt={
-                                selectedCountry.flagAlt ||
-                                `Flag of ${selectedCountry.country}`
-                            }
-                            width={56}
-                            height={40}
-                        />
-                    ) : (
-                        <div className="country-details-airport-icon">
-                            {selectedLocation ? "⌖" : "✈"}
-                        </div>
-                    )}
-                    <div>
-                        <div className="country-details-eyebrow">{panelEyebrow}</div>
-                        <h2 className="country-details-title">{panelTitle}</h2>
-                    </div>
-                </div>
-                <button
-                    type="button"
-                    className="country-details-close"
-                    onClick={handleClose}
-                    aria-label="Close details"
-                >
-                    ✕
-                </button>
-            </div>
-
+        <OverlayPanel
+            ariaLabel="Details panel"
+            className="country-details-panel"
+            eyebrow={panelEyebrow}
+            title={panelTitle}
+            leading={leading}
+            onClose={handleClose}
+            closeLabel="Close details"
+        >
             {selectedCountry && countryDetails ? (
                 <>
                     <div className="country-details-stats">
@@ -173,7 +190,9 @@ export default function CountryDetailsPanel() {
                             </span>
                         </div>
                         <div className="country-details-stat">
-                            <span className="country-details-stat-label">Area</span>
+                            <span className="country-details-stat-label">
+                                Area
+                            </span>
                             <span className="country-details-stat-value">
                                 {selectedCountry.area
                                     ? `${formatNumber(selectedCountry.area)} km²`
@@ -181,11 +200,13 @@ export default function CountryDetailsPanel() {
                             </span>
                         </div>
                         <div className="country-details-stat">
-                            <span className="country-details-stat-label">Density</span>
+                            <span className="country-details-stat-label">
+                                Density
+                            </span>
                             <span className="country-details-stat-value">
                                 {selectedCountry.populationDensity
                                     ? `${formatNumber(
-                                          selectedCountry.populationDensity
+                                          selectedCountry.populationDensity,
                                       )} / km²`
                                     : "N/A"}
                             </span>
@@ -208,6 +229,60 @@ export default function CountryDetailsPanel() {
                         ))}
                     </div>
                 </>
+            ) : null}
+
+            {selectedMeasurement ? (
+                <>
+                    <div className="country-details-stats country-details-stats-single">
+                        <div className="country-details-stat">
+                            <span className="country-details-stat-label">
+                                Distance
+                            </span>
+                            <span className="country-details-stat-value">
+                                {measurementDistanceLabel}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="country-details-list">
+                        <div className="country-details-list-item">
+                            <span className="country-details-list-label">
+                                Start Point
+                            </span>
+                            <span className="country-details-list-value">
+                                {selectedMeasurement.start.latitude.toFixed(6)},{" "}
+                                {selectedMeasurement.start.longitude.toFixed(6)}
+                            </span>
+                        </div>
+                        <div className="country-details-list-item">
+                            <span className="country-details-list-label">
+                                End Point
+                            </span>
+                            <span className="country-details-list-value">
+                                {selectedMeasurement.end.latitude.toFixed(6)},{" "}
+                                {selectedMeasurement.end.longitude.toFixed(6)}
+                            </span>
+                        </div>
+                    </div>
+                </>
+            ) : null}
+
+            {measurementStart && !selectedMeasurement ? (
+                <div className="country-details-list">
+                    <div className="country-details-list-item">
+                        <span className="country-details-list-label">
+                            Start Point
+                        </span>
+                        <span className="country-details-list-value">
+                            {measurementStart.latitude.toFixed(6)},{" "}
+                            {measurementStart.longitude.toFixed(6)}
+                        </span>
+                    </div>
+                    <div className="country-details-note">
+                        Click a second point on the map to complete the
+                        measurement.
+                    </div>
+                </div>
             ) : null}
 
             {selectedAirport && airportDetails ? (
@@ -294,6 +369,6 @@ export default function CountryDetailsPanel() {
                     </div>
                 </div>
             ) : null}
-        </aside>
+        </OverlayPanel>
     );
 }

@@ -52,7 +52,7 @@
 }
 
 .popup-stat {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface);
   padding: 8px;
   border-radius: 10px;
   border: 1px solid var(--border);
@@ -74,7 +74,7 @@
 }
 
 .popup-details {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--surface);
   padding: 10px;
   border-radius: 10px;
   border: 1px solid var(--border);

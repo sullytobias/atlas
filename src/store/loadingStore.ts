@@ -61,29 +61,52 @@ export interface SelectedLocation {
     longitude: number;
 }
 
+export interface MeasurementPoint {
+    latitude: number;
+    longitude: number;
+}
+
+export interface SelectedMeasurement {
+    start: MeasurementPoint;
+    end: MeasurementPoint;
+    distanceMeters: number;
+    distanceKilometers: number;
+}
+
+export type ComparisonSlot = 0 | 1;
+
 interface MapState {
     showCoastlines: boolean;
     showSatellite: boolean;
     showCapitals: boolean;
     showContinents: boolean;
+    showTimezones: boolean;
     showDensity: boolean;
     showHeatmap: boolean;
     showStreetViewPicker: boolean;
+    showDistanceMeasure: boolean;
+    showCountryComparison: boolean;
     showTerrain: boolean;
     showGlobe: boolean;
     showAirports: AirportState;
     selectedAirport: SelectedAirport | null;
     selectedCountry: SelectedCountry | null;
     selectedLocation: SelectedLocation | null;
+    measurementStart: MeasurementPoint | null;
+    selectedMeasurement: SelectedMeasurement | null;
+    comparisonCountries: [SelectedCountry | null, SelectedCountry | null];
     theme: "dark" | "light";
-    
+
     toggleCoastlines: () => void;
     toggleSatellite: () => void;
     toggleCapitals: () => void;
     toggleContinents: () => void;
+    toggleTimezones: () => void;
     toggleDensity: () => void;
     toggleHeatmap: () => void;
     toggleStreetViewPicker: () => void;
+    toggleDistanceMeasure: () => void;
+    toggleCountryComparison: () => void;
     toggleTerrain: () => void;
     toggleGlobe: () => void;
     toggleAirport: (type: keyof AirportState) => void;
@@ -91,6 +114,15 @@ interface MapState {
     setSelectedAirport: (airport: SelectedAirport | null) => void;
     setSelectedCountry: (country: SelectedCountry | null) => void;
     setSelectedLocation: (location: SelectedLocation | null) => void;
+    setMeasurementStart: (point: MeasurementPoint | null) => void;
+    setSelectedMeasurement: (measurement: SelectedMeasurement | null) => void;
+    setComparisonCountry: (
+        country: SelectedCountry,
+        slot?: ComparisonSlot
+    ) => void;
+    clearComparisonSlot: (slot: ComparisonSlot) => void;
+    clearComparison: () => void;
+    clearMeasurement: () => void;
     toggleTheme: () => void;
 }
 
@@ -99,14 +131,20 @@ export const useMapStore = create<MapState>((set) => ({
     showSatellite: false,
     showCapitals: false,
     showContinents: false,
+    showTimezones: false,
     showDensity: false,
     showHeatmap: false,
     showStreetViewPicker: false,
+    showDistanceMeasure: false,
+    showCountryComparison: false,
     showTerrain: false,
     showGlobe: false,
     selectedAirport: null,
     selectedCountry: null,
     selectedLocation: null,
+    measurementStart: null,
+    selectedMeasurement: null,
+    comparisonCountries: [null, null],
     theme: "dark",
     showAirports: {
         large: false,
@@ -117,41 +155,71 @@ export const useMapStore = create<MapState>((set) => ({
         closed: false,
         balloonport: false,
     },
-    
+
     toggleCoastlines: () => {
-        useLoadingStore.getState().setLoading('coastlines', true);
+        useLoadingStore.getState().setLoading("coastlines", true);
         set((state) => ({ showCoastlines: !state.showCoastlines }));
     },
     toggleSatellite: () => {
-        useLoadingStore.getState().setLoading('satellite', true);
+        useLoadingStore.getState().setLoading("satellite", true);
         set((state) => ({ showSatellite: !state.showSatellite }));
     },
     toggleCapitals: () => {
-        useLoadingStore.getState().setLoading('capitals', true);
+        useLoadingStore.getState().setLoading("capitals", true);
         set((state) => ({ showCapitals: !state.showCapitals }));
     },
     toggleContinents: () => {
-        useLoadingStore.getState().setLoading('continents', true);
+        useLoadingStore.getState().setLoading("continents", true);
         set((state) => ({ showContinents: !state.showContinents }));
     },
+    toggleTimezones: () => {
+        useLoadingStore.getState().setLoading("timezones", true);
+        set((state) => ({ showTimezones: !state.showTimezones }));
+    },
     toggleDensity: () => {
-        useLoadingStore.getState().setLoading('density', true);
+        useLoadingStore.getState().setLoading("density", true);
         set((state) => ({ showDensity: !state.showDensity }));
     },
     toggleHeatmap: () => {
-        useLoadingStore.getState().setLoading('heatmap', true);
+        useLoadingStore.getState().setLoading("heatmap", true);
         set((state) => ({ showHeatmap: !state.showHeatmap }));
     },
     toggleStreetViewPicker: () =>
         set((state) => ({
             showStreetViewPicker: !state.showStreetViewPicker,
+            showDistanceMeasure: !state.showStreetViewPicker
+                ? false
+                : state.showDistanceMeasure,
+            measurementStart: !state.showStreetViewPicker
+                ? null
+                : state.measurementStart,
+            selectedMeasurement: !state.showStreetViewPicker
+                ? null
+                : state.selectedMeasurement,
+        })),
+    toggleDistanceMeasure: () =>
+        set((state) => ({
+            showDistanceMeasure: !state.showDistanceMeasure,
+            showStreetViewPicker: !state.showDistanceMeasure
+                ? false
+                : state.showStreetViewPicker,
+            measurementStart: null,
+            selectedMeasurement: null,
+        })),
+    toggleCountryComparison: () =>
+        set((state) => ({
+            showCountryComparison: !state.showCountryComparison,
+            comparisonCountries: !state.showCountryComparison
+                ? state.comparisonCountries
+                : [null, null],
+            selectedCountry: null,
         })),
     toggleTerrain: () => {
-        useLoadingStore.getState().setLoading('terrain', true);
+        useLoadingStore.getState().setLoading("terrain", true);
         set((state) => ({ showTerrain: !state.showTerrain }));
     },
     toggleGlobe: () => {
-        useLoadingStore.getState().setLoading('globe', true);
+        useLoadingStore.getState().setLoading("globe", true);
         set((state) => ({ showGlobe: !state.showGlobe }));
     },
     toggleAirport: (type) => {
@@ -164,8 +232,16 @@ export const useMapStore = create<MapState>((set) => ({
         }));
     },
     setAllAirports: (value) => {
-        const types: (keyof AirportState)[] = ['large', 'medium', 'small', 'heliport', 'seaplane', 'closed', 'balloonport'];
-        types.forEach(type => {
+        const types: (keyof AirportState)[] = [
+            "large",
+            "medium",
+            "small",
+            "heliport",
+            "seaplane",
+            "closed",
+            "balloonport",
+        ];
+        types.forEach((type) => {
             useLoadingStore.getState().setLoading(`airport-${type}`, true);
         });
         set(() => ({
@@ -181,22 +257,103 @@ export const useMapStore = create<MapState>((set) => ({
         }));
     },
     setSelectedAirport: (airport) =>
-        set({
+        set((state) => ({
             selectedAirport: airport,
-            selectedCountry: airport ? null : useMapStore.getState().selectedCountry,
-            selectedLocation: airport ? null : useMapStore.getState().selectedLocation,
-        }),
+            selectedCountry: airport ? null : state.selectedCountry,
+            selectedLocation: airport ? null : state.selectedLocation,
+            measurementStart: airport ? null : state.measurementStart,
+            selectedMeasurement: airport ? null : state.selectedMeasurement,
+        })),
     setSelectedCountry: (country) =>
-        set({
-            selectedAirport: country ? null : useMapStore.getState().selectedAirport,
+        set((state) => ({
+            selectedAirport: country ? null : state.selectedAirport,
             selectedCountry: country,
-            selectedLocation: country ? null : useMapStore.getState().selectedLocation,
-        }),
+            selectedLocation: country ? null : state.selectedLocation,
+            measurementStart: country ? null : state.measurementStart,
+            selectedMeasurement: country ? null : state.selectedMeasurement,
+        })),
     setSelectedLocation: (location) =>
-        set({
-            selectedAirport: location ? null : useMapStore.getState().selectedAirport,
-            selectedCountry: location ? null : useMapStore.getState().selectedCountry,
+        set((state) => ({
+            selectedAirport: location ? null : state.selectedAirport,
+            selectedCountry: location ? null : state.selectedCountry,
             selectedLocation: location,
+            measurementStart: location ? null : state.measurementStart,
+            selectedMeasurement: location ? null : state.selectedMeasurement,
+        })),
+    setMeasurementStart: (point) =>
+        set((state) => ({
+            selectedAirport: point ? null : state.selectedAirport,
+            selectedCountry: point ? null : state.selectedCountry,
+            selectedLocation: point ? null : state.selectedLocation,
+            measurementStart: point,
+            selectedMeasurement: point ? null : state.selectedMeasurement,
+        })),
+    setSelectedMeasurement: (measurement) =>
+        set((state) => ({
+            selectedAirport: measurement ? null : state.selectedAirport,
+            selectedCountry: measurement ? null : state.selectedCountry,
+            selectedLocation: measurement ? null : state.selectedLocation,
+            measurementStart: measurement ? null : state.measurementStart,
+            selectedMeasurement: measurement,
+        })),
+    setComparisonCountry: (country, slot) =>
+        set((state) => {
+            const comparisonCountries: [SelectedCountry | null, SelectedCountry | null] =
+                [...state.comparisonCountries] as [
+                    SelectedCountry | null,
+                    SelectedCountry | null,
+                ];
+
+            if (slot !== undefined) {
+                comparisonCountries[slot] = country;
+            } else if (!comparisonCountries[0]) {
+                comparisonCountries[0] = country;
+            } else if (!comparisonCountries[1]) {
+                comparisonCountries[1] = country;
+            } else {
+                comparisonCountries[1] = country;
+            }
+
+            return {
+                showCountryComparison: true,
+                comparisonCountries,
+                selectedAirport: null,
+                selectedCountry: null,
+                selectedLocation: null,
+                measurementStart: null,
+                selectedMeasurement: null,
+            };
+        }),
+    clearComparisonSlot: (slot) =>
+        set((state) => {
+            const comparisonCountries: [SelectedCountry | null, SelectedCountry | null] =
+                [...state.comparisonCountries] as [
+                    SelectedCountry | null,
+                    SelectedCountry | null,
+                ];
+            comparisonCountries[slot] = null;
+
+            if (!comparisonCountries[0] && comparisonCountries[1]) {
+                comparisonCountries[0] = comparisonCountries[1];
+                comparisonCountries[1] = null;
+            }
+
+            return {
+                comparisonCountries,
+                showCountryComparison:
+                    comparisonCountries[0] !== null ||
+                    comparisonCountries[1] !== null,
+            };
+        }),
+    clearComparison: () =>
+        set({
+            comparisonCountries: [null, null],
+            showCountryComparison: false,
+        }),
+    clearMeasurement: () =>
+        set({
+            measurementStart: null,
+            selectedMeasurement: null,
         }),
     toggleTheme: () =>
         set((state) => ({

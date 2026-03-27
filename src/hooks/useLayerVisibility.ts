@@ -8,27 +8,32 @@ type LayerVisibilityConfig = {
 };
 
 export function useLayerVisibility(
-    mapRef: React.RefObject<MLMap | null>,
+    map: MLMap | null,
     configs: LayerVisibilityConfig[],
     onLoadingComplete?: (key: string) => void
 ) {
     useEffect(() => {
-        const map = mapRef.current;
         if (!map) return;
 
         const apply = () => {
             const pendingKeys = new Set<string>();
 
             configs.forEach(({ layerId, condition, loadingKey }) => {
-                if (map.getLayer(layerId)) {
-                    map.setLayoutProperty(
-                        layerId,
-                        "visibility",
-                        condition ? "visible" : "none"
-                    );
+                if (!map.getLayer(layerId)) {
+                    return;
                 }
 
-                if (loadingKey) {
+                const nextVisibility = condition ? "visible" : "none";
+                const currentVisibility = map.getLayoutProperty(
+                    layerId,
+                    "visibility"
+                );
+
+                if (currentVisibility !== nextVisibility) {
+                    map.setLayoutProperty(layerId, "visibility", nextVisibility);
+                }
+
+                if (loadingKey && currentVisibility !== nextVisibility) {
                     pendingKeys.add(loadingKey);
                 }
             });
@@ -39,17 +44,13 @@ export function useLayerVisibility(
                 pendingKeys.forEach((key) => onLoadingComplete(key));
             };
 
-            if (map.loaded()) {
-                clearPendingKeys();
-            } else {
-                map.once("idle", clearPendingKeys);
-            }
+            window.requestAnimationFrame(clearPendingKeys);
         };
 
         if (map.isStyleLoaded()) {
             apply();
         } else {
-            map.once("styledata", apply);
+            map.once("load", apply);
         }
-    }, [mapRef, configs, onLoadingComplete]);
+    }, [map, configs, onLoadingComplete]);
 }

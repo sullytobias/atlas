@@ -6,7 +6,7 @@ import {
     useImperativeHandle,
     forwardRef,
 } from "react";
-import type { StyleSpecification } from "maplibre-gl";
+import type { GeoJSONSource, StyleSpecification } from "maplibre-gl";
 import { MapMouseEvent } from "maplibre-gl";
 
 import { MAP_SOURCES } from "../config/mapSources";
@@ -16,6 +16,11 @@ import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import { useMapStore } from "../store/loadingStore";
 import SimpleLoader from "./SimpleLoader/SimpleLoader";
 import { useMapPopups } from "../hooks/useMapPopups";
+import {
+    buildMeasurementLabelGeoJson,
+    buildMeasurementLineGeoJson,
+    buildMeasurementPointsGeoJson,
+} from "../utils/distanceMeasurement";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/map.css";
@@ -40,11 +45,14 @@ export default forwardRef<MapRef, Props>(function Map(
         showSatellite,
         showCapitals,
         showContinents,
+        showTimezones,
         showDensity,
         showHeatmap,
         showGlobe,
         showTerrain,
         showAirports,
+        measurementStart,
+        selectedMeasurement,
     } = useMapStore();
 
     const style = useMemo<StyleSpecification>(
@@ -56,7 +64,19 @@ export default forwardRef<MapRef, Props>(function Map(
         [],
     );
 
-    const mapRef = useMapInstance(containerRef, style);
+    const { map, mapRef } = useMapInstance(containerRef, style);
+    const previousLayerStateRef = useRef({
+        showCoastlines,
+        showSatellite,
+        showCapitals,
+        showContinents,
+        showTimezones,
+        showDensity,
+        showHeatmap,
+        showGlobe,
+        showTerrain,
+        showAirports,
+    });
 
     useImperativeHandle(
         ref,
@@ -114,6 +134,21 @@ export default forwardRef<MapRef, Props>(function Map(
                 layerId: "continents-fill",
                 condition: showContinents,
                 loadingKey: "continents",
+            },
+            {
+                layerId: "timezones-fill",
+                condition: showTimezones,
+                loadingKey: "timezones",
+            },
+            {
+                layerId: "timezones-outline",
+                condition: showTimezones,
+                loadingKey: "timezones",
+            },
+            {
+                layerId: "timezones-labels",
+                condition: showTimezones,
+                loadingKey: "timezones",
             },
             {
                 layerId: "density-choropleth",
@@ -176,6 +211,7 @@ export default forwardRef<MapRef, Props>(function Map(
             showSatellite,
             showCapitals,
             showContinents,
+            showTimezones,
             showDensity,
             showHeatmap,
             showTerrain,
@@ -183,7 +219,138 @@ export default forwardRef<MapRef, Props>(function Map(
         ],
     );
 
-    useLayerVisibility(mapRef, visibilityConfigs, onLoadingComplete);
+    useLayerVisibility(map, visibilityConfigs, onLoadingComplete);
+
+    const measurementStartRef = useRef(measurementStart);
+    const selectedMeasurementRef = useRef(selectedMeasurement);
+
+    useEffect(() => {
+        measurementStartRef.current = measurementStart;
+        selectedMeasurementRef.current = selectedMeasurement;
+    }, [measurementStart, selectedMeasurement]);
+
+    useEffect(() => {
+        if (!map) return;
+
+        const syncMeasurementSources = () => {
+            const measurementLineSource = map.getSource(
+                "measurementLine",
+            ) as GeoJSONSource | undefined;
+            const measurementPointsSource = map.getSource(
+                "measurementPoints",
+            ) as GeoJSONSource | undefined;
+            const measurementLabelSource = map.getSource(
+                "measurementLabel",
+            ) as GeoJSONSource | undefined;
+            const currentMeasurementStart = measurementStartRef.current;
+            const currentSelectedMeasurement = selectedMeasurementRef.current;
+
+            measurementLineSource?.setData(
+                buildMeasurementLineGeoJson(
+                    currentSelectedMeasurement?.start ?? null,
+                    currentSelectedMeasurement?.end ?? null,
+                ),
+            );
+            measurementPointsSource?.setData(
+                buildMeasurementPointsGeoJson(
+                    currentSelectedMeasurement?.start ?? currentMeasurementStart,
+                    currentSelectedMeasurement?.end ?? null,
+                ),
+            );
+            measurementLabelSource?.setData(
+                buildMeasurementLabelGeoJson(
+                    currentSelectedMeasurement?.start ?? null,
+                    currentSelectedMeasurement?.end ?? null,
+                    currentSelectedMeasurement?.distanceMeters ?? null,
+                ),
+            );
+        };
+
+        if (map.isStyleLoaded()) {
+            syncMeasurementSources();
+        } else {
+            map.once("load", syncMeasurementSources);
+        }
+    }, [map, measurementStart, selectedMeasurement]);
+
+    useEffect(() => {
+        if (!onLoadingComplete) return;
+
+        const previousState = previousLayerStateRef.current;
+        const changedKeys = new Set<string>();
+
+        if (previousState.showCoastlines !== showCoastlines) {
+            changedKeys.add("coastlines");
+        }
+        if (previousState.showSatellite !== showSatellite) {
+            changedKeys.add("satellite");
+        }
+        if (previousState.showCapitals !== showCapitals) {
+            changedKeys.add("capitals");
+        }
+        if (previousState.showContinents !== showContinents) {
+            changedKeys.add("continents");
+        }
+        if (previousState.showTimezones !== showTimezones) {
+            changedKeys.add("timezones");
+        }
+        if (previousState.showDensity !== showDensity) {
+            changedKeys.add("density");
+        }
+        if (previousState.showHeatmap !== showHeatmap) {
+            changedKeys.add("heatmap");
+        }
+        if (previousState.showGlobe !== showGlobe) {
+            changedKeys.add("globe");
+        }
+        if (previousState.showTerrain !== showTerrain) {
+            changedKeys.add("terrain");
+        }
+
+        (
+            Object.keys(showAirports) as Array<keyof typeof showAirports>
+        ).forEach((airportType) => {
+            if (
+                previousState.showAirports[airportType] !==
+                showAirports[airportType]
+            ) {
+                changedKeys.add(`airport-${airportType}`);
+            }
+        });
+
+        previousLayerStateRef.current = {
+            showCoastlines,
+            showSatellite,
+            showCapitals,
+            showContinents,
+            showTimezones,
+            showDensity,
+            showHeatmap,
+            showGlobe,
+            showTerrain,
+            showAirports,
+        };
+
+        if (changedKeys.size === 0) return;
+
+        const frameId = window.requestAnimationFrame(() => {
+            changedKeys.forEach((key) => onLoadingComplete(key));
+        });
+
+        return () => window.cancelAnimationFrame(frameId);
+    }, [
+        onLoadingComplete,
+        showCoastlines,
+        showSatellite,
+        showCapitals,
+        showContinents,
+        showTimezones,
+        showDensity,
+        showHeatmap,
+        showGlobe,
+        showTerrain,
+        showAirports,
+    ]);
 
     const clearHoveredCountry = useCallback(() => {
         const map = mapRef.current;
@@ -201,7 +368,6 @@ export default forwardRef<MapRef, Props>(function Map(
     }, []);
 
     const setHoveredCountry = useCallback((countryId: string | number) => {
-        const map = mapRef.current;
         if (!map) return;
 
         map.setFeatureState(
@@ -213,7 +379,7 @@ export default forwardRef<MapRef, Props>(function Map(
             { hover: true },
         );
         hoveredCountryId.current = countryId;
-    }, []);
+    }, [map]);
 
     const { handleClick, removePopup } = useMapPopups(mapRef);
 
@@ -221,6 +387,11 @@ export default forwardRef<MapRef, Props>(function Map(
         (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
+
+            if (showTimezones) {
+                clearHoveredCountry();
+                return;
+            }
 
             const features = map.queryRenderedFeatures(e.point, {
                 layers: ["countries-fill"],
@@ -241,11 +412,10 @@ export default forwardRef<MapRef, Props>(function Map(
                 clearHoveredCountry();
             }
         },
-        [clearHoveredCountry, setHoveredCountry],
+        [clearHoveredCountry, setHoveredCountry, showTimezones],
     );
 
     useEffect(() => {
-        const map = mapRef.current;
         if (!map) return;
 
         const onLoad = () => {
@@ -264,10 +434,9 @@ export default forwardRef<MapRef, Props>(function Map(
             map.off("mousemove", handleMouseMove);
             removePopup();
         };
-    }, [handleClick, handleMouseMove, removePopup]);
+    }, [map, handleClick, handleMouseMove, removePopup]);
 
     useEffect(() => {
-        const map = mapRef.current;
         if (!map) return;
 
         const applyProjection = () => {
@@ -281,11 +450,7 @@ export default forwardRef<MapRef, Props>(function Map(
 
             if (onLoadingComplete) {
                 const clearGlobe = () => onLoadingComplete("globe");
-                if (map.loaded()) {
-                    clearGlobe();
-                } else {
-                    map.once("idle", clearGlobe);
-                }
+                window.requestAnimationFrame(clearGlobe);
             }
         };
 
@@ -294,10 +459,9 @@ export default forwardRef<MapRef, Props>(function Map(
         } else {
             map.once("load", applyProjection);
         }
-    }, [showGlobe, onLoadingComplete]);
+    }, [map, showGlobe, onLoadingComplete]);
 
     useEffect(() => {
-        const map = mapRef.current;
         if (!map) return;
 
         const applyTerrain = () => {
@@ -312,11 +476,7 @@ export default forwardRef<MapRef, Props>(function Map(
 
             if (onLoadingComplete) {
                 const clearTerrain = () => onLoadingComplete("terrain");
-                if (map.loaded()) {
-                    clearTerrain();
-                } else {
-                    map.once("idle", clearTerrain);
-                }
+                window.requestAnimationFrame(clearTerrain);
             }
         };
 
@@ -325,11 +485,11 @@ export default forwardRef<MapRef, Props>(function Map(
         } else {
             map.once("load", applyTerrain);
         }
-    }, [showTerrain, onLoadingComplete]);
+    }, [map, showTerrain, onLoadingComplete]);
 
     return (
         <>
-            <SimpleLoader map={mapRef.current} />
+            <SimpleLoader map={map} />
             <div ref={containerRef} className="map" />
         </>
     );

@@ -55,7 +55,6 @@ const POPULATION_EXPRESSION = buildCountryMetricExpression(
 const DENSITY_EXPRESSION = buildCountryMetricExpression(
     (properties) => properties.populationDensity ?? -1,
 );
-
 export const MAP_LAYERS: LayerSpecification[] = [
     {
         id: "basic-base",
@@ -66,12 +65,17 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "satellite-base",
         type: "raster",
         source: "satellite",
+        layout: {
+            visibility: "none",
+        },
     },
     {
         id: "hillshade",
         type: "hillshade",
         source: "terrainSource",
-
+        layout: {
+            visibility: "none",
+        },
         paint: {
             "hillshade-exaggeration": 0.4,
             "hillshade-shadow-color": "#000000",
@@ -82,6 +86,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         type: "fill",
         source: "countries",
         "source-layer": "countries",
+        layout: {
+            visibility: "none",
+        },
         paint: {
             "fill-color": [
                 "case",
@@ -113,6 +120,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         type: "fill",
         source: "countries",
         "source-layer": "countries",
+        layout: {
+            visibility: "none",
+        },
         paint: {
             "fill-color": [
                 "case",
@@ -174,12 +184,18 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "countries",
         "source-layer": "countries",
         type: "line",
+        layout: {
+            visibility: "none",
+        },
         paint: { "line-color": "#198EC8", "line-width": 2 },
     },
     {
         id: "capitals-points",
         type: "circle",
         source: "countriesData",
+        layout: {
+            visibility: "none",
+        },
         paint: {
             "circle-radius": 6,
             "circle-color": "#FF0000",
@@ -192,6 +208,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         type: "symbol",
         source: "countriesData",
         layout: {
+            visibility: "none",
             "text-field": ["get", "capital"],
             "text-font": ["Open Sans Regular"],
             "text-offset": [0, 1.5],
@@ -208,15 +225,135 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "continents-fill",
         type: "fill",
         source: "continents",
+        layout: {
+            visibility: "none",
+        },
         paint: {
             "fill-color": getContinentColorExpression(),
             "fill-opacity": 0.4,
         },
     },
     {
+        id: "timezones-fill",
+        type: "fill",
+        source: "timezones",
+        layout: {
+            visibility: "none",
+        },
+        paint: {
+            "fill-color": ["coalesce", ["get", "fillColor"], "#b7e4dc"],
+            "fill-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                0,
+                0.2,
+                3,
+                0.26,
+                6,
+                0.32,
+            ],
+        },
+    },
+    {
+        id: "timezones-outline",
+        type: "line",
+        source: "timezones",
+        layout: {
+            visibility: "none",
+        },
+        paint: {
+            "line-color": ["coalesce", ["get", "outlineColor"], "#4f8d84"],
+            "line-opacity": 0.95,
+            "line-width": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                0,
+                1,
+                4,
+                1.8,
+                7,
+                2.4,
+            ],
+        },
+    },
+    {
+        id: "timezones-labels",
+        type: "symbol",
+        source: "timezoneLabels",
+        layout: {
+            visibility: "none",
+            "text-field": ["get", "label"],
+            "text-font": ["Open Sans Regular"],
+            "text-size": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                2,
+                11,
+                5,
+                12,
+                8,
+                14,
+            ],
+            "text-anchor": "top",
+            "text-offset": [0, 0.8],
+        },
+        paint: {
+            "text-color": ["coalesce", ["get", "textColor"], "#233735"],
+            "text-halo-color": "rgba(255, 255, 255, 0.9)",
+            "text-halo-width": 1.8,
+        },
+    },
+    {
+        id: "measurement-line",
+        type: "line",
+        source: "measurementLine",
+        layout: {
+            "line-cap": "round",
+            "line-join": "round",
+        },
+        paint: {
+            "line-color": "#0ea5e9",
+            "line-width": 4,
+            "line-opacity": 0.95,
+        },
+    },
+    {
+        id: "measurement-points",
+        type: "circle",
+        source: "measurementPoints",
+        paint: {
+            "circle-radius": 5.5,
+            "circle-color": "#f8fafc",
+            "circle-stroke-color": "#0ea5e9",
+            "circle-stroke-width": 3,
+        },
+    },
+    {
+        id: "measurement-label",
+        type: "symbol",
+        source: "measurementLabel",
+        layout: {
+            "text-field": ["get", "label"],
+            "text-font": ["Open Sans Bold"],
+            "text-offset": [0, -1.4],
+            "text-size": 13,
+        },
+        paint: {
+            "text-color": "#f8fafc",
+            "text-halo-color": "#082f49",
+            "text-halo-width": 1.6,
+        },
+    },
+    {
         id: "airports-large",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "large_airport"],
         paint: {
             "circle-radius": 6,
@@ -229,6 +366,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-medium",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "medium_airport"],
         paint: {
             "circle-radius": 4.5,
@@ -241,6 +381,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-small",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "small_airport"],
         paint: {
             "circle-radius": 3,
@@ -253,6 +396,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-heliport",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "heliport"],
         paint: {
             "circle-radius": 2.5,
@@ -265,6 +411,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-seaplane",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "seaplane_base"],
         paint: {
             "circle-radius": 2.5,
@@ -277,6 +426,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-balloonport",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "balloonport"],
         paint: {
             "circle-radius": 2,
@@ -289,6 +441,9 @@ export const MAP_LAYERS: LayerSpecification[] = [
         id: "airports-closed",
         type: "circle",
         source: "airports",
+        layout: {
+            visibility: "none",
+        },
         filter: ["==", ["get", "type"], "closed"],
         paint: {
             "circle-radius": 2,
@@ -304,6 +459,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "airports",
         filter: ["==", ["get", "type"], "large_airport"],
         layout: {
+            visibility: "none",
             "text-field": ["get", "code"],
             "text-font": ["Open Sans Bold"],
             "text-offset": [0, 1.2],
@@ -322,6 +478,7 @@ export const MAP_LAYERS: LayerSpecification[] = [
         source: "airports",
         filter: ["==", ["get", "type"], "medium_airport"],
         layout: {
+            visibility: "none",
             "text-field": ["get", "code"],
             "text-font": ["Open Sans Bold"],
             "text-offset": [0, 1.2],

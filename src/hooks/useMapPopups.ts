@@ -3,6 +3,7 @@ import type { Map as MLMap, MapMouseEvent } from "maplibre-gl";
 import countryData from "../data/data.json";
 import { REVERSE_CODE_MAPPING } from "../utils/countryCodeMappings";
 import { useMapStore } from "../store/loadingStore";
+import { calculateProjectedDistance } from "../utils/distanceMeasurement";
 
 type CountryFeature = {
     properties: {
@@ -22,19 +23,60 @@ type CountryFeature = {
 export function useMapPopups(
     mapRef: React.RefObject<MLMap | null>
 ) {
-    const showStreetViewPicker = useMapStore(
-        (state) => state.showStreetViewPicker
-    );
     const setSelectedCountry = useMapStore((state) => state.setSelectedCountry);
     const setSelectedAirport = useMapStore((state) => state.setSelectedAirport);
     const setSelectedLocation = useMapStore(
         (state) => state.setSelectedLocation
+    );
+    const setMeasurementStart = useMapStore(
+        (state) => state.setMeasurementStart,
+    );
+    const setSelectedMeasurement = useMapStore(
+        (state) => state.setSelectedMeasurement,
+    );
+    const setComparisonCountry = useMapStore(
+        (state) => state.setComparisonCountry,
     );
 
     const handleClick = useCallback(
         (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
+            const {
+                showStreetViewPicker,
+                showDistanceMeasure,
+                measurementStart,
+                selectedMeasurement,
+                showCountryComparison,
+            } = useMapStore.getState();
+
+            if (showDistanceMeasure) {
+                const point = {
+                    latitude: e.lngLat.lat,
+                    longitude: e.lngLat.lng,
+                };
+
+                if (selectedMeasurement) {
+                    setMeasurementStart(point);
+                    return;
+                }
+
+                if (!measurementStart) {
+                    setMeasurementStart(point);
+                    return;
+                }
+
+                const { distanceMeters, distanceKilometers } =
+                    calculateProjectedDistance(measurementStart, point);
+
+                setSelectedMeasurement({
+                    start: measurementStart,
+                    end: point,
+                    distanceMeters,
+                    distanceKilometers,
+                });
+                return;
+            }
 
             if (showStreetViewPicker) {
                 setSelectedLocation({
@@ -98,15 +140,23 @@ export function useMapPopups(
                 continent: CONTINENT,
                 continents: [CONTINENT],
             };
+
+            if (showCountryComparison) {
+                setComparisonCountry(enrichedProperties);
+                return;
+            }
+
             setSelectedCountry(enrichedProperties);
         },
         [
             mapRef,
+            setComparisonCountry,
             setSelectedAirport,
             setSelectedCountry,
+            setMeasurementStart,
             setSelectedLocation,
-            showStreetViewPicker,
-        ]
+            setSelectedMeasurement,
+        ],
     );
 
     const removePopup = useCallback(() => {}, []);

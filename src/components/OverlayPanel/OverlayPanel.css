@@ -1,0 +1,90 @@
+.overlay-panel {
+    position: absolute;
+    z-index: 900;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    padding: 16px;
+}
+
+.overlay-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.overlay-panel-header-main {
+    display: flex;
+    gap: 12px;
+    min-width: 0;
+}
+
+.overlay-panel-leading {
+    flex-shrink: 0;
+}
+
+.overlay-panel-heading {
+    min-width: 0;
+}
+
+.overlay-panel-eyebrow {
+    color: var(--text-faint);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.overlay-panel-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.overlay-panel-description {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.overlay-panel-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.overlay-panel-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.overlay-panel-body {
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .overlay-panel {
+        left: 16px;
+        right: 16px;
+        width: auto;
+        max-height: 52vh;
+        overflow-y: auto;
+    }
+
+    .overlay-panel-title {
+        font-size: 18px;
+    }
+}

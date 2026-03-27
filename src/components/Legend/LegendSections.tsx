@@ -84,10 +84,32 @@ function DensityLegendContent() {
     );
 }
 
+function TimezonesLegendContent() {
+    return (
+        <div className="legend-items legend-items-compact">
+            <div className="legend-scale-item">
+                <div
+                    className="legend-scale-swatch"
+                    style={{ backgroundColor: "#38b2ac" }}
+                />
+                <span className="legend-scale-label">Timezone boundary</span>
+            </div>
+            <div className="legend-scale-item">
+                <div
+                    className="legend-scale-swatch"
+                    style={{ backgroundColor: "#63d4c8" }}
+                />
+                <span className="legend-scale-label">UTC offset label</span>
+            </div>
+        </div>
+    );
+}
+
 export function buildLegendSections(
     showContinents: boolean,
     showHeatmap: boolean,
-    showDensity: boolean
+    showDensity: boolean,
+    showTimezones: boolean
 ): LegendSection[] {
     return [
         {
@@ -107,6 +129,12 @@ export function buildLegendSections(
             icon: "",
             isVisible: showDensity,
             content: <DensityLegendContent />,
+        },
+        {
+            title: "Timezones",
+            icon: "",
+            isVisible: showTimezones,
+            content: <TimezonesLegendContent />,
         },
     ];
 }
