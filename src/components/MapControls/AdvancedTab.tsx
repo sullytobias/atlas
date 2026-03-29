@@ -24,7 +24,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Large,
         label: "Large Airport",
-        color: "#e74c3c",
+        color: "#ef9a84",
         size: 12,
         icon: "✈️",
         count: 955,
@@ -32,7 +32,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Medium,
         label: "Medium Airport",
-        color: "#f39c12",
+        color: "#f2c878",
         size: 9,
         icon: "🛬",
         count: 4241,
@@ -40,7 +40,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Small,
         label: "Small Airport",
-        color: "#3498db",
+        color: "#88c7e8",
         size: 6,
         icon: "🛩️",
         count: 42540,
@@ -48,7 +48,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Heliport,
         label: "Heliport",
-        color: "#9b59b6",
+        color: "#99d7ac",
         size: 5,
         icon: "🚁",
         count: 22436,
@@ -56,7 +56,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Seaplane,
         label: "Seaplane Base",
-        color: "#1abc9c",
+        color: "#71cabf",
         size: 5,
         icon: "🛥️",
         count: 1248,
@@ -64,7 +64,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Balloonport,
         label: "Balloonport",
-        color: "#e91e63",
+        color: "#ef9ab2",
         size: 4,
         icon: "🎈",
         count: 60,
@@ -72,7 +72,7 @@ const AIRPORT_TYPES: AirportType[] = [
     {
         key: AirportKey.Closed,
         label: "Closed",
-        color: "#95a5a6",
+        color: "#b3c3c8",
         size: 4,
         icon: "🚫",
         count: 12929,
@@ -241,7 +241,7 @@ export default function AdvancedTab() {
                         active={showTerrain}
                         loading={!!loadingStates["terrain"]}
                         onClick={toggleTerrain}
-                        color="#10b981"
+                        color="#84d2aa"
                         ariaLabel="Toggle 3D Terrain"
                     />
                     <LayerButton
@@ -251,7 +251,7 @@ export default function AdvancedTab() {
                         active={showGlobe}
                         loading={!!loadingStates["globe"]}
                         onClick={toggleGlobe}
-                        color="#3b82f6"
+                        color="#90bae9"
                         ariaLabel="Toggle Globe Projection"
                     />
                 </div>
@@ -274,7 +274,7 @@ export default function AdvancedTab() {
                         active={showCountryComparison}
                         loading={false}
                         onClick={toggleCountryComparison}
-                        color="#9333ea"
+                        color="#efb29b"
                         ariaLabel="Toggle country comparison"
                     />
                     <LayerButton
@@ -284,7 +284,7 @@ export default function AdvancedTab() {
                         active={showDistanceMeasure}
                         loading={false}
                         onClick={toggleDistanceMeasure}
-                        color="#0f766e"
+                        color="#6ebea8"
                         ariaLabel="Toggle distance measurement"
                     />
                     <LayerButton
@@ -294,7 +294,7 @@ export default function AdvancedTab() {
                         active={showStreetViewPicker}
                         loading={false}
                         onClick={toggleStreetViewPicker}
-                        color="#2563eb"
+                        color="#88c0ea"
                         ariaLabel="Toggle Street View picker"
                     />
                 </div>

@@ -1,13 +1,13 @@
 import { DataDrivenPropertyValueSpecification } from "maplibre-gl";
 
 export const CONTINENTS = [
-    { name: "Africa", color: "#FF6B6B", link: "https://en.wikipedia.org/wiki/Africa" },
-    { name: "Asia", color: "#4ECDC4", link: "https://en.wikipedia.org/wiki/Asia" },
-    { name: "Europe", color: "#95E1D3", link: "https://en.wikipedia.org/wiki/Europe" },
-    { name: "North America", color: "#FFE66D", link: "https://en.wikipedia.org/wiki/North_America" },
-    { name: "South America", color: "#A8E6CF", link: "https://en.wikipedia.org/wiki/South_America" },
-    { name: "Oceania", color: "#C7CEEA", link: "https://en.wikipedia.org/wiki/Oceania" },
-    { name: "Antarctica", color: "#F0F0F0", link: "https://en.wikipedia.org/wiki/Antarctica" },
+    { name: "Africa", color: "#efaa97", link: "https://en.wikipedia.org/wiki/Africa" },
+    { name: "Asia", color: "#8fded1", link: "https://en.wikipedia.org/wiki/Asia" },
+    { name: "Europe", color: "#bae7cd", link: "https://en.wikipedia.org/wiki/Europe" },
+    { name: "North America", color: "#f4df9c", link: "https://en.wikipedia.org/wiki/North_America" },
+    { name: "South America", color: "#f6c7a7", link: "https://en.wikipedia.org/wiki/South_America" },
+    { name: "Oceania", color: "#aed5f4", link: "https://en.wikipedia.org/wiki/Oceania" },
+    { name: "Antarctica", color: "#edf3f5", link: "https://en.wikipedia.org/wiki/Antarctica" },
 ];
 
 export function getContinentColorExpression() {
@@ -17,7 +17,7 @@ export function getContinentColorExpression() {
         expression.push(continent.name, continent.color);
     });
     
-    expression.push("#CCCCCC"); 
+    expression.push("#d6dee2");
     
     return expression as DataDrivenPropertyValueSpecification<string>;
 }

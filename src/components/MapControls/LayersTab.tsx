@@ -99,7 +99,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showCoastlines,
                 onChange: toggleCoastlines,
-                color: "#06b6d4",
+                color: "#7ccddd",
                 key: LayerKey.Coastlines,
             },
             {
@@ -108,7 +108,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showCapitals,
                 onChange: toggleCapitals,
-                color: "#ef4444",
+                color: "#ef9a84",
                 key: LayerKey.Capitals,
             },
             {
@@ -117,7 +117,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showSatellite,
                 onChange: toggleSatellite,
-                color: "#f59e0b",
+                color: "#f2cf84",
                 key: LayerKey.Satellite,
             },
             {
@@ -126,7 +126,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showDensity,
                 onChange: toggleDensity,
-                color: "#22c55e",
+                color: "#84d2aa",
                 key: LayerKey.Density,
             },
             {
@@ -135,7 +135,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showHeatmap,
                 onChange: toggleHeatmap,
-                color: "#f97316",
+                color: "#f0ac7e",
                 key: LayerKey.Heatmap,
             },
             {
@@ -144,7 +144,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showContinents,
                 onChange: toggleContinents,
-                color: "#10b981",
+                color: "#9adfcf",
                 key: LayerKey.Continents,
             },
             {
@@ -153,7 +153,7 @@ export default function LayersTab() {
                 icon: "",
                 checked: showTimezones,
                 onChange: toggleTimezones,
-                color: "#8b5cf6",
+                color: "#7ecfda",
                 key: LayerKey.Timezones,
             },
         ],

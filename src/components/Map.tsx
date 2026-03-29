@@ -21,6 +21,7 @@ import {
     buildMeasurementLineGeoJson,
     buildMeasurementPointsGeoJson,
 } from "../utils/distanceMeasurement";
+import { getCountryFeaturesAtPoint } from "../utils/countryFeatureQueries";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/map.css";
@@ -387,15 +388,7 @@ export default forwardRef<MapRef, Props>(function Map(
         (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
-
-            if (showTimezones) {
-                clearHoveredCountry();
-                return;
-            }
-
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ["countries-fill"],
-            });
+            const features = getCountryFeaturesAtPoint(map, e.point);
 
             if (features.length > 0) {
                 map.getCanvas().style.cursor = "pointer";
@@ -412,7 +405,7 @@ export default forwardRef<MapRef, Props>(function Map(
                 clearHoveredCountry();
             }
         },
-        [clearHoveredCountry, setHoveredCountry, showTimezones],
+        [clearHoveredCountry, setHoveredCountry],
     );
 
     useEffect(() => {

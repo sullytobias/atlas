@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import type { Map as MLMap, MapMouseEvent } from "maplibre-gl";
 import countryData from "../data/data.json";
 import { REVERSE_CODE_MAPPING } from "../utils/countryCodeMappings";
+import { getCountryFeaturesAtPoint } from "../utils/countryFeatureQueries";
 import { useMapStore } from "../store/loadingStore";
 import { calculateProjectedDistance } from "../utils/distanceMeasurement";
 
@@ -112,9 +113,7 @@ export function useMapPopups(
                 return;
             }
 
-            const features = map.queryRenderedFeatures(e.point, {
-                layers: ["countries-fill"],
-            });
+            const features = getCountryFeaturesAtPoint(map, e.point);
 
             if (features.length === 0) {
                 setSelectedLocation({

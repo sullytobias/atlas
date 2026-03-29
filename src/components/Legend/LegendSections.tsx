@@ -8,21 +8,21 @@ type LegendSection = {
 };
 
 const POPULATION_COLORS = [
-    { color: "#87CEEB", label: "< 1M" },
-    { color: "#4169E1", label: "1-10M" },
-    { color: "#FFA500", label: "10-50M" },
-    { color: "#FF4500", label: "50-100M" },
-    { color: "#DC143C", label: "100-500M" },
-    { color: "#8B008B", label: "> 500M" },
+    { color: "#d7eef8", label: "< 1M" },
+    { color: "#acd8f0", label: "1-10M" },
+    { color: "#f4de9b", label: "10-50M" },
+    { color: "#f5bc91", label: "50-100M" },
+    { color: "#eb8f78", label: "100-500M" },
+    { color: "#d96f78", label: "> 500M" },
 ];
 
 const DENSITY_COLORS = [
-    { color: "#ECFDF5", label: "< 25 / km²" },
-    { color: "#A7F3D0", label: "25-100 / km²" },
-    { color: "#34D399", label: "100-250 / km²" },
-    { color: "#10B981", label: "250-500 / km²" },
-    { color: "#059669", label: "500-1K / km²" },
-    { color: "#065F46", label: "> 1K / km²" },
+    { color: "#eef9f1", label: "< 25 / km²" },
+    { color: "#d6f1df", label: "25-100 / km²" },
+    { color: "#b4e6c8", label: "100-250 / km²" },
+    { color: "#87d6ae", label: "250-500 / km²" },
+    { color: "#59c096", label: "500-1K / km²" },
+    { color: "#2f9f87", label: "> 1K / km²" },
 ];
 
 function ContinentsLegendContent() {
@@ -90,14 +90,14 @@ function TimezonesLegendContent() {
             <div className="legend-scale-item">
                 <div
                     className="legend-scale-swatch"
-                    style={{ backgroundColor: "#38b2ac" }}
+                    style={{ backgroundColor: "#71cabf" }}
                 />
                 <span className="legend-scale-label">Timezone boundary</span>
             </div>
             <div className="legend-scale-item">
                 <div
                     className="legend-scale-swatch"
-                    style={{ backgroundColor: "#63d4c8" }}
+                    style={{ backgroundColor: "#9de2da" }}
                 />
                 <span className="legend-scale-label">UTC offset label</span>
             </div>
