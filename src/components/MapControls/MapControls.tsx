@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import LayersTab from "./LayersTab";
 import AdvancedTab from "./AdvancedTab";
 import { useMapStore } from "../../store/loadingStore";
@@ -45,6 +45,7 @@ const TabButton: React.FC<TabButtonProps> = ({
 export default function MapControls() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<"layers" | "advanced">("layers");
+    const contentRef = useRef<HTMLDivElement | null>(null);
     const {
         showCoastlines,
         showSatellite,
@@ -121,8 +122,12 @@ export default function MapControls() {
         []
     );
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isOpen) return;
+
+        setActiveTab("layers");
+        contentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Escape") setIsOpen(false);
         };
@@ -228,6 +233,7 @@ export default function MapControls() {
 
                 <div
                     className="controls-content"
+                    ref={contentRef}
                     role="tabpanel"
                     id={activeTab === "layers" ? "layers-panel" : "advanced-panel"}
                     aria-labelledby={

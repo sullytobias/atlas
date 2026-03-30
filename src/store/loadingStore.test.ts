@@ -218,6 +218,22 @@ describe("useMapStore", () => {
         expect(useMapStore.getState().comparisonCountries[1]?.cca3).toBe("ESP");
     });
 
+    it("ignores duplicate comparison country selections", () => {
+        useMapStore.getState().setComparisonCountry(selectedCountry);
+        useMapStore.getState().setComparisonCountry(selectedCountry);
+
+        expect(useMapStore.getState().comparisonCountries[0]?.cca3).toBe("FRA");
+        expect(useMapStore.getState().comparisonCountries[1]).toBeNull();
+    });
+
+    it("ignores duplicate comparison country selections for an explicit slot", () => {
+        useMapStore.getState().setComparisonCountry(selectedCountry);
+        useMapStore.getState().setComparisonCountry(selectedCountry, 1);
+
+        expect(useMapStore.getState().comparisonCountries[0]?.cca3).toBe("FRA");
+        expect(useMapStore.getState().comparisonCountries[1]).toBeNull();
+    });
+
     it("stores a hovered comparison preview only while compare mode is active", () => {
         useMapStore.getState().setHoveredComparisonCountry(selectedCountry);
         expect(useMapStore.getState().hoveredComparisonCountry).toBeNull();

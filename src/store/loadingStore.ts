@@ -91,6 +91,20 @@ export interface SelectedMeasurement {
 
 export type ComparisonSlot = 0 | 1;
 
+function normalizeComparisonCountries(
+    countries: [SelectedCountry | null, SelectedCountry | null],
+): [SelectedCountry | null, SelectedCountry | null] {
+    const uniqueCountries = countries.filter(
+        (country, index, allCountries): country is SelectedCountry =>
+            country !== null &&
+            allCountries.findIndex(
+                (candidate) => candidate?.cca3 === country.cca3,
+            ) === index,
+    );
+
+    return [uniqueCountries[0] ?? null, uniqueCountries[1] ?? null];
+}
+
 interface MapState {
     showCoastlines: boolean;
     showSatellite: boolean;
@@ -351,7 +365,8 @@ export const useMapStore = create<MapState>((set) => ({
 
             return {
                 showCountryComparison: true,
-                comparisonCountries,
+                comparisonCountries:
+                    normalizeComparisonCountries(comparisonCountries),
                 hoveredComparisonCountry: null,
                 selectedAirport: null,
                 selectedCountry: null,

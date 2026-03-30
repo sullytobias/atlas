@@ -160,11 +160,25 @@ export default forwardRef<MapRef, Props>(function Map(
                 layerId: "density-choropleth",
                 condition: showDensity,
                 loadingKey: "density",
+                paintProperties: [
+                    {
+                        name: "fill-opacity",
+                        visibleValue: 0.5,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "population-choropleth",
                 condition: showHeatmap,
                 loadingKey: "heatmap",
+                paintProperties: [
+                    {
+                        name: "fill-opacity",
+                        visibleValue: 0.5,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "airports-large",
