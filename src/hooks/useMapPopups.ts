@@ -1,25 +1,23 @@
 import { useCallback } from "react";
 import type { Map as MLMap, MapMouseEvent } from "maplibre-gl";
-import countryData from "../data/data.json";
-import { REVERSE_CODE_MAPPING } from "../utils/countryCodeMappings";
 import { getCountryFeaturesAtPoint } from "../utils/countryFeatureQueries";
 import { useMapStore } from "../store/loadingStore";
 import { calculateProjectedDistance } from "../utils/distanceMeasurement";
+import { buildTimezoneInfo } from "../utils/timezoneInfo";
+import { getSelectedCountryFromFeature } from "../utils/selectedCountry";
 
-type CountryFeature = {
-    properties: {
-        cca3: string;
-        country: string;
-        flag: string;
-        flagAlt: string;
-        population: number;
-        area: number;
-        capital: string;
-        languages: string;
-        currencies: string;
-        car: { side: string };
-    };
-};
+function getTimezoneInfoAtPoint(map: MLMap, point: MapMouseEvent["point"]) {
+    const timezoneFeature = map.queryRenderedFeatures(point, {
+        layers: ["timezones-fill"],
+    })[0];
+    const tzid = timezoneFeature?.properties?.tzid;
+
+    if (typeof tzid !== "string") {
+        return undefined;
+    }
+
+    return buildTimezoneInfo(tzid);
+}
 
 export function useMapPopups(
     mapRef: React.RefObject<MLMap | null>
@@ -83,6 +81,7 @@ export function useMapPopups(
                 setSelectedLocation({
                     latitude: e.lngLat.lat,
                     longitude: e.lngLat.lng,
+                    timezoneInfo: getTimezoneInfoAtPoint(map, e.point),
                 });
                 return;
             }
@@ -114,30 +113,24 @@ export function useMapPopups(
             }
 
             const features = getCountryFeaturesAtPoint(map, e.point);
+            const timezoneInfo = getTimezoneInfoAtPoint(map, e.point);
 
             if (features.length === 0) {
                 setSelectedLocation({
                     latitude: e.lngLat.lat,
                     longitude: e.lngLat.lng,
+                    timezoneInfo,
                 });
                 return;
             }
 
-            const { ADM0_A3, CONTINENT } = features[0].properties || {};
-            const mappedCode = REVERSE_CODE_MAPPING[ADM0_A3] || ADM0_A3;
-            if (!mappedCode) return;
-
-            const countryFeature = (
-                countryData as { features: CountryFeature[] }
-            ).features.find((f) => f.properties.cca3 === mappedCode);
-            if (!countryFeature) {
-                console.warn(`No country data found for: ${ADM0_A3}`);
+            const selectedCountry = getSelectedCountryFromFeature(features[0]);
+            if (!selectedCountry) {
                 return;
             }
             const enrichedProperties = {
-                ...countryFeature.properties,
-                continent: CONTINENT,
-                continents: [CONTINENT],
+                ...selectedCountry,
+                timezoneInfo,
             };
 
             if (showCountryComparison) {

@@ -24,6 +24,11 @@
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
+.comparison-chip.preview {
+    border-color: color-mix(in srgb, #f4c87b 55%, var(--border));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, #f4c87b 18%, transparent);
+}
+
 .comparison-chip-topline {
     display: flex;
     align-items: center;

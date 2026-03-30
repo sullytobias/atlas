@@ -22,6 +22,7 @@ import {
     buildMeasurementPointsGeoJson,
 } from "../utils/distanceMeasurement";
 import { getCountryFeaturesAtPoint } from "../utils/countryFeatureQueries";
+import { getSelectedCountryFromFeature } from "../utils/selectedCountry";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/map.css";
@@ -54,7 +55,11 @@ export default forwardRef<MapRef, Props>(function Map(
         showAirports,
         measurementStart,
         selectedMeasurement,
+        showCountryComparison,
     } = useMapStore();
+    const setHoveredComparisonCountry = useMapStore(
+        (state) => state.setHoveredComparisonCountry,
+    );
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -400,12 +405,24 @@ export default forwardRef<MapRef, Props>(function Map(
                     clearHoveredCountry();
                     setHoveredCountry(countryId);
                 }
+
+                if (showCountryComparison) {
+                    setHoveredComparisonCountry(
+                        getSelectedCountryFromFeature(features[0]),
+                    );
+                }
             } else {
                 map.getCanvas().style.cursor = "default";
                 clearHoveredCountry();
+                setHoveredComparisonCountry(null);
             }
         },
-        [clearHoveredCountry, setHoveredCountry],
+        [
+            clearHoveredCountry,
+            setHoveredComparisonCountry,
+            setHoveredCountry,
+            showCountryComparison,
+        ],
     );
 
     useEffect(() => {
@@ -428,6 +445,14 @@ export default forwardRef<MapRef, Props>(function Map(
             removePopup();
         };
     }, [map, handleClick, handleMouseMove, removePopup]);
+
+    useEffect(() => {
+        if (showCountryComparison) {
+            return;
+        }
+
+        setHoveredComparisonCountry(null);
+    }, [setHoveredComparisonCountry, showCountryComparison]);
 
     useEffect(() => {
         if (!map) return;

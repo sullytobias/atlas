@@ -27,6 +27,14 @@ function formatAirportType(type?: string): string {
         .join(" ");
 }
 
+function formatDstStatus(
+    observesDst?: boolean,
+    isDstActive?: boolean,
+): string {
+    if (!observesDst) return "No seasonal shift";
+    return isDstActive ? "DST active" : "Standard time";
+}
+
 function sanitizeUrl(value?: string): string | null {
     if (!value) return null;
 
@@ -113,6 +121,8 @@ export default function CountryDetailsPanel() {
     const measurementDistanceLabel = selectedMeasurement
         ? formatDistance(selectedMeasurement.distanceMeters)
         : null;
+    const selectedTimezoneInfo =
+        selectedCountry?.timezoneInfo || selectedLocation?.timezoneInfo;
 
     if (
         showCountryComparison ||
@@ -227,6 +237,45 @@ export default function CountryDetailsPanel() {
                                 </span>
                             </div>
                         ))}
+                        {selectedCountry.timezoneInfo ? (
+                            <>
+                                <div className="country-details-list-item">
+                                    <span className="country-details-list-label">
+                                        Local Time
+                                    </span>
+                                    <span className="country-details-list-value">
+                                        {selectedCountry.timezoneInfo.currentTime}
+                                    </span>
+                                </div>
+                                <div className="country-details-list-item">
+                                    <span className="country-details-list-label">
+                                        UTC Offset
+                                    </span>
+                                    <span className="country-details-list-value">
+                                        {selectedCountry.timezoneInfo.offsetLabel}
+                                    </span>
+                                </div>
+                                <div className="country-details-list-item">
+                                    <span className="country-details-list-label">
+                                        DST
+                                    </span>
+                                    <span className="country-details-list-value">
+                                        {formatDstStatus(
+                                            selectedCountry.timezoneInfo.observesDst,
+                                            selectedCountry.timezoneInfo.isDstActive,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="country-details-list-item">
+                                    <span className="country-details-list-label">
+                                        Timezone
+                                    </span>
+                                    <span className="country-details-list-value">
+                                        {selectedCountry.timezoneInfo.cityLabel}
+                                    </span>
+                                </div>
+                            </>
+                        ) : null}
                     </div>
                 </>
             ) : null}
@@ -345,6 +394,45 @@ export default function CountryDetailsPanel() {
                             {selectedLocation.longitude.toFixed(6)}
                         </span>
                     </div>
+                    {selectedTimezoneInfo ? (
+                        <>
+                            <div className="country-details-list-item">
+                                <span className="country-details-list-label">
+                                    Local Time
+                                </span>
+                                <span className="country-details-list-value">
+                                    {selectedTimezoneInfo.currentTime}
+                                </span>
+                            </div>
+                            <div className="country-details-list-item">
+                                <span className="country-details-list-label">
+                                    UTC Offset
+                                </span>
+                                <span className="country-details-list-value">
+                                    {selectedTimezoneInfo.offsetLabel}
+                                </span>
+                            </div>
+                            <div className="country-details-list-item">
+                                <span className="country-details-list-label">
+                                    DST
+                                </span>
+                                <span className="country-details-list-value">
+                                    {formatDstStatus(
+                                        selectedTimezoneInfo.observesDst,
+                                        selectedTimezoneInfo.isDstActive,
+                                    )}
+                                </span>
+                            </div>
+                            <div className="country-details-list-item">
+                                <span className="country-details-list-label">
+                                    Timezone
+                                </span>
+                                <span className="country-details-list-value">
+                                    {selectedTimezoneInfo.cityLabel}
+                                </span>
+                            </div>
+                        </>
+                    ) : null}
                     <div className="country-details-links">
                         {googleMapsLink ? (
                             <a

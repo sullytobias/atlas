@@ -86,6 +86,7 @@ beforeEach(() => {
         measurementStart: null,
         selectedMeasurement: null,
         comparisonCountries: [null, null],
+        hoveredComparisonCountry: null,
         showAirports: initialAirports,
     });
 });
@@ -215,6 +216,26 @@ describe("useMapStore", () => {
 
         expect(useMapStore.getState().comparisonCountries[0]?.cca3).toBe("FRA");
         expect(useMapStore.getState().comparisonCountries[1]?.cca3).toBe("ESP");
+    });
+
+    it("stores a hovered comparison preview only while compare mode is active", () => {
+        useMapStore.getState().setHoveredComparisonCountry(selectedCountry);
+        expect(useMapStore.getState().hoveredComparisonCountry).toBeNull();
+
+        useMapStore.getState().toggleCountryComparison();
+        useMapStore.getState().setHoveredComparisonCountry(selectedCountry);
+
+        expect(useMapStore.getState().hoveredComparisonCountry?.cca3).toBe(
+            "FRA"
+        );
+    });
+
+    it("clears the hovered comparison preview after committing a comparison country", () => {
+        useMapStore.getState().toggleCountryComparison();
+        useMapStore.getState().setHoveredComparisonCountry(selectedCountry);
+        useMapStore.getState().setComparisonCountry(selectedCountry);
+
+        expect(useMapStore.getState().hoveredComparisonCountry).toBeNull();
     });
 
     it("clears a comparison slot and compacts remaining countries", () => {

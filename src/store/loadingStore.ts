@@ -44,6 +44,14 @@ export interface SelectedCountry {
     languages: string;
     population: number;
     populationDensity?: number;
+    timezoneInfo?: {
+        cityLabel: string;
+        currentTime: string;
+        isDstActive: boolean;
+        observesDst: boolean;
+        offsetLabel: string;
+        tzid: string;
+    };
 }
 
 export interface SelectedAirport {
@@ -59,6 +67,14 @@ export interface SelectedAirport {
 export interface SelectedLocation {
     latitude: number;
     longitude: number;
+    timezoneInfo?: {
+        cityLabel: string;
+        currentTime: string;
+        isDstActive: boolean;
+        observesDst: boolean;
+        offsetLabel: string;
+        tzid: string;
+    };
 }
 
 export interface MeasurementPoint {
@@ -95,6 +111,7 @@ interface MapState {
     measurementStart: MeasurementPoint | null;
     selectedMeasurement: SelectedMeasurement | null;
     comparisonCountries: [SelectedCountry | null, SelectedCountry | null];
+    hoveredComparisonCountry: SelectedCountry | null;
     theme: "dark" | "light";
 
     toggleCoastlines: () => void;
@@ -120,6 +137,7 @@ interface MapState {
         country: SelectedCountry,
         slot?: ComparisonSlot
     ) => void;
+    setHoveredComparisonCountry: (country: SelectedCountry | null) => void;
     clearComparisonSlot: (slot: ComparisonSlot) => void;
     clearComparison: () => void;
     clearMeasurement: () => void;
@@ -145,6 +163,7 @@ export const useMapStore = create<MapState>((set) => ({
     measurementStart: null,
     selectedMeasurement: null,
     comparisonCountries: [null, null],
+    hoveredComparisonCountry: null,
     theme: "dark",
     showAirports: {
         large: false,
@@ -212,6 +231,7 @@ export const useMapStore = create<MapState>((set) => ({
             comparisonCountries: !state.showCountryComparison
                 ? state.comparisonCountries
                 : [null, null],
+            hoveredComparisonCountry: null,
             selectedCountry: null,
         })),
     toggleTerrain: () => {
@@ -263,6 +283,9 @@ export const useMapStore = create<MapState>((set) => ({
             selectedLocation: airport ? null : state.selectedLocation,
             measurementStart: airport ? null : state.measurementStart,
             selectedMeasurement: airport ? null : state.selectedMeasurement,
+            hoveredComparisonCountry: airport
+                ? null
+                : state.hoveredComparisonCountry,
         })),
     setSelectedCountry: (country) =>
         set((state) => ({
@@ -271,6 +294,9 @@ export const useMapStore = create<MapState>((set) => ({
             selectedLocation: country ? null : state.selectedLocation,
             measurementStart: country ? null : state.measurementStart,
             selectedMeasurement: country ? null : state.selectedMeasurement,
+            hoveredComparisonCountry: country
+                ? null
+                : state.hoveredComparisonCountry,
         })),
     setSelectedLocation: (location) =>
         set((state) => ({
@@ -279,6 +305,9 @@ export const useMapStore = create<MapState>((set) => ({
             selectedLocation: location,
             measurementStart: location ? null : state.measurementStart,
             selectedMeasurement: location ? null : state.selectedMeasurement,
+            hoveredComparisonCountry: location
+                ? null
+                : state.hoveredComparisonCountry,
         })),
     setMeasurementStart: (point) =>
         set((state) => ({
@@ -287,6 +316,9 @@ export const useMapStore = create<MapState>((set) => ({
             selectedLocation: point ? null : state.selectedLocation,
             measurementStart: point,
             selectedMeasurement: point ? null : state.selectedMeasurement,
+            hoveredComparisonCountry: point
+                ? null
+                : state.hoveredComparisonCountry,
         })),
     setSelectedMeasurement: (measurement) =>
         set((state) => ({
@@ -295,6 +327,9 @@ export const useMapStore = create<MapState>((set) => ({
             selectedLocation: measurement ? null : state.selectedLocation,
             measurementStart: measurement ? null : state.measurementStart,
             selectedMeasurement: measurement,
+            hoveredComparisonCountry: measurement
+                ? null
+                : state.hoveredComparisonCountry,
         })),
     setComparisonCountry: (country, slot) =>
         set((state) => {
@@ -317,6 +352,7 @@ export const useMapStore = create<MapState>((set) => ({
             return {
                 showCountryComparison: true,
                 comparisonCountries,
+                hoveredComparisonCountry: null,
                 selectedAirport: null,
                 selectedCountry: null,
                 selectedLocation: null,
@@ -324,6 +360,12 @@ export const useMapStore = create<MapState>((set) => ({
                 selectedMeasurement: null,
             };
         }),
+    setHoveredComparisonCountry: (country) =>
+        set((state) => ({
+            hoveredComparisonCountry: state.showCountryComparison
+                ? country
+                : null,
+        })),
     clearComparisonSlot: (slot) =>
         set((state) => {
             const comparisonCountries: [SelectedCountry | null, SelectedCountry | null] =
@@ -340,6 +382,7 @@ export const useMapStore = create<MapState>((set) => ({
 
             return {
                 comparisonCountries,
+                hoveredComparisonCountry: null,
                 showCountryComparison:
                     comparisonCountries[0] !== null ||
                     comparisonCountries[1] !== null,
@@ -348,12 +391,14 @@ export const useMapStore = create<MapState>((set) => ({
     clearComparison: () =>
         set({
             comparisonCountries: [null, null],
+            hoveredComparisonCountry: null,
             showCountryComparison: false,
         }),
     clearMeasurement: () =>
         set({
             measurementStart: null,
             selectedMeasurement: null,
+            hoveredComparisonCountry: null,
         }),
     toggleTheme: () =>
         set((state) => ({

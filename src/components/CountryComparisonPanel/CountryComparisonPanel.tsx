@@ -81,16 +81,24 @@ function CountryChip({
     country,
     slot,
     onClear,
+    isPreview = false,
 }: {
     country: SelectedCountry | null;
     slot: ComparisonSlot;
     onClear: (slot: ComparisonSlot) => void;
+    isPreview?: boolean;
 }) {
     return (
-        <div className={`comparison-chip${country ? " filled" : ""}`}>
+        <div
+            className={`comparison-chip${country ? " filled" : ""}${
+                isPreview ? " preview" : ""
+            }`}
+        >
             <div className="comparison-chip-topline">
-                <span className="comparison-chip-label">Country {slot + 1}</span>
-                {country ? (
+                <span className="comparison-chip-label">
+                    {isPreview ? "Hover Preview" : `Country ${slot + 1}`}
+                </span>
+                {country && !isPreview ? (
                     <button
                         type="button"
                         className="comparison-chip-clear"
@@ -129,6 +137,7 @@ export default function CountryComparisonPanel() {
     const {
         comparisonCountries,
         showCountryComparison,
+        hoveredComparisonCountry,
         clearComparison,
         clearComparisonSlot,
     } = useMapStore();
@@ -138,7 +147,18 @@ export default function CountryComparisonPanel() {
     }
 
     const [leftCountry, rightCountry] = comparisonCountries;
-    const metrics = buildMetrics(leftCountry, rightCountry);
+    const previewSlot: ComparisonSlot = leftCountry && !rightCountry ? 1 : 0;
+    const previewCountry =
+        hoveredComparisonCountry &&
+        hoveredComparisonCountry.cca3 !== leftCountry?.cca3 &&
+        hoveredComparisonCountry.cca3 !== rightCountry?.cca3
+            ? hoveredComparisonCountry
+            : null;
+    const displayLeftCountry =
+        previewCountry && previewSlot === 0 ? previewCountry : leftCountry;
+    const displayRightCountry =
+        previewCountry && previewSlot === 1 ? previewCountry : rightCountry;
+    const metrics = buildMetrics(displayLeftCountry, displayRightCountry);
 
     return (
         <OverlayPanel
@@ -146,20 +166,22 @@ export default function CountryComparisonPanel() {
             className="comparison-panel"
             eyebrow="Compare Countries"
             title="Quick comparison"
-            description="Pick two countries from the map or search. New picks fill the next open slot."
+            description="Pick two countries from the map or search. Hover previews the next slot, and clicks commit the selection."
             onClose={clearComparison}
             closeLabel="Close comparison"
         >
             <div className="comparison-chip-grid">
                 <CountryChip
-                    country={leftCountry}
+                    country={displayLeftCountry}
                     slot={0}
                     onClear={clearComparisonSlot}
+                    isPreview={previewCountry !== null && previewSlot === 0}
                 />
                 <CountryChip
-                    country={rightCountry}
+                    country={displayRightCountry}
                     slot={1}
                     onClear={clearComparisonSlot}
+                    isPreview={previewCountry !== null && previewSlot === 1}
                 />
             </div>
 
