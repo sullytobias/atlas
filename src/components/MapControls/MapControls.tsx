@@ -48,6 +48,7 @@ export default function MapControls() {
     const contentRef = useRef<HTMLDivElement | null>(null);
     const {
         showCoastlines,
+        showNightLights,
         showSatellite,
         showCapitals,
         showContinents,
@@ -68,6 +69,7 @@ export default function MapControls() {
         () =>
             [
                 showCoastlines,
+                showNightLights,
                 showSatellite,
                 showCapitals,
                 showContinents,
@@ -77,6 +79,7 @@ export default function MapControls() {
             ].filter(Boolean).length,
         [
             showCoastlines,
+            showNightLights,
             showSatellite,
             showCapitals,
             showContinents,

@@ -1,0 +1,35 @@
+.random-country-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 18px;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transition: background 0.15s, transform 0.1s;
+    line-height: 1;
+}
+
+.random-country-btn:hover {
+    background: var(--surface-muted);
+    transform: scale(1.08);
+}
+
+.random-country-btn:active {
+    transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+    .random-country-btn {
+        bottom: 100px;
+    }
+}

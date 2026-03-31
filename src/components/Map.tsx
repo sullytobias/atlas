@@ -14,6 +14,10 @@ import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import { useMapStore } from "../store/loadingStore";
+import {
+    CODE_MAPPING,
+    ADDITIONAL_TERRITORIES,
+} from "../utils/countryCodeMappings";
 import SimpleLoader from "./SimpleLoader/SimpleLoader";
 import { useMapPopups } from "../hooks/useMapPopups";
 import {
@@ -29,6 +33,7 @@ import "../styles/map.css";
 
 type Props = {
     onLoadingComplete?: (key: string) => void;
+    onMapMove?: (lat: number, lng: number, zoom: number) => void;
 };
 
 export type MapRef = {
@@ -36,7 +41,7 @@ export type MapRef = {
 };
 
 export default forwardRef<MapRef, Props>(function Map(
-    { onLoadingComplete },
+    { onLoadingComplete, onMapMove },
     ref,
 ) {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -44,6 +49,7 @@ export default forwardRef<MapRef, Props>(function Map(
 
     const {
         showCoastlines,
+        showNightLights,
         showSatellite,
         showCapitals,
         showContinents,
@@ -56,10 +62,13 @@ export default forwardRef<MapRef, Props>(function Map(
         measurementStart,
         selectedMeasurement,
         showCountryComparison,
+        pendingFlyTo,
     } = useMapStore();
+    const visitedCountries = useMapStore((s) => s.visitedCountries);
     const setHoveredComparisonCountry = useMapStore(
         (state) => state.setHoveredComparisonCountry,
     );
+    const setPendingFlyTo = useMapStore((state) => state.setPendingFlyTo);
 
     const style = useMemo<StyleSpecification>(
         () => ({
@@ -120,6 +129,11 @@ export default forwardRef<MapRef, Props>(function Map(
             {
                 layerId: "hillshade",
                 condition: showTerrain,
+            },
+            {
+                layerId: "night-lights",
+                condition: showNightLights,
+                loadingKey: "nightLights",
             },
             {
                 layerId: "coastline",
@@ -228,6 +242,7 @@ export default forwardRef<MapRef, Props>(function Map(
         ],
         [
             showCoastlines,
+            showNightLights,
             showSatellite,
             showCapitals,
             showContinents,
@@ -253,15 +268,15 @@ export default forwardRef<MapRef, Props>(function Map(
         if (!map) return;
 
         const syncMeasurementSources = () => {
-            const measurementLineSource = map.getSource(
-                "measurementLine",
-            ) as GeoJSONSource | undefined;
+            const measurementLineSource = map.getSource("measurementLine") as
+                | GeoJSONSource
+                | undefined;
             const measurementPointsSource = map.getSource(
                 "measurementPoints",
             ) as GeoJSONSource | undefined;
-            const measurementLabelSource = map.getSource(
-                "measurementLabel",
-            ) as GeoJSONSource | undefined;
+            const measurementLabelSource = map.getSource("measurementLabel") as
+                | GeoJSONSource
+                | undefined;
             const currentMeasurementStart = measurementStartRef.current;
             const currentSelectedMeasurement = selectedMeasurementRef.current;
 
@@ -273,7 +288,8 @@ export default forwardRef<MapRef, Props>(function Map(
             );
             measurementPointsSource?.setData(
                 buildMeasurementPointsGeoJson(
-                    currentSelectedMeasurement?.start ?? currentMeasurementStart,
+                    currentSelectedMeasurement?.start ??
+                        currentMeasurementStart,
                     currentSelectedMeasurement?.end ?? null,
                 ),
             );
@@ -327,16 +343,16 @@ export default forwardRef<MapRef, Props>(function Map(
             changedKeys.add("terrain");
         }
 
-        (
-            Object.keys(showAirports) as Array<keyof typeof showAirports>
-        ).forEach((airportType) => {
-            if (
-                previousState.showAirports[airportType] !==
-                showAirports[airportType]
-            ) {
-                changedKeys.add(`airport-${airportType}`);
-            }
-        });
+        (Object.keys(showAirports) as Array<keyof typeof showAirports>).forEach(
+            (airportType) => {
+                if (
+                    previousState.showAirports[airportType] !==
+                    showAirports[airportType]
+                ) {
+                    changedKeys.add(`airport-${airportType}`);
+                }
+            },
+        );
 
         previousLayerStateRef.current = {
             showCoastlines,
@@ -387,19 +403,22 @@ export default forwardRef<MapRef, Props>(function Map(
         hoveredCountryId.current = null;
     }, []);
 
-    const setHoveredCountry = useCallback((countryId: string | number) => {
-        if (!map) return;
+    const setHoveredCountry = useCallback(
+        (countryId: string | number) => {
+            if (!map) return;
 
-        map.setFeatureState(
-            {
-                source: "countries",
-                sourceLayer: "countries",
-                id: countryId,
-            },
-            { hover: true },
-        );
-        hoveredCountryId.current = countryId;
-    }, [map]);
+            map.setFeatureState(
+                {
+                    source: "countries",
+                    sourceLayer: "countries",
+                    id: countryId,
+                },
+                { hover: true },
+            );
+            hoveredCountryId.current = countryId;
+        },
+        [map],
+    );
 
     const { handleClick, removePopup } = useMapPopups(mapRef);
 
@@ -518,6 +537,98 @@ export default forwardRef<MapRef, Props>(function Map(
             map.once("load", applyTerrain);
         }
     }, [map, showTerrain, onLoadingComplete]);
+
+    // Highlight selected country
+    const selectedCountry = useMapStore((s) => s.selectedCountry);
+    useEffect(() => {
+        if (!map) return;
+
+        const applySelection = () => {
+            if (!selectedCountry) {
+                const empty = [
+                    "==",
+                    ["get", "ADM0_A3"],
+                    "",
+                ] as maplibregl.FilterSpecification;
+                map.setFilter("country-selected-fill", empty);
+                map.setFilter("country-selected-outline", empty);
+                return;
+            }
+
+            const primary =
+                CODE_MAPPING[selectedCountry.cca3] ?? selectedCountry.cca3;
+            const extras = ADDITIONAL_TERRITORIES[selectedCountry.cca3] ?? [];
+            const codes = [primary, ...extras];
+
+            const filter = (
+                codes.length === 1
+                    ? ["==", ["get", "ADM0_A3"], codes[0]]
+                    : ["in", ["get", "ADM0_A3"], ["literal", codes]]
+            ) as maplibregl.FilterSpecification;
+
+            map.setFilter("country-selected-fill", filter);
+            map.setFilter("country-selected-outline", filter);
+        };
+
+        if (map.isStyleLoaded()) {
+            applySelection();
+        } else {
+            map.once("load", applySelection);
+        }
+    }, [map, selectedCountry]);
+
+    // Highlight visited countries
+    useEffect(() => {
+        if (!map) return;
+
+        const applyVisited = () => {
+            const adm0Codes = visitedCountries.flatMap((cca3) => [
+                CODE_MAPPING[cca3] ?? cca3,
+                ...(ADDITIONAL_TERRITORIES[cca3] ?? []),
+            ]);
+
+            const filter = (
+                adm0Codes.length > 0
+                    ? ["in", ["get", "ADM0_A3"], ["literal", adm0Codes]]
+                    : ["==", ["get", "ADM0_A3"], ""]
+            ) as maplibregl.FilterSpecification;
+
+            map.setFilter("country-visited-fill", filter);
+        };
+
+        if (map.isStyleLoaded()) {
+            applyVisited();
+        } else {
+            map.once("load", applyVisited);
+        }
+    }, [map, visitedCountries]);
+
+    // Fly to pending location (triggered by neighbor chip clicks or URL init)
+    useEffect(() => {
+        if (!map || !pendingFlyTo) return;
+        map.flyTo({
+            center: pendingFlyTo,
+            zoom: 5,
+            duration: 2000,
+            essential: true,
+        });
+        setPendingFlyTo(null);
+    }, [map, pendingFlyTo, setPendingFlyTo]);
+
+    // Sync map position to URL
+    useEffect(() => {
+        if (!map || !onMapMove) return;
+
+        const handleMoveEnd = () => {
+            const center = map.getCenter();
+            onMapMove(center.lat, center.lng, map.getZoom());
+        };
+
+        map.on("moveend", handleMoveEnd);
+        return () => {
+            map.off("moveend", handleMoveEnd);
+        };
+    }, [map, onMapMove]);
 
     return (
         <>

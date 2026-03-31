@@ -82,6 +82,20 @@ export const MAP_LAYERS: LayerSpecification[] = [
         },
     },
     {
+        id: "night-lights",
+        type: "raster",
+        source: "nightLights",
+        layout: {
+            visibility: "none",
+        },
+        paint: {
+            "raster-opacity": 0.9,
+            "raster-contrast": 0.5,
+            "raster-brightness-min": 0,
+            "raster-brightness-max": 0.8,
+        },
+    },
+    {
         id: "density-choropleth",
         type: "fill",
         source: "countries",
@@ -178,6 +192,37 @@ export const MAP_LAYERS: LayerSpecification[] = [
                 0,
             ],
         },
+    },
+    {
+        id: "country-visited-fill",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "fill-color": "rgba(34, 197, 94, 0.18)",
+        },
+        filter: ["==", ["get", "ADM0_A3"], ""],
+    },
+    {
+        id: "country-selected-fill",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "fill-color": "rgba(99, 179, 237, 0.25)",
+        },
+        filter: ["==", ["get", "ADM0_A3"], ""],
+    },
+    {
+        id: "country-selected-outline",
+        type: "line",
+        source: "countries",
+        "source-layer": "countries",
+        paint: {
+            "line-color": "rgba(99, 179, 237, 1)",
+            "line-width": 2,
+        },
+        filter: ["==", ["get", "ADM0_A3"], ""],
     },
     {
         id: "coastline",

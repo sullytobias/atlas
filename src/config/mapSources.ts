@@ -74,6 +74,15 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
             features: [],
         } as FeatureCollection<Point, { label: string }>,
     },
+    nightLights: {
+        type: "raster",
+        tiles: [
+            "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_SNPP_DayNightBand_ENCC/default/2023-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.png",
+        ],
+        tileSize: 256,
+        maxzoom: 8,
+        attribution: "NASA VIIRS Day/Night Band",
+    },
     terrainSource: {
         type: "raster-dem",
         tiles: [

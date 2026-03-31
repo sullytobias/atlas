@@ -12,11 +12,19 @@ export function useMapInstance(
     useEffect(() => {
         if (!containerRef.current || mapRef.current) return;
 
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLng = parseFloat(urlParams.get("lng") ?? "");
+        const urlLat = parseFloat(urlParams.get("lat") ?? "");
+        const urlZoom = parseFloat(urlParams.get("zoom") ?? "");
+        const initialCenter: [number, number] =
+            !isNaN(urlLng) && !isNaN(urlLat) ? [urlLng, urlLat] : [8, 48];
+        const initialZoom = !isNaN(urlZoom) ? urlZoom : 0;
+
         const map = new maplibregl.Map({
             container: containerRef.current,
             style,
-            center: [8, 48],
-            zoom: 0,
+            center: initialCenter,
+            zoom: initialZoom,
         });
 
         map.addControl(new maplibregl.NavigationControl(), "top-right");

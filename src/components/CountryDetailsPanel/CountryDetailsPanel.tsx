@@ -1,14 +1,58 @@
-import { useMemo } from "react";
-import { useMapStore } from "../../store/loadingStore";
+import { useMemo, useCallback } from "react";
+import { useMapStore, type SelectedCountry } from "../../store/loadingStore";
 import { formatDistance } from "../../utils/distanceMeasurement";
 import OverlayPanel from "../OverlayPanel/OverlayPanel";
+import countryData from "../../data/data.json";
+import bordersData from "../../data/borders.json";
 import "./CountryDetailsPanel.css";
 
-function formatNumber(value?: number): string {
-    if (typeof value !== "number" || Number.isNaN(value)) {
-        return "N/A";
-    }
+type CountryFeatureRaw = {
+    geometry: { coordinates: [number, number] };
+    properties: SelectedCountry;
+};
 
+// Pre-sorted arrays for percentile computation (module-level, runs once)
+const allFeatureProps = (
+    countryData as unknown as { features: CountryFeatureRaw[] }
+).features.map((f) => f.properties);
+
+const SORTED_POPULATION = allFeatureProps
+    .map((p) => p.population ?? 0)
+    .filter((v) => v > 0)
+    .sort((a, b) => a - b);
+
+const SORTED_AREA = allFeatureProps
+    .map((p) => p.area ?? 0)
+    .filter((v) => v > 0)
+    .sort((a, b) => a - b);
+
+const SORTED_DENSITY = allFeatureProps
+    .map((p) => p.populationDensity ?? 0)
+    .filter((v) => v > 0)
+    .sort((a, b) => a - b);
+
+function getPercentile(sorted: number[], value: number): number {
+    if (!sorted.length || !value) return 0;
+    let lo = 0;
+    let hi = sorted.length;
+    while (lo < hi) {
+        const mid = (lo + hi) >> 1;
+        if (sorted[mid] < value) lo = mid + 1;
+        else hi = mid;
+    }
+    return Math.round((lo / sorted.length) * 100);
+}
+
+function formatCompact(value?: number): string {
+    if (typeof value !== "number" || Number.isNaN(value)) return "N/A";
+    if (value >= 1e9) return `${(value / 1e9).toFixed(1)}B`;
+    if (value >= 1e6) return `${(value / 1e6).toFixed(1)}M`;
+    if (value >= 1e3) return `${(value / 1e3).toFixed(0)}K`;
+    return value.toFixed(0);
+}
+
+function formatNumber(value?: number): string {
+    if (typeof value !== "number" || Number.isNaN(value)) return "N/A";
     return value.toLocaleString();
 }
 
@@ -20,33 +64,25 @@ function formatDrivingSide(side?: string): string {
 
 function formatAirportType(type?: string): string {
     if (!type) return "Unknown";
-
     return type
         .split("_")
         .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
         .join(" ");
 }
 
-function formatDstStatus(
-    observesDst?: boolean,
-    isDstActive?: boolean,
-): string {
-    if (!observesDst) return "No seasonal shift";
+function formatDstStatus(observesDst?: boolean, isDstActive?: boolean): string {
+    if (!observesDst) return "No DST";
     return isDstActive ? "DST active" : "Standard time";
 }
 
 function sanitizeUrl(value?: string): string | null {
     if (!value) return null;
-
     try {
         const url = new URL(value);
-        if (url.protocol === "http:" || url.protocol === "https:") {
-            return url.toString();
-        }
+        if (url.protocol === "http:" || url.protocol === "https:") return url.toString();
     } catch {
         return null;
     }
-
     return null;
 }
 
@@ -62,53 +98,72 @@ export default function CountryDetailsPanel() {
         setSelectedAirport,
         setSelectedCountry,
         setSelectedLocation,
+        setPendingFlyTo,
+        visitedCountries,
+        toggleVisited,
     } = useMapStore();
 
     const countryDetails = useMemo(() => {
         if (!selectedCountry) return null;
-
         return [
             {
+                icon: "🏛",
                 label: "Capital",
                 value: selectedCountry.capital || "N/A",
+                href: selectedCountry.capital
+                    ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedCountry.capital)}`
+                    : undefined,
             },
             {
+                icon: "💬",
                 label: "Languages",
                 value: selectedCountry.languages || "N/A",
+                href: undefined,
             },
             {
+                icon: "💰",
                 label: "Currency",
                 value: selectedCountry.currencies || "N/A",
+                href: selectedCountry.currencies
+                    ? `https://en.wikipedia.org/wiki/${encodeURIComponent(selectedCountry.currencies)}`
+                    : undefined,
             },
             {
+                icon: "🚗",
                 label: "Driving Side",
                 value: formatDrivingSide(selectedCountry.car?.side),
+                href: undefined,
             },
         ];
     }, [selectedCountry]);
 
     const airportDetails = useMemo(() => {
         if (!selectedAirport) return null;
-
         return [
-            {
-                label: "Type",
-                value: formatAirportType(selectedAirport.type),
-            },
-            {
-                label: "Code",
-                value: selectedAirport.code || "N/A",
-            },
-            {
-                label: "City",
-                value: selectedAirport.city || "N/A",
-            },
-            {
-                label: "Country",
-                value: selectedAirport.country || "N/A",
-            },
+            { label: "Type", value: formatAirportType(selectedAirport.type) },
+            { label: "Code", value: selectedAirport.code || "N/A" },
+            { label: "City", value: selectedAirport.city || "N/A" },
+            { label: "Country", value: selectedAirport.country || "N/A" },
         ];
     }, [selectedAirport]);
+
+    const neighbors = useMemo(() => {
+        if (!selectedCountry) return [];
+        const codes = (bordersData as Record<string, string[]>)[selectedCountry.cca3] ?? [];
+        const features = (countryData as unknown as { features: CountryFeatureRaw[] }).features;
+        return codes
+            .map((code) => features.find((f) => f.properties.cca3 === code))
+            .filter((f): f is CountryFeatureRaw => f !== undefined);
+    }, [selectedCountry]);
+
+    const handleNeighborClick = useCallback(
+        (neighbor: CountryFeatureRaw) => {
+            setSelectedCountry(neighbor.properties);
+            const [lng, lat] = neighbor.geometry.coordinates;
+            setPendingFlyTo([lng, lat]);
+        },
+        [setSelectedCountry, setPendingFlyTo],
+    );
 
     const airportWikipediaLink = sanitizeUrl(selectedAirport?.wikipediaLink);
     const airportHomeLink = sanitizeUrl(selectedAirport?.homeLink);
@@ -126,11 +181,11 @@ export default function CountryDetailsPanel() {
 
     if (
         showCountryComparison ||
-        !selectedCountry &&
-        !selectedAirport &&
-        !selectedLocation &&
-        !measurementStart &&
-        !selectedMeasurement
+        (!selectedCountry &&
+            !selectedAirport &&
+            !selectedLocation &&
+            !measurementStart &&
+            !selectedMeasurement)
     ) {
         return null;
     }
@@ -150,6 +205,7 @@ export default function CountryDetailsPanel() {
               : selectedCountry
                 ? selectedCountry.country
                 : "Picked Location";
+
     const panelEyebrow = selectedMeasurement
         ? "Map Tool"
         : measurementStart
@@ -170,13 +226,13 @@ export default function CountryDetailsPanel() {
         />
     ) : (
         <div className="country-details-airport-icon">
-            {selectedMeasurement || measurementStart
-                ? "R"
-                : selectedLocation
-                  ? "⌖"
-                  : "✈"}
+            {selectedMeasurement || measurementStart ? "R" : selectedLocation ? "⌖" : "✈"}
         </div>
     );
+
+    const isVisited = selectedCountry
+        ? visitedCountries.includes(selectedCountry.cca3)
+        : false;
 
     return (
         <OverlayPanel
@@ -188,125 +244,191 @@ export default function CountryDetailsPanel() {
             onClose={handleClose}
             closeLabel="Close details"
         >
+            {/* ── Country view ── */}
             {selectedCountry && countryDetails ? (
                 <>
-                    <div className="country-details-stats">
-                        <div className="country-details-stat">
-                            <span className="country-details-stat-label">
-                                Population
+                    {/* Stats row */}
+                    <div className="cdp-stats">
+                        <div className="cdp-stat">
+                            <span className="cdp-stat-label">Population</span>
+                            <span className="cdp-stat-value">
+                                {formatCompact(selectedCountry.population)}
                             </span>
-                            <span className="country-details-stat-value">
-                                {formatNumber(selectedCountry.population)}
+                            <div className="cdp-stat-bar">
+                                <div
+                                    className="cdp-stat-bar-fill"
+                                    style={{
+                                        width: `${getPercentile(SORTED_POPULATION, selectedCountry.population)}%`,
+                                    }}
+                                />
+                            </div>
+                            <span className="cdp-stat-pct">
+                                {getPercentile(SORTED_POPULATION, selectedCountry.population)}%
                             </span>
                         </div>
-                        <div className="country-details-stat">
-                            <span className="country-details-stat-label">
-                                Area
-                            </span>
-                            <span className="country-details-stat-value">
+                        <div className="cdp-stat">
+                            <span className="cdp-stat-label">Area</span>
+                            <span className="cdp-stat-value">
                                 {selectedCountry.area
-                                    ? `${formatNumber(selectedCountry.area)} km²`
+                                    ? `${formatCompact(selectedCountry.area)} km²`
                                     : "N/A"}
+                            </span>
+                            <div className="cdp-stat-bar">
+                                <div
+                                    className="cdp-stat-bar-fill"
+                                    style={{
+                                        width: `${getPercentile(SORTED_AREA, selectedCountry.area)}%`,
+                                    }}
+                                />
+                            </div>
+                            <span className="cdp-stat-pct">
+                                {getPercentile(SORTED_AREA, selectedCountry.area)}%
                             </span>
                         </div>
-                        <div className="country-details-stat">
-                            <span className="country-details-stat-label">
-                                Density
-                            </span>
-                            <span className="country-details-stat-value">
+                        <div className="cdp-stat">
+                            <span className="cdp-stat-label">Density</span>
+                            <span className="cdp-stat-value">
                                 {selectedCountry.populationDensity
-                                    ? `${formatNumber(
-                                          selectedCountry.populationDensity,
-                                      )} / km²`
+                                    ? `${formatCompact(selectedCountry.populationDensity)}/km²`
                                     : "N/A"}
+                            </span>
+                            <div className="cdp-stat-bar">
+                                <div
+                                    className="cdp-stat-bar-fill"
+                                    style={{
+                                        width: `${getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%`,
+                                    }}
+                                />
+                            </div>
+                            <span className="cdp-stat-pct">
+                                {getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%
                             </span>
                         </div>
                     </div>
 
-                    <div className="country-details-list">
-                        {countryDetails.map((detail) => (
-                            <div
-                                key={detail.label}
-                                className="country-details-list-item"
-                            >
-                                <span className="country-details-list-label">
-                                    {detail.label}
-                                </span>
-                                <span className="country-details-list-value">
-                                    {detail.value}
-                                </span>
+                    {/* Info card */}
+                    <div className="cdp-info">
+                        {countryDetails.map((row) => (
+                            <div key={row.label} className="cdp-info-row">
+                                <span className="cdp-info-icon">{row.icon}</span>
+                                <div className="cdp-info-body">
+                                    <div className="cdp-info-label">{row.label}</div>
+                                    {row.href ? (
+                                        <a
+                                            href={row.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="cdp-info-value cdp-link"
+                                        >
+                                            {row.value}
+                                        </a>
+                                    ) : (
+                                        <div className="cdp-info-value">{row.value}</div>
+                                    )}
+                                </div>
                             </div>
                         ))}
-                        {selectedCountry.timezoneInfo ? (
-                            <>
-                                <div className="country-details-list-item">
-                                    <span className="country-details-list-label">
-                                        Local Time
-                                    </span>
-                                    <span className="country-details-list-value">
-                                        {selectedCountry.timezoneInfo.currentTime}
-                                    </span>
+                    </div>
+
+                    {/* Timezone card */}
+                    {selectedCountry.timezoneInfo ? (
+                        <div className="cdp-time">
+                            <span className="cdp-time-icon">🕐</span>
+                            <div className="cdp-time-body">
+                                <div className="cdp-time-value">
+                                    {selectedCountry.timezoneInfo.currentTime}
                                 </div>
-                                <div className="country-details-list-item">
-                                    <span className="country-details-list-label">
-                                        UTC Offset
-                                    </span>
-                                    <span className="country-details-list-value">
-                                        {selectedCountry.timezoneInfo.offsetLabel}
-                                    </span>
+                                <div className="cdp-time-sub">
+                                    {selectedCountry.timezoneInfo.offsetLabel}
+                                    {" · "}
+                                    {formatDstStatus(
+                                        selectedCountry.timezoneInfo.observesDst,
+                                        selectedCountry.timezoneInfo.isDstActive,
+                                    )}
                                 </div>
-                                <div className="country-details-list-item">
-                                    <span className="country-details-list-label">
-                                        DST
-                                    </span>
-                                    <span className="country-details-list-value">
-                                        {formatDstStatus(
-                                            selectedCountry.timezoneInfo.observesDst,
-                                            selectedCountry.timezoneInfo.isDstActive,
-                                        )}
-                                    </span>
+                                <div className="cdp-time-zone">
+                                    {selectedCountry.timezoneInfo.cityLabel}
                                 </div>
-                                <div className="country-details-list-item">
-                                    <span className="country-details-list-label">
-                                        Timezone
-                                    </span>
-                                    <span className="country-details-list-value">
-                                        {selectedCountry.timezoneInfo.cityLabel}
-                                    </span>
-                                </div>
-                            </>
-                        ) : null}
+                            </div>
+                        </div>
+                    ) : null}
+
+                    {/* Borders */}
+                    {neighbors.length > 0 ? (
+                        <div className="cdp-section">
+                            <div className="cdp-section-label">Borders</div>
+                            <div className="cdp-chips">
+                                {neighbors.map((neighbor) => (
+                                    <button
+                                        key={neighbor.properties.cca3}
+                                        className="cdp-chip"
+                                        onClick={() => handleNeighborClick(neighbor)}
+                                    >
+                                        <img
+                                            src={neighbor.properties.flag}
+                                            alt={
+                                                neighbor.properties.flagAlt ||
+                                                `Flag of ${neighbor.properties.country}`
+                                            }
+                                            className="cdp-chip-flag"
+                                        />
+                                        {neighbor.properties.country}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
+
+                    {/* Footer: visited + Wikipedia */}
+                    <div className="cdp-footer">
+                        <button
+                            className={`cdp-visited${isVisited ? " active" : ""}`}
+                            onClick={() => toggleVisited(selectedCountry.cca3)}
+                        >
+                            <span className="cdp-visited-icon">{isVisited ? "✓" : "○"}</span>
+                            {isVisited ? "Visited" : "Mark visited"}
+                        </button>
+                        <div className="cdp-footer-end">
+                            <span className="cdp-visited-count">
+                                {visitedCountries.length}
+                                <span className="cdp-visited-total">
+                                    /{allFeatureProps.length}
+                                </span>
+                            </span>
+                            <a
+                                href={`https://en.wikipedia.org/wiki/${encodeURIComponent(selectedCountry.country)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="cdp-wiki"
+                            >
+                                Wikipedia
+                            </a>
+                        </div>
                     </div>
                 </>
             ) : null}
 
+            {/* ── Measurement view ── */}
             {selectedMeasurement ? (
                 <>
                     <div className="country-details-stats country-details-stats-single">
                         <div className="country-details-stat">
-                            <span className="country-details-stat-label">
-                                Distance
-                            </span>
+                            <span className="country-details-stat-label">Distance</span>
                             <span className="country-details-stat-value">
                                 {measurementDistanceLabel}
                             </span>
                         </div>
                     </div>
-
                     <div className="country-details-list">
                         <div className="country-details-list-item">
-                            <span className="country-details-list-label">
-                                Start Point
-                            </span>
+                            <span className="country-details-list-label">Start Point</span>
                             <span className="country-details-list-value">
                                 {selectedMeasurement.start.latitude.toFixed(6)},{" "}
                                 {selectedMeasurement.start.longitude.toFixed(6)}
                             </span>
                         </div>
                         <div className="country-details-list-item">
-                            <span className="country-details-list-label">
-                                End Point
-                            </span>
+                            <span className="country-details-list-label">End Point</span>
                             <span className="country-details-list-value">
                                 {selectedMeasurement.end.latitude.toFixed(6)},{" "}
                                 {selectedMeasurement.end.longitude.toFixed(6)}
@@ -316,37 +438,29 @@ export default function CountryDetailsPanel() {
                 </>
             ) : null}
 
+            {/* ── Measurement start pending ── */}
             {measurementStart && !selectedMeasurement ? (
                 <div className="country-details-list">
                     <div className="country-details-list-item">
-                        <span className="country-details-list-label">
-                            Start Point
-                        </span>
+                        <span className="country-details-list-label">Start Point</span>
                         <span className="country-details-list-value">
                             {measurementStart.latitude.toFixed(6)},{" "}
                             {measurementStart.longitude.toFixed(6)}
                         </span>
                     </div>
                     <div className="country-details-note">
-                        Click a second point on the map to complete the
-                        measurement.
+                        Click a second point on the map to complete the measurement.
                     </div>
                 </div>
             ) : null}
 
+            {/* ── Airport view ── */}
             {selectedAirport && airportDetails ? (
                 <div className="country-details-list">
                     {airportDetails.map((detail) => (
-                        <div
-                            key={detail.label}
-                            className="country-details-list-item"
-                        >
-                            <span className="country-details-list-label">
-                                {detail.label}
-                            </span>
-                            <span className="country-details-list-value">
-                                {detail.value}
-                            </span>
+                        <div key={detail.label} className="country-details-list-item">
+                            <span className="country-details-list-label">{detail.label}</span>
+                            <span className="country-details-list-value">{detail.value}</span>
                         </div>
                     ))}
                     {airportWikipediaLink || airportHomeLink ? (
@@ -376,20 +490,17 @@ export default function CountryDetailsPanel() {
                 </div>
             ) : null}
 
+            {/* ── Location pin view ── */}
             {selectedLocation ? (
                 <div className="country-details-list">
                     <div className="country-details-list-item">
-                        <span className="country-details-list-label">
-                            Latitude
-                        </span>
+                        <span className="country-details-list-label">Latitude</span>
                         <span className="country-details-list-value">
                             {selectedLocation.latitude.toFixed(6)}
                         </span>
                     </div>
                     <div className="country-details-list-item">
-                        <span className="country-details-list-label">
-                            Longitude
-                        </span>
+                        <span className="country-details-list-label">Longitude</span>
                         <span className="country-details-list-value">
                             {selectedLocation.longitude.toFixed(6)}
                         </span>
@@ -397,25 +508,19 @@ export default function CountryDetailsPanel() {
                     {selectedTimezoneInfo ? (
                         <>
                             <div className="country-details-list-item">
-                                <span className="country-details-list-label">
-                                    Local Time
-                                </span>
+                                <span className="country-details-list-label">Local Time</span>
                                 <span className="country-details-list-value">
                                     {selectedTimezoneInfo.currentTime}
                                 </span>
                             </div>
                             <div className="country-details-list-item">
-                                <span className="country-details-list-label">
-                                    UTC Offset
-                                </span>
+                                <span className="country-details-list-label">UTC Offset</span>
                                 <span className="country-details-list-value">
                                     {selectedTimezoneInfo.offsetLabel}
                                 </span>
                             </div>
                             <div className="country-details-list-item">
-                                <span className="country-details-list-label">
-                                    DST
-                                </span>
+                                <span className="country-details-list-label">DST</span>
                                 <span className="country-details-list-value">
                                     {formatDstStatus(
                                         selectedTimezoneInfo.observesDst,
@@ -424,9 +529,7 @@ export default function CountryDetailsPanel() {
                                 </span>
                             </div>
                             <div className="country-details-list-item">
-                                <span className="country-details-list-label">
-                                    Timezone
-                                </span>
+                                <span className="country-details-list-label">Timezone</span>
                                 <span className="country-details-list-value">
                                     {selectedTimezoneInfo.cityLabel}
                                 </span>

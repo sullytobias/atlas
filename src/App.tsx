@@ -7,6 +7,8 @@ import {
     type SelectedCountry,
 } from "./store/loadingStore";
 import countryData from "./data/data.json";
+import { useUrlSync } from "./hooks/useUrlSync";
+import RandomCountryButton from "./components/RandomCountryButton/RandomCountryButton";
 
 const Map = lazy(() => import("./components/Map"));
 const MapControls = lazy(() => import("./components/MapControls/MapControls"));
@@ -49,6 +51,7 @@ export default function App() {
     } =
         useMapStore();
     const mapRef = useRef<MapRef>(null);
+    const { onMapMove } = useUrlSync();
 
     const handleLoadingComplete = useCallback(
         (key: string) => {
@@ -105,7 +108,9 @@ export default function App() {
                 <Map
                     ref={mapRef}
                     onLoadingComplete={handleLoadingComplete}
+                    onMapMove={onMapMove}
                 />
+                <RandomCountryButton />
             </Suspense>
         </>
     );

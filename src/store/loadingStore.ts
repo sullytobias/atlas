@@ -106,7 +106,9 @@ function normalizeComparisonCountries(
 }
 
 interface MapState {
+    pendingFlyTo: [number, number] | null;
     showCoastlines: boolean;
+    showNightLights: boolean;
     showSatellite: boolean;
     showCapitals: boolean;
     showContinents: boolean;
@@ -127,8 +129,11 @@ interface MapState {
     comparisonCountries: [SelectedCountry | null, SelectedCountry | null];
     hoveredComparisonCountry: SelectedCountry | null;
     theme: "dark" | "light";
+    visitedCountries: string[];
 
     toggleCoastlines: () => void;
+    toggleNightLights: () => void;
+    toggleVisited: (cca3: string) => void;
     toggleSatellite: () => void;
     toggleCapitals: () => void;
     toggleContinents: () => void;
@@ -156,10 +161,13 @@ interface MapState {
     clearComparison: () => void;
     clearMeasurement: () => void;
     toggleTheme: () => void;
+    setPendingFlyTo: (coords: [number, number] | null) => void;
 }
 
 export const useMapStore = create<MapState>((set) => ({
+    pendingFlyTo: null,
     showCoastlines: false,
+    showNightLights: false,
     showSatellite: false,
     showCapitals: false,
     showContinents: false,
@@ -179,6 +187,14 @@ export const useMapStore = create<MapState>((set) => ({
     comparisonCountries: [null, null],
     hoveredComparisonCountry: null,
     theme: "dark",
+    visitedCountries: (() => {
+        try {
+            const raw = localStorage.getItem("atlas-visited");
+            return raw ? (JSON.parse(raw) as string[]) : [];
+        } catch {
+            return [];
+        }
+    })(),
     showAirports: {
         large: false,
         medium: false,
@@ -193,6 +209,20 @@ export const useMapStore = create<MapState>((set) => ({
         useLoadingStore.getState().setLoading("coastlines", true);
         set((state) => ({ showCoastlines: !state.showCoastlines }));
     },
+    toggleNightLights: () => {
+        useLoadingStore.getState().setLoading("nightLights", true);
+        set((state) => ({ showNightLights: !state.showNightLights }));
+    },
+    toggleVisited: (cca3) =>
+        set((state) => {
+            const next = state.visitedCountries.includes(cca3)
+                ? state.visitedCountries.filter((c) => c !== cca3)
+                : [...state.visitedCountries, cca3];
+            try {
+                localStorage.setItem("atlas-visited", JSON.stringify(next));
+            } catch {}
+            return { visitedCountries: next };
+        }),
     toggleSatellite: () => {
         useLoadingStore.getState().setLoading("satellite", true);
         set((state) => ({ showSatellite: !state.showSatellite }));
@@ -419,4 +449,5 @@ export const useMapStore = create<MapState>((set) => ({
         set((state) => ({
             theme: state.theme === "dark" ? "light" : "dark",
         })),
+    setPendingFlyTo: (coords) => set({ pendingFlyTo: coords }),
 }));

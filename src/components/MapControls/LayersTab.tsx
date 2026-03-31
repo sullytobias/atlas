@@ -9,6 +9,7 @@ enum LayerKey {
     Heatmap = "heatmap",
     Continents = "continents",
     Timezones = "timezones",
+    NightLights = "nightLights",
 }
 
 type Layer = {
@@ -76,6 +77,7 @@ export default function LayersTab() {
     const { loadingStates } = useLoadingStore();
     const {
         showCoastlines,
+        showNightLights,
         showSatellite,
         showCapitals,
         showContinents,
@@ -83,6 +85,7 @@ export default function LayersTab() {
         showDensity,
         showHeatmap,
         toggleCoastlines,
+        toggleNightLights,
         toggleSatellite,
         toggleCapitals,
         toggleContinents,
@@ -156,9 +159,19 @@ export default function LayersTab() {
                 color: "#7ecfda",
                 key: LayerKey.Timezones,
             },
+            {
+                label: "Night Lights",
+                description: "NASA Black Marble — Earth lit up after dark.",
+                icon: "",
+                checked: showNightLights,
+                onChange: toggleNightLights,
+                color: "#f5c842",
+                key: LayerKey.NightLights,
+            },
         ],
         [
             showCoastlines,
+            showNightLights,
             showCapitals,
             showSatellite,
             showDensity,
@@ -166,6 +179,7 @@ export default function LayersTab() {
             showContinents,
             showTimezones,
             toggleCoastlines,
+            toggleNightLights,
             toggleCapitals,
             toggleSatellite,
             toggleDensity,
