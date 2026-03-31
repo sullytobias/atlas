@@ -10,6 +10,7 @@ enum LayerKey {
     Continents = "continents",
     Timezones = "timezones",
     NightLights = "nightLights",
+    Weather = "weather",
 }
 
 type Layer = {
@@ -84,6 +85,7 @@ export default function LayersTab() {
         showTimezones,
         showDensity,
         showHeatmap,
+        showWeather,
         toggleCoastlines,
         toggleNightLights,
         toggleSatellite,
@@ -92,6 +94,7 @@ export default function LayersTab() {
         toggleTimezones,
         toggleDensity,
         toggleHeatmap,
+        toggleWeather,
     } = useMapStore();
 
     const layers = useMemo<Layer[]>(
@@ -168,10 +171,20 @@ export default function LayersTab() {
                 color: "#f5c842",
                 key: LayerKey.NightLights,
             },
+            {
+                label: "Weather Radar",
+                description: "Live precipitation radar from RainViewer.",
+                icon: "",
+                checked: showWeather,
+                onChange: toggleWeather,
+                color: "#60a5fa",
+                key: LayerKey.Weather,
+            },
         ],
         [
             showCoastlines,
             showNightLights,
+            showWeather,
             showCapitals,
             showSatellite,
             showDensity,
@@ -180,6 +193,7 @@ export default function LayersTab() {
             showTimezones,
             toggleCoastlines,
             toggleNightLights,
+            toggleWeather,
             toggleCapitals,
             toggleSatellite,
             toggleDensity,

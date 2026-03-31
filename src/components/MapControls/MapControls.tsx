@@ -49,6 +49,7 @@ export default function MapControls() {
     const {
         showCoastlines,
         showNightLights,
+        showWeather,
         showSatellite,
         showCapitals,
         showContinents,
@@ -70,6 +71,7 @@ export default function MapControls() {
             [
                 showCoastlines,
                 showNightLights,
+                showWeather,
                 showSatellite,
                 showCapitals,
                 showContinents,
@@ -80,6 +82,7 @@ export default function MapControls() {
         [
             showCoastlines,
             showNightLights,
+            showWeather,
             showSatellite,
             showCapitals,
             showContinents,

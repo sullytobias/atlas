@@ -18,6 +18,7 @@ const LAYER_KEYS = [
     "terrain",
     "globe",
     "timezones",
+    "weather",
 ] as const;
 
 type LayerKey = (typeof LAYER_KEYS)[number];
@@ -33,6 +34,7 @@ const LAYER_TOGGLE_MAP: Record<LayerKey, () => void> = {
     get terrain() { return useMapStore.getState().toggleTerrain; },
     get globe() { return useMapStore.getState().toggleGlobe; },
     get timezones() { return useMapStore.getState().toggleTimezones; },
+    get weather() { return useMapStore.getState().toggleWeather; },
 };
 
 const LAYER_SHOW_MAP: Record<LayerKey, (s: ReturnType<typeof useMapStore.getState>) => boolean> = {
@@ -46,6 +48,7 @@ const LAYER_SHOW_MAP: Record<LayerKey, (s: ReturnType<typeof useMapStore.getStat
     terrain: (s) => s.showTerrain,
     globe: (s) => s.showGlobe,
     timezones: (s) => s.showTimezones,
+    weather: (s) => s.showWeather,
 };
 
 function buildUrlParams(
@@ -82,6 +85,7 @@ export function useUrlSync() {
         showTerrain,
         showGlobe,
         showTimezones,
+        showWeather,
         selectedCountry,
     } = useMapStore();
 
@@ -135,6 +139,7 @@ export function useUrlSync() {
         showTerrain,
         showGlobe,
         showTimezones,
+        showWeather,
         selectedCountry,
     ]);
 

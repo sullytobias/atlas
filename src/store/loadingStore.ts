@@ -109,6 +109,7 @@ interface MapState {
     pendingFlyTo: [number, number] | null;
     showCoastlines: boolean;
     showNightLights: boolean;
+    showWeather: boolean;
     showSatellite: boolean;
     showCapitals: boolean;
     showContinents: boolean;
@@ -133,6 +134,7 @@ interface MapState {
 
     toggleCoastlines: () => void;
     toggleNightLights: () => void;
+    toggleWeather: () => void;
     toggleVisited: (cca3: string) => void;
     toggleSatellite: () => void;
     toggleCapitals: () => void;
@@ -168,6 +170,7 @@ export const useMapStore = create<MapState>((set) => ({
     pendingFlyTo: null,
     showCoastlines: false,
     showNightLights: false,
+    showWeather: false,
     showSatellite: false,
     showCapitals: false,
     showContinents: false,
@@ -212,6 +215,10 @@ export const useMapStore = create<MapState>((set) => ({
     toggleNightLights: () => {
         useLoadingStore.getState().setLoading("nightLights", true);
         set((state) => ({ showNightLights: !state.showNightLights }));
+    },
+    toggleWeather: () => {
+        useLoadingStore.getState().setLoading("weather", true);
+        set((state) => ({ showWeather: !state.showWeather }));
     },
     toggleVisited: (cca3) =>
         set((state) => {

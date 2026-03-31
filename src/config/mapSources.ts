@@ -83,6 +83,15 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         maxzoom: 8,
         attribution: "NASA VIIRS Day/Night Band",
     },
+    rainRadar: {
+        type: "raster",
+        tiles: [
+            "https://tilecache.rainviewer.com/v2/radar/0/256/{z}/{x}/{y}/2/1_1.png",
+        ],
+        tileSize: 256,
+        maxzoom: 8,
+        attribution: "RainViewer",
+    },
     terrainSource: {
         type: "raster-dem",
         tiles: [

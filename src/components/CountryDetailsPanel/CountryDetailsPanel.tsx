@@ -5,6 +5,7 @@ import OverlayPanel from "../OverlayPanel/OverlayPanel";
 import countryData from "../../data/data.json";
 import bordersData from "../../data/borders.json";
 import territoriesData from "../../data/territories.json";
+import { useWeather, getWeatherInfo } from "../../hooks/useWeather";
 import "./CountryDetailsPanel.css";
 
 type CountryFeatureRaw = {
@@ -168,6 +169,19 @@ export default function CountryDetailsPanel() {
             .map((code) => allFeatures.find((f) => f.properties.cca3 === code))
             .filter((f): f is CountryFeatureRaw => f !== undefined);
     }, [selectedCountry, allFeatures]);
+
+    const capitalCoords = useMemo(() => {
+        if (!selectedCountry) return { lat: null, lng: null };
+        const feature = allFeatures.find((f) => f.properties.cca3 === selectedCountry.cca3);
+        if (!feature) return { lat: null, lng: null };
+        const [lng, lat] = feature.geometry.coordinates;
+        return { lat, lng };
+    }, [selectedCountry, allFeatures]);
+
+    const { data: weatherData, loading: weatherLoading } = useWeather(
+        capitalCoords.lat,
+        capitalCoords.lng,
+    );
 
     const handleNeighborClick = useCallback(
         (neighbor: CountryFeatureRaw) => {
@@ -404,6 +418,38 @@ export default function CountryDetailsPanel() {
                                         </div>
                                     </div>
                                 ) : null}
+
+                                {/* Weather */}
+                                {weatherLoading && (
+                                    <div className="cdp-weather cdp-weather--loading">
+                                        <span className="cdp-weather-spinner" />
+                                        <span className="cdp-weather-loading-label">Loading weather…</span>
+                                    </div>
+                                )}
+                                {!weatherLoading && weatherData && (() => {
+                                    const info = getWeatherInfo(weatherData.weatherCode);
+                                    return (
+                                        <div className="cdp-weather">
+                                            <div className="cdp-weather-main">
+                                                <span className="cdp-weather-emoji">{info.emoji}</span>
+                                                <div className="cdp-weather-center">
+                                                    <span className="cdp-weather-temp">{weatherData.temperatureC}°C</span>
+                                                    <span className="cdp-weather-label">{info.label}</span>
+                                                </div>
+                                            </div>
+                                            <div className="cdp-weather-meta">
+                                                <span className="cdp-weather-meta-item">
+                                                    <span className="cdp-weather-meta-icon">💨</span>
+                                                    {weatherData.windSpeed} km/h
+                                                </span>
+                                                <span className="cdp-weather-meta-item">
+                                                    <span className="cdp-weather-meta-icon">💧</span>
+                                                    {weatherData.humidity}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
                             </>
                         )}
 

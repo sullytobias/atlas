@@ -259,6 +259,98 @@
     font-weight: 400;
 }
 
+/* ── Weather card ── */
+.cdp-weather {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    flex-shrink: 0;
+}
+
+.cdp-weather--loading {
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.cdp-weather-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent-strong);
+    border-radius: 50%;
+    animation: cdp-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes cdp-spin {
+    to { transform: rotate(360deg); }
+}
+
+.cdp-weather-loading-label {
+    color: var(--text-faint);
+    font-size: 12px;
+}
+
+.cdp-weather-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cdp-weather-emoji {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.cdp-weather-center {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cdp-weather-temp {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+
+.cdp-weather-label {
+    color: var(--text-faint);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.cdp-weather-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+}
+
+.cdp-weather-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-faint);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.cdp-weather-meta-icon {
+    font-size: 12px;
+    line-height: 1;
+}
+
 /* ── Chips grid (borders / territories tab) ── */
 .cdp-chips-grid {
     display: grid;

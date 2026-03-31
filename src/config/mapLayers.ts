@@ -82,6 +82,13 @@ export const MAP_LAYERS: LayerSpecification[] = [
         },
     },
     {
+        id: "rain-radar",
+        type: "raster",
+        source: "rainRadar",
+        layout: { visibility: "none" },
+        paint: { "raster-opacity": 0.7 },
+    },
+    {
         id: "night-lights",
         type: "raster",
         source: "nightLights",

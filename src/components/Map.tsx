@@ -6,7 +6,7 @@ import {
     useImperativeHandle,
     forwardRef,
 } from "react";
-import type { GeoJSONSource, StyleSpecification } from "maplibre-gl";
+import type { GeoJSONSource, RasterTileSource, StyleSpecification } from "maplibre-gl";
 import { MapMouseEvent } from "maplibre-gl";
 
 import { MAP_SOURCES } from "../config/mapSources";
@@ -59,6 +59,7 @@ export default forwardRef<MapRef, Props>(function Map(
         showGlobe,
         showTerrain,
         showAirports,
+        showWeather,
         measurementStart,
         selectedMeasurement,
         showCountryComparison,
@@ -614,6 +615,47 @@ export default forwardRef<MapRef, Props>(function Map(
         });
         setPendingFlyTo(null);
     }, [map, pendingFlyTo, setPendingFlyTo]);
+
+    // Rain radar — fetch latest RainViewer timestamp, then show layer
+    useEffect(() => {
+        if (!map) return;
+
+        const apply = () => {
+            if (!showWeather) {
+                if (map.getLayer("rain-radar")) {
+                    map.setLayoutProperty("rain-radar", "visibility", "none");
+                }
+                if (onLoadingComplete) onLoadingComplete("weather");
+                return;
+            }
+
+            fetch("https://api.rainviewer.com/public/weather-maps.json")
+                .then((r) => r.json())
+                .then((json) => {
+                    const past = json.radar.past as { time: number; path: string }[];
+                    const latest = past[past.length - 1];
+                    const tileUrl = `${json.host}${latest.path}/256/{z}/{x}/{y}/2/1_1.png`;
+                    const src = map.getSource("rainRadar") as RasterTileSource | undefined;
+                    if (src) {
+                        src.setTiles([tileUrl]);
+                    }
+                    if (map.getLayer("rain-radar")) {
+                        map.setLayoutProperty("rain-radar", "visibility", "visible");
+                    }
+                })
+                .catch(() => {})
+                .finally(() => {
+                    if (onLoadingComplete)
+                        window.requestAnimationFrame(() => onLoadingComplete("weather"));
+                });
+        };
+
+        if (map.isStyleLoaded()) {
+            apply();
+        } else {
+            map.once("load", apply);
+        }
+    }, [map, showWeather, onLoadingComplete]);
 
     // Sync map position to URL
     useEffect(() => {
