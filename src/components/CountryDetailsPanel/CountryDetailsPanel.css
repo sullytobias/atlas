@@ -1,3 +1,4 @@
+/* ── Panel shell ── */
 .country-details-panel {
     top: 92px;
     left: 18px;
@@ -7,6 +8,18 @@
     flex-direction: column;
 }
 
+/* The overlay-panel-body holds: [tabs?] [cdp-body] [cdp-footer]
+   It must be a flex column so cdp-body can scroll independently */
+.country-details-panel .overlay-panel-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    gap: 0;
+}
+
+/* ── Shared leading icons ── */
 .country-details-flag {
     object-fit: cover;
     border-radius: 8px;
@@ -28,235 +41,66 @@
     flex-shrink: 0;
 }
 
-.country-details-stats {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
-    margin-bottom: 14px;
-}
-
-.country-details-stats-single {
-    grid-template-columns: 1fr;
-}
-
-.country-details-stat {
+/* ── Tab bar ── */
+.cdp-tabs {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 10px;
-    border-radius: 12px;
+    gap: 2px;
+    padding: 0 0 12px;
+    flex-shrink: 0;
+    justify-content: center;
+}
+
+.cdp-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-faint);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+}
+
+.cdp-tab:hover {
     background: var(--surface-muted);
-    border: 1px solid var(--border);
-}
-
-.country-details-stat-bar-track {
-    height: 3px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-top: 4px;
-}
-
-.country-details-stat-bar-fill {
-    height: 100%;
-    background: var(--accent-strong);
-    border-radius: 2px;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.country-details-stat-pct {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--accent-strong);
-    margin-top: 2px;
-    line-height: 1;
-}
-
-.country-details-stat-pct-label {
-    font-weight: 400;
-    color: var(--text-faint);
-}
-
-.country-details-stat-label,
-.country-details-list-label {
-    color: var(--text-faint);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.country-details-stat-value,
-.country-details-list-value {
     color: var(--text);
-    font-size: 13px;
-    font-weight: 600;
 }
 
-.country-details-list-link {
-    color: var(--accent-strong);
-    text-decoration: none;
+.cdp-tab.active {
+    background: var(--surface-muted);
+    border-color: var(--border);
+    color: var(--text);
 }
 
-.country-details-list-link:hover {
-    text-decoration: underline;
-}
-
-.country-details-list {
-    display: grid;
-    gap: 10px;
-
-}
-
-.country-details-list-item {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-}
-
-.country-details-list-value {
-    text-align: right;
-}
-
-.country-details-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.country-details-link {
+.cdp-tab-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    padding: 0 14px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
     border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-muted);
-    color: var(--text);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.country-details-neighbors {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 24px;
-}
-
-.country-details-neighbor-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.country-details-neighbor-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px 4px 6px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-muted);
-    color: var(--text);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-    white-space: nowrap;
-}
-
-.country-details-neighbor-chip:hover {
-    background: var(--surface);
-    border-color: var(--accent-strong);
-    color: var(--accent-strong);
-}
-
-.country-details-neighbor-flag {
-    width: 20px;
-    height: 14px;
-    object-fit: cover;
-    border-radius: 2px;
-    border: 1px solid var(--border);
-    flex-shrink: 0;
-}
-
-.country-details-visited-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 4px;
-}
-
-.country-details-visited-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 36px;
-    padding: 0 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--surface-muted);
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-
-.country-details-visited-btn::before {
-    content: "○";
-    font-size: 12px;
-}
-
-.country-details-visited-btn.visited {
-    background: rgba(34, 197, 94, 0.15);
-    border-color: rgba(34, 197, 94, 0.5);
-    color: rgb(34, 197, 94);
-}
-
-.country-details-visited-btn.visited::before {
-    content: "✓";
-}
-
-.country-details-visited-btn:hover:not(.visited) {
-    background: var(--surface);
-    border-color: var(--accent-strong);
-}
-
-.country-details-visited-count {
-    font-size: 12px;
+    background: var(--accent-strong);
+    color: #fff;
+    font-size: 10px;
     font-weight: 700;
-    color: var(--text);
-    white-space: nowrap;
-}
-
-.country-details-note {
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface-muted);
-    color: var(--text-muted);
-    font-size: 13px;
-    line-height: 1.45;
+    line-height: 1;
 }
 
 /* ── Scrollable body ── */
-.country-details-panel .overlay-panel-body {
-    overflow-y: auto;
+.cdp-body {
     flex: 1;
     min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 12px;
+    padding: 12px 2px 12px;
 }
 
 /* ── Stats grid ── */
@@ -264,6 +108,7 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .cdp-stat {
@@ -319,13 +164,15 @@
     border: 1px solid var(--border);
     background: var(--surface-muted);
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .cdp-info-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
 }
 
 .cdp-info-row + .cdp-info-row {
@@ -333,25 +180,16 @@
 }
 
 .cdp-info-icon {
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1;
-    margin-top: 1px;
-    flex-shrink: 0;
-}
-
-.cdp-info-body {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-    flex: 1;
+    text-align: center;
 }
 
 .cdp-info-label {
     color: var(--text-faint);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
@@ -359,8 +197,11 @@
     color: var(--text);
     font-size: 13px;
     font-weight: 500;
-    line-height: 1.35;
-    word-break: break-word;
+    text-align: right;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .cdp-link {
@@ -381,6 +222,7 @@
     border-radius: 14px;
     border: 1px solid var(--border);
     background: var(--surface-muted);
+    flex-shrink: 0;
 }
 
 .cdp-time-icon {
@@ -417,42 +259,26 @@
     font-weight: 400;
 }
 
-/* ── Borders section ── */
-.cdp-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.cdp-section-label {
-    color: var(--text-faint);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0 2px;
-}
-
-.cdp-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+/* ── Chips grid (borders / territories tab) ── */
+.cdp-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
 .cdp-chip {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px 4px 5px;
-    border-radius: 999px;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
     border: 1px solid var(--border);
     background: var(--surface-muted);
     color: var(--text);
-    font-size: 12px;
-    font-weight: 500;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s, color 0.15s;
-    white-space: nowrap;
+    text-align: left;
+    min-width: 0;
 }
 
 .cdp-chip:hover {
@@ -462,12 +288,21 @@
 }
 
 .cdp-chip-flag {
-    width: 20px;
-    height: 14px;
+    width: 22px;
+    height: 15px;
     object-fit: cover;
     border-radius: 2px;
     border: 1px solid var(--border);
     flex-shrink: 0;
+}
+
+.cdp-chip-name {
+    font-size: 12px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 /* ── Footer ── */
@@ -476,26 +311,29 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding-top: 2px;
+    padding-top: 10px;
+    margin-top: 2px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .cdp-footer-end {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .cdp-visited {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    min-height: 34px;
-    padding: 0 14px;
+    min-height: 32px;
+    padding: 0 12px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: var(--surface-muted);
     color: var(--text);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -513,7 +351,7 @@
 }
 
 .cdp-visited-icon {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 .cdp-visited-count {
@@ -530,8 +368,98 @@
 .cdp-wiki {
     display: inline-flex;
     align-items: center;
-    min-height: 34px;
+    min-height: 32px;
     padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.cdp-wiki:hover {
+    background: var(--surface);
+    border-color: var(--accent-strong);
+    color: var(--accent-strong);
+}
+
+/* ── Airport / Location / Measurement views ── */
+.country-details-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.country-details-stats-single {
+    grid-template-columns: 1fr;
+}
+
+.country-details-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    border-radius: 12px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+}
+
+.country-details-stat-label,
+.country-details-list-label {
+    color: var(--text-faint);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.country-details-stat-value,
+.country-details-list-value {
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.country-details-list {
+    display: grid;
+    gap: 8px;
+}
+
+.country-details-list-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+}
+
+.country-details-list-value {
+    text-align: right;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.country-details-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.country-details-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 14px;
     border-radius: 999px;
     border: 1px solid var(--border);
     background: var(--surface-muted);
@@ -542,13 +470,23 @@
     transition: background 0.15s, border-color 0.15s;
 }
 
-.cdp-wiki:hover {
+.country-details-link:hover {
     background: var(--surface);
     border-color: var(--accent-strong);
     color: var(--accent-strong);
 }
 
-/* ── Responsive ── */
+.country-details-note {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text-faint);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+/* ── Mobile ── */
 @media (max-width: 768px) {
     .country-details-panel {
         top: auto;
@@ -556,19 +494,12 @@
         left: 16px;
         right: 16px;
         width: auto;
-        max-height: 52vh;
-    }
-
-    .cdp-stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .country-details-stats {
-        grid-template-columns: 1fr;
+        max-height: 60vh;
     }
 
     .country-details-list-item {
         flex-direction: column;
+        gap: 4px;
     }
 
     .country-details-list-value {

@@ -1,9 +1,10 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useMapStore, type SelectedCountry } from "../../store/loadingStore";
 import { formatDistance } from "../../utils/distanceMeasurement";
 import OverlayPanel from "../OverlayPanel/OverlayPanel";
 import countryData from "../../data/data.json";
 import bordersData from "../../data/borders.json";
+import territoriesData from "../../data/territories.json";
 import "./CountryDetailsPanel.css";
 
 type CountryFeatureRaw = {
@@ -51,11 +52,6 @@ function formatCompact(value?: number): string {
     return value.toFixed(0);
 }
 
-function formatNumber(value?: number): string {
-    if (typeof value !== "number" || Number.isNaN(value)) return "N/A";
-    return value.toLocaleString();
-}
-
 function formatDrivingSide(side?: string): string {
     if (side === "left") return "Left";
     if (side === "right") return "Right";
@@ -86,6 +82,8 @@ function sanitizeUrl(value?: string): string | null {
     return null;
 }
 
+type Tab = "overview" | "borders" | "territories";
+
 export default function CountryDetailsPanel() {
     const {
         clearMeasurement,
@@ -102,6 +100,12 @@ export default function CountryDetailsPanel() {
         visitedCountries,
         toggleVisited,
     } = useMapStore();
+
+    const [activeTab, setActiveTab] = useState<Tab>("overview");
+
+    useEffect(() => {
+        setActiveTab("overview");
+    }, [selectedCountry?.cca3]);
 
     const countryDetails = useMemo(() => {
         if (!selectedCountry) return null;
@@ -130,7 +134,7 @@ export default function CountryDetailsPanel() {
             },
             {
                 icon: "🚗",
-                label: "Driving Side",
+                label: "Driving",
                 value: formatDrivingSide(selectedCountry.car?.side),
                 href: undefined,
             },
@@ -147,14 +151,23 @@ export default function CountryDetailsPanel() {
         ];
     }, [selectedAirport]);
 
+    const allFeatures = (countryData as unknown as { features: CountryFeatureRaw[] }).features;
+
     const neighbors = useMemo(() => {
         if (!selectedCountry) return [];
         const codes = (bordersData as Record<string, string[]>)[selectedCountry.cca3] ?? [];
-        const features = (countryData as unknown as { features: CountryFeatureRaw[] }).features;
         return codes
-            .map((code) => features.find((f) => f.properties.cca3 === code))
+            .map((code) => allFeatures.find((f) => f.properties.cca3 === code))
             .filter((f): f is CountryFeatureRaw => f !== undefined);
-    }, [selectedCountry]);
+    }, [selectedCountry, allFeatures]);
+
+    const territories = useMemo(() => {
+        if (!selectedCountry) return [];
+        const codes = (territoriesData as Record<string, string[]>)[selectedCountry.cca3] ?? [];
+        return codes
+            .map((code) => allFeatures.find((f) => f.properties.cca3 === code))
+            .filter((f): f is CountryFeatureRaw => f !== undefined);
+    }, [selectedCountry, allFeatures]);
 
     const handleNeighborClick = useCallback(
         (neighbor: CountryFeatureRaw) => {
@@ -234,6 +247,13 @@ export default function CountryDetailsPanel() {
         ? visitedCountries.includes(selectedCountry.cca3)
         : false;
 
+    // Resolve tab — fall back to overview if active tab has no content
+    const resolvedTab: Tab =
+        (activeTab === "borders" && neighbors.length === 0) ||
+        (activeTab === "territories" && territories.length === 0)
+            ? "overview"
+            : activeTab;
+
     return (
         <OverlayPanel
             ariaLabel="Details panel"
@@ -247,117 +267,148 @@ export default function CountryDetailsPanel() {
             {/* ── Country view ── */}
             {selectedCountry && countryDetails ? (
                 <>
-                    {/* Stats row */}
-                    <div className="cdp-stats">
-                        <div className="cdp-stat">
-                            <span className="cdp-stat-label">Population</span>
-                            <span className="cdp-stat-value">
-                                {formatCompact(selectedCountry.population)}
-                            </span>
-                            <div className="cdp-stat-bar">
-                                <div
-                                    className="cdp-stat-bar-fill"
-                                    style={{
-                                        width: `${getPercentile(SORTED_POPULATION, selectedCountry.population)}%`,
-                                    }}
-                                />
-                            </div>
-                            <span className="cdp-stat-pct">
-                                {getPercentile(SORTED_POPULATION, selectedCountry.population)}%
-                            </span>
+                    {/* Tab bar — only when there's more than just overview */}
+                    {(neighbors.length > 0 || territories.length > 0) && (
+                        <div className="cdp-tabs">
+                            <button
+                                className={`cdp-tab${resolvedTab === "overview" ? " active" : ""}`}
+                                onClick={() => setActiveTab("overview")}
+                            >
+                                Overview
+                            </button>
+                            {neighbors.length > 0 && (
+                                <button
+                                    className={`cdp-tab${resolvedTab === "borders" ? " active" : ""}`}
+                                    onClick={() => setActiveTab("borders")}
+                                >
+                                    Borders
+                                    <span className="cdp-tab-badge">{neighbors.length}</span>
+                                </button>
+                            )}
+                            {territories.length > 0 && (
+                                <button
+                                    className={`cdp-tab${resolvedTab === "territories" ? " active" : ""}`}
+                                    onClick={() => setActiveTab("territories")}
+                                >
+                                    Territories
+                                    <span className="cdp-tab-badge">{territories.length}</span>
+                                </button>
+                            )}
                         </div>
-                        <div className="cdp-stat">
-                            <span className="cdp-stat-label">Area</span>
-                            <span className="cdp-stat-value">
-                                {selectedCountry.area
-                                    ? `${formatCompact(selectedCountry.area)} km²`
-                                    : "N/A"}
-                            </span>
-                            <div className="cdp-stat-bar">
-                                <div
-                                    className="cdp-stat-bar-fill"
-                                    style={{
-                                        width: `${getPercentile(SORTED_AREA, selectedCountry.area)}%`,
-                                    }}
-                                />
-                            </div>
-                            <span className="cdp-stat-pct">
-                                {getPercentile(SORTED_AREA, selectedCountry.area)}%
-                            </span>
-                        </div>
-                        <div className="cdp-stat">
-                            <span className="cdp-stat-label">Density</span>
-                            <span className="cdp-stat-value">
-                                {selectedCountry.populationDensity
-                                    ? `${formatCompact(selectedCountry.populationDensity)}/km²`
-                                    : "N/A"}
-                            </span>
-                            <div className="cdp-stat-bar">
-                                <div
-                                    className="cdp-stat-bar-fill"
-                                    style={{
-                                        width: `${getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%`,
-                                    }}
-                                />
-                            </div>
-                            <span className="cdp-stat-pct">
-                                {getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%
-                            </span>
-                        </div>
-                    </div>
+                    )}
 
-                    {/* Info card */}
-                    <div className="cdp-info">
-                        {countryDetails.map((row) => (
-                            <div key={row.label} className="cdp-info-row">
-                                <span className="cdp-info-icon">{row.icon}</span>
-                                <div className="cdp-info-body">
-                                    <div className="cdp-info-label">{row.label}</div>
-                                    {row.href ? (
-                                        <a
-                                            href={row.href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="cdp-info-value cdp-link"
-                                        >
-                                            {row.value}
-                                        </a>
-                                    ) : (
-                                        <div className="cdp-info-value">{row.value}</div>
-                                    )}
+                    {/* Scrollable tab content */}
+                    <div className="cdp-body">
+                        {resolvedTab === "overview" && (
+                            <>
+                                {/* Stats */}
+                                <div className="cdp-stats">
+                                    <div className="cdp-stat">
+                                        <span className="cdp-stat-label">Population</span>
+                                        <span className="cdp-stat-value">
+                                            {formatCompact(selectedCountry.population)}
+                                        </span>
+                                        <div className="cdp-stat-bar">
+                                            <div
+                                                className="cdp-stat-bar-fill"
+                                                style={{
+                                                    width: `${getPercentile(SORTED_POPULATION, selectedCountry.population)}%`,
+                                                }}
+                                            />
+                                        </div>
+                                        <span className="cdp-stat-pct">
+                                            {getPercentile(SORTED_POPULATION, selectedCountry.population)}%
+                                        </span>
+                                    </div>
+                                    <div className="cdp-stat">
+                                        <span className="cdp-stat-label">Area</span>
+                                        <span className="cdp-stat-value">
+                                            {selectedCountry.area
+                                                ? `${formatCompact(selectedCountry.area)} km²`
+                                                : "N/A"}
+                                        </span>
+                                        <div className="cdp-stat-bar">
+                                            <div
+                                                className="cdp-stat-bar-fill"
+                                                style={{
+                                                    width: `${getPercentile(SORTED_AREA, selectedCountry.area)}%`,
+                                                }}
+                                            />
+                                        </div>
+                                        <span className="cdp-stat-pct">
+                                            {getPercentile(SORTED_AREA, selectedCountry.area)}%
+                                        </span>
+                                    </div>
+                                    <div className="cdp-stat">
+                                        <span className="cdp-stat-label">Density</span>
+                                        <span className="cdp-stat-value">
+                                            {selectedCountry.populationDensity
+                                                ? `${formatCompact(selectedCountry.populationDensity)}/km²`
+                                                : "N/A"}
+                                        </span>
+                                        <div className="cdp-stat-bar">
+                                            <div
+                                                className="cdp-stat-bar-fill"
+                                                style={{
+                                                    width: `${getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%`,
+                                                }}
+                                            />
+                                        </div>
+                                        <span className="cdp-stat-pct">
+                                            {getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
 
-                    {/* Timezone card */}
-                    {selectedCountry.timezoneInfo ? (
-                        <div className="cdp-time">
-                            <span className="cdp-time-icon">🕐</span>
-                            <div className="cdp-time-body">
-                                <div className="cdp-time-value">
-                                    {selectedCountry.timezoneInfo.currentTime}
+                                {/* Info rows */}
+                                <div className="cdp-info">
+                                    {countryDetails.map((row) => (
+                                        <div key={row.label} className="cdp-info-row">
+                                            <span className="cdp-info-icon">{row.icon}</span>
+                                            <span className="cdp-info-label">{row.label}</span>
+                                            {row.href ? (
+                                                <a
+                                                    href={row.href}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="cdp-info-value cdp-link"
+                                                >
+                                                    {row.value}
+                                                </a>
+                                            ) : (
+                                                <span className="cdp-info-value">{row.value}</span>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className="cdp-time-sub">
-                                    {selectedCountry.timezoneInfo.offsetLabel}
-                                    {" · "}
-                                    {formatDstStatus(
-                                        selectedCountry.timezoneInfo.observesDst,
-                                        selectedCountry.timezoneInfo.isDstActive,
-                                    )}
-                                </div>
-                                <div className="cdp-time-zone">
-                                    {selectedCountry.timezoneInfo.cityLabel}
-                                </div>
-                            </div>
-                        </div>
-                    ) : null}
 
-                    {/* Borders */}
-                    {neighbors.length > 0 ? (
-                        <div className="cdp-section">
-                            <div className="cdp-section-label">Borders</div>
-                            <div className="cdp-chips">
+                                {/* Timezone */}
+                                {selectedCountry.timezoneInfo ? (
+                                    <div className="cdp-time">
+                                        <span className="cdp-time-icon">🕐</span>
+                                        <div className="cdp-time-body">
+                                            <div className="cdp-time-value">
+                                                {selectedCountry.timezoneInfo.currentTime}
+                                            </div>
+                                            <div className="cdp-time-sub">
+                                                {selectedCountry.timezoneInfo.offsetLabel}
+                                                {" · "}
+                                                {formatDstStatus(
+                                                    selectedCountry.timezoneInfo.observesDst,
+                                                    selectedCountry.timezoneInfo.isDstActive,
+                                                )}
+                                            </div>
+                                            <div className="cdp-time-zone">
+                                                {selectedCountry.timezoneInfo.cityLabel}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </>
+                        )}
+
+                        {resolvedTab === "borders" && (
+                            <div className="cdp-chips-grid">
                                 {neighbors.map((neighbor) => (
                                     <button
                                         key={neighbor.properties.cca3}
@@ -372,14 +423,40 @@ export default function CountryDetailsPanel() {
                                             }
                                             className="cdp-chip-flag"
                                         />
-                                        {neighbor.properties.country}
+                                        <span className="cdp-chip-name">
+                                            {neighbor.properties.country}
+                                        </span>
                                     </button>
                                 ))}
                             </div>
-                        </div>
-                    ) : null}
+                        )}
 
-                    {/* Footer: visited + Wikipedia */}
+                        {resolvedTab === "territories" && (
+                            <div className="cdp-chips-grid">
+                                {territories.map((territory) => (
+                                    <button
+                                        key={territory.properties.cca3}
+                                        className="cdp-chip"
+                                        onClick={() => handleNeighborClick(territory)}
+                                    >
+                                        <img
+                                            src={territory.properties.flag}
+                                            alt={
+                                                territory.properties.flagAlt ||
+                                                `Flag of ${territory.properties.country}`
+                                            }
+                                            className="cdp-chip-flag"
+                                        />
+                                        <span className="cdp-chip-name">
+                                            {territory.properties.country}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Sticky footer */}
                     <div className="cdp-footer">
                         <button
                             className={`cdp-visited${isVisited ? " active" : ""}`}

@@ -1,0 +1,12 @@
+{
+    "FRA": ["REU", "MTQ", "GLP", "GUF", "MYT", "NCL", "PYF", "SPM", "WLF", "BLM", "MAF", "ATF"],
+    "GBR": ["FLK", "GIB", "BMU", "CYM", "VGB", "TCA", "AIA", "MSR", "SHN", "IOT", "PCN", "SGS"],
+    "USA": ["PRI", "VIR", "GUM", "ASM", "MNP", "UMI"],
+    "NLD": ["ABW", "CUW", "SXM", "BES"],
+    "DNK": ["GRL", "FRO"],
+    "AUS": ["CXR", "CCK", "NFK", "HMD"],
+    "NZL": ["TKL", "COK", "NIU"],
+    "NOR": ["SJM", "BVT"],
+    "CHN": ["HKG", "MAC"],
+    "FIN": ["ALA"]
+}
