@@ -6,6 +6,7 @@ enum LayerKey {
     Capitals = "capitals",
     Satellite = "satellite",
     Density = "density",
+    Gdp = "gdp",
     Heatmap = "heatmap",
     Continents = "continents",
     Timezones = "timezones",
@@ -21,6 +22,8 @@ type Layer = {
     onChange: () => void;
     color: string;
     key: LayerKey;
+    opacity?: number;
+    onOpacityChange?: (value: number) => void;
 };
 
 interface LayerButtonProps {
@@ -32,6 +35,8 @@ interface LayerButtonProps {
     onClick: () => void;
     color: string;
     ariaLabel: string;
+    opacity?: number;
+    onOpacityChange?: (value: number) => void;
 }
 
 const LayerButton: React.FC<LayerButtonProps> = ({
@@ -43,36 +48,63 @@ const LayerButton: React.FC<LayerButtonProps> = ({
     onClick,
     color,
     ariaLabel,
-}) => (
-    <button
-        className={`layer-item${checked ? " active" : ""}${
-            loading ? " loading" : ""
-        }`}
-        onClick={onClick}
-        disabled={loading}
-        style={{ "--layer-color": color } as React.CSSProperties}
-        aria-pressed={checked}
-        aria-label={ariaLabel}
-    >
-        <span className="layer-icon">{icon}</span>
-        <span className="layer-body">
-            <span className="layer-text">
-                <span className="layer-label">{label}</span>
-                <span className="layer-description">{description}</span>
-            </span>
-            <span className={`layer-status${checked ? " active" : ""}`}>
-                {loading ? "Updating" : checked ? "On" : "Off"}
-            </span>
-        </span>
-        <div className={`layer-checkbox${checked ? " active" : ""}`}>
-            {loading ? (
-                <span className="spinner"></span>
-            ) : (
-                checked && <span className="checkmark">✓</span>
+    opacity,
+    onOpacityChange,
+}) => {
+    const showSlider = checked && opacity !== undefined && onOpacityChange !== undefined;
+    return (
+        <div
+            className="layer-item-wrapper"
+            style={{ "--layer-color": color } as React.CSSProperties}
+        >
+            <button
+                className={`layer-item${checked ? " active" : ""}${
+                    loading ? " loading" : ""
+                }${showSlider ? " has-slider" : ""}`}
+                onClick={onClick}
+                disabled={loading}
+                aria-pressed={checked}
+                aria-label={ariaLabel}
+            >
+                <span className="layer-icon">{icon}</span>
+                <span className="layer-body">
+                    <span className="layer-text">
+                        <span className="layer-label">{label}</span>
+                        <span className="layer-description">{description}</span>
+                    </span>
+                    <span className={`layer-status${checked ? " active" : ""}`}>
+                        {loading ? "Updating" : checked ? "On" : "Off"}
+                    </span>
+                </span>
+                <div className={`layer-checkbox${checked ? " active" : ""}`}>
+                    {loading ? (
+                        <span className="spinner"></span>
+                    ) : (
+                        checked && <span className="checkmark">✓</span>
+                    )}
+                </div>
+            </button>
+            {showSlider && (
+                <div className="layer-opacity-control">
+                    <span className="layer-opacity-label">Opacity</span>
+                    <input
+                        type="range"
+                        className="layer-opacity-slider"
+                        min={0.1}
+                        max={1}
+                        step={0.05}
+                        value={opacity}
+                        onChange={(e) => onOpacityChange(parseFloat(e.target.value))}
+                        aria-label={`${label} opacity`}
+                    />
+                    <span className="layer-opacity-value">
+                        {Math.round(opacity * 100)}%
+                    </span>
+                </div>
             )}
         </div>
-    </button>
-);
+    );
+};
 
 export default function LayersTab() {
     const { loadingStates } = useLoadingStore();
@@ -84,8 +116,10 @@ export default function LayersTab() {
         showContinents,
         showTimezones,
         showDensity,
+        showGdp,
         showHeatmap,
         showWeather,
+        layerOpacities,
         toggleCoastlines,
         toggleNightLights,
         toggleSatellite,
@@ -93,8 +127,10 @@ export default function LayersTab() {
         toggleContinents,
         toggleTimezones,
         toggleDensity,
+        toggleGdp,
         toggleHeatmap,
         toggleWeather,
+        setLayerOpacity,
     } = useMapStore();
 
     const layers = useMemo<Layer[]>(
@@ -107,6 +143,8 @@ export default function LayersTab() {
                 onChange: toggleCoastlines,
                 color: "#7ccddd",
                 key: LayerKey.Coastlines,
+                opacity: layerOpacities.coastlines,
+                onOpacityChange: (v) => setLayerOpacity("coastlines", v),
             },
             {
                 label: "Capitals",
@@ -125,6 +163,8 @@ export default function LayersTab() {
                 onChange: toggleSatellite,
                 color: "#f2cf84",
                 key: LayerKey.Satellite,
+                opacity: layerOpacities.satellite,
+                onOpacityChange: (v) => setLayerOpacity("satellite", v),
             },
             {
                 label: "Density",
@@ -134,6 +174,19 @@ export default function LayersTab() {
                 onChange: toggleDensity,
                 color: "#84d2aa",
                 key: LayerKey.Density,
+                opacity: layerOpacities.density,
+                onOpacityChange: (v) => setLayerOpacity("density", v),
+            },
+            {
+                label: "GDP",
+                description: "Color countries by gross domestic product.",
+                icon: "",
+                checked: showGdp,
+                onChange: toggleGdp,
+                color: "#fbbf24",
+                key: LayerKey.Gdp,
+                opacity: layerOpacities.gdp,
+                onOpacityChange: (v) => setLayerOpacity("gdp", v),
             },
             {
                 label: "Population",
@@ -143,6 +196,8 @@ export default function LayersTab() {
                 onChange: toggleHeatmap,
                 color: "#f0ac7e",
                 key: LayerKey.Heatmap,
+                opacity: layerOpacities.heatmap,
+                onOpacityChange: (v) => setLayerOpacity("heatmap", v),
             },
             {
                 label: "Continents",
@@ -152,6 +207,8 @@ export default function LayersTab() {
                 onChange: toggleContinents,
                 color: "#9adfcf",
                 key: LayerKey.Continents,
+                opacity: layerOpacities.continents,
+                onOpacityChange: (v) => setLayerOpacity("continents", v),
             },
             {
                 label: "Timezones",
@@ -170,6 +227,8 @@ export default function LayersTab() {
                 onChange: toggleNightLights,
                 color: "#f5c842",
                 key: LayerKey.NightLights,
+                opacity: layerOpacities.nightLights,
+                onOpacityChange: (v) => setLayerOpacity("nightLights", v),
             },
             {
                 label: "Weather Radar",
@@ -179,6 +238,8 @@ export default function LayersTab() {
                 onChange: toggleWeather,
                 color: "#60a5fa",
                 key: LayerKey.Weather,
+                opacity: layerOpacities.weather,
+                onOpacityChange: (v) => setLayerOpacity("weather", v),
             },
         ],
         [
@@ -188,18 +249,22 @@ export default function LayersTab() {
             showCapitals,
             showSatellite,
             showDensity,
+            showGdp,
             showHeatmap,
             showContinents,
             showTimezones,
+            layerOpacities,
             toggleCoastlines,
             toggleNightLights,
             toggleWeather,
             toggleCapitals,
             toggleSatellite,
             toggleDensity,
+            toggleGdp,
             toggleHeatmap,
             toggleContinents,
             toggleTimezones,
+            setLayerOpacity,
         ]
     );
 
@@ -259,6 +324,8 @@ export default function LayersTab() {
                         onClick={layer.onChange}
                         color={layer.color}
                         ariaLabel={`Toggle ${layer.label}`}
+                        opacity={layer.opacity}
+                        onOpacityChange={layer.onOpacityChange}
                     />
                 ))}
             </div>

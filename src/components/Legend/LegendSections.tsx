@@ -25,6 +25,15 @@ const DENSITY_COLORS = [
     { color: "#2f9f87", label: "> 1K / km²" },
 ];
 
+const GDP_COLORS = [
+    { color: "#fef9e7", label: "< $1B" },
+    { color: "#fde68a", label: "$1B–$10B" },
+    { color: "#fbbf24", label: "$10B–$100B" },
+    { color: "#d97706", label: "$100B–$1T" },
+    { color: "#92400e", label: "$1T–$10T" },
+    { color: "#451a03", label: "> $10T" },
+];
+
 function ContinentsLegendContent() {
     return (
         <div className="legend-items">
@@ -84,6 +93,22 @@ function DensityLegendContent() {
     );
 }
 
+function GdpLegendContent() {
+    return (
+        <div className="legend-items legend-items-compact">
+            {GDP_COLORS.map((item) => (
+                <div key={item.label} className="legend-scale-item">
+                    <div
+                        className="legend-scale-swatch"
+                        style={{ backgroundColor: item.color }}
+                    />
+                    <span className="legend-scale-label">{item.label}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 function TimezonesLegendContent() {
     return (
         <div className="legend-items legend-items-compact">
@@ -109,7 +134,8 @@ export function buildLegendSections(
     showContinents: boolean,
     showHeatmap: boolean,
     showDensity: boolean,
-    showTimezones: boolean
+    showTimezones: boolean,
+    showGdp: boolean
 ): LegendSection[] {
     return [
         {
@@ -129,6 +155,12 @@ export function buildLegendSections(
             icon: "",
             isVisible: showDensity,
             content: <DensityLegendContent />,
+        },
+        {
+            title: "GDP",
+            icon: "",
+            isVisible: showGdp,
+            content: <GdpLegendContent />,
         },
         {
             title: "Timezones",

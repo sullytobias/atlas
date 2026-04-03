@@ -10,6 +10,7 @@ import type { GeoJSONSource, RasterTileSource, StyleSpecification } from "maplib
 import { MapMouseEvent } from "maplibre-gl";
 
 import { MAP_SOURCES } from "../config/mapSources";
+import { getFlightRoutesGeoJson } from "../utils/flightRoutes";
 import { MAP_LAYERS } from "../config/mapLayers";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
@@ -55,11 +56,14 @@ export default forwardRef<MapRef, Props>(function Map(
         showContinents,
         showTimezones,
         showDensity,
+        showGdp,
         showHeatmap,
         showGlobe,
         showTerrain,
         showAirports,
         showWeather,
+        showFlightRoutes,
+        layerOpacities,
         measurementStart,
         selectedMeasurement,
         showCountryComparison,
@@ -88,10 +92,12 @@ export default forwardRef<MapRef, Props>(function Map(
         showContinents,
         showTimezones,
         showDensity,
+        showGdp,
         showHeatmap,
         showGlobe,
         showTerrain,
         showAirports,
+        showFlightRoutes,
     });
 
     useImperativeHandle(
@@ -121,6 +127,13 @@ export default forwardRef<MapRef, Props>(function Map(
                 layerId: "satellite-base",
                 condition: showSatellite,
                 loadingKey: "satellite",
+                paintProperties: [
+                    {
+                        name: "raster-opacity",
+                        visibleValue: layerOpacities.satellite,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "basic-base",
@@ -135,11 +148,25 @@ export default forwardRef<MapRef, Props>(function Map(
                 layerId: "night-lights",
                 condition: showNightLights,
                 loadingKey: "nightLights",
+                paintProperties: [
+                    {
+                        name: "raster-opacity",
+                        visibleValue: layerOpacities.nightLights,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "coastline",
                 condition: showCoastlines,
                 loadingKey: "coastlines",
+                paintProperties: [
+                    {
+                        name: "line-opacity",
+                        visibleValue: layerOpacities.coastlines,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "capitals-points",
@@ -155,6 +182,13 @@ export default forwardRef<MapRef, Props>(function Map(
                 layerId: "continents-fill",
                 condition: showContinents,
                 loadingKey: "continents",
+                paintProperties: [
+                    {
+                        name: "fill-opacity",
+                        visibleValue: layerOpacities.continents,
+                        hiddenValue: 0,
+                    },
+                ],
             },
             {
                 layerId: "timezones-fill",
@@ -178,7 +212,19 @@ export default forwardRef<MapRef, Props>(function Map(
                 paintProperties: [
                     {
                         name: "fill-opacity",
-                        visibleValue: 0.5,
+                        visibleValue: layerOpacities.density,
+                        hiddenValue: 0,
+                    },
+                ],
+            },
+            {
+                layerId: "gdp-choropleth",
+                condition: showGdp,
+                loadingKey: "gdp",
+                paintProperties: [
+                    {
+                        name: "fill-opacity",
+                        visibleValue: layerOpacities.gdp,
                         hiddenValue: 0,
                     },
                 ],
@@ -190,7 +236,31 @@ export default forwardRef<MapRef, Props>(function Map(
                 paintProperties: [
                     {
                         name: "fill-opacity",
-                        visibleValue: 0.5,
+                        visibleValue: layerOpacities.heatmap,
+                        hiddenValue: 0,
+                    },
+                ],
+            },
+            {
+                layerId: "flight-routes-glow",
+                condition: showFlightRoutes,
+                loadingKey: "flightRoutes",
+                paintProperties: [
+                    {
+                        name: "line-opacity",
+                        visibleValue: layerOpacities.flightRoutes * 0.33,
+                        hiddenValue: 0,
+                    },
+                ],
+            },
+            {
+                layerId: "flight-routes",
+                condition: showFlightRoutes,
+                loadingKey: "flightRoutes",
+                paintProperties: [
+                    {
+                        name: "line-opacity",
+                        visibleValue: layerOpacities.flightRoutes,
                         hiddenValue: 0,
                     },
                 ],
@@ -249,9 +319,12 @@ export default forwardRef<MapRef, Props>(function Map(
             showContinents,
             showTimezones,
             showDensity,
+            showGdp,
             showHeatmap,
             showTerrain,
             showAirports,
+            showFlightRoutes,
+            layerOpacities,
         ],
     );
 
@@ -334,6 +407,9 @@ export default forwardRef<MapRef, Props>(function Map(
         if (previousState.showDensity !== showDensity) {
             changedKeys.add("density");
         }
+        if (previousState.showGdp !== showGdp) {
+            changedKeys.add("gdp");
+        }
         if (previousState.showHeatmap !== showHeatmap) {
             changedKeys.add("heatmap");
         }
@@ -355,6 +431,10 @@ export default forwardRef<MapRef, Props>(function Map(
             },
         );
 
+        if (previousState.showFlightRoutes !== showFlightRoutes) {
+            changedKeys.add("flightRoutes");
+        }
+
         previousLayerStateRef.current = {
             showCoastlines,
             showSatellite,
@@ -362,10 +442,12 @@ export default forwardRef<MapRef, Props>(function Map(
             showContinents,
             showTimezones,
             showDensity,
+            showGdp,
             showHeatmap,
             showGlobe,
             showTerrain,
             showAirports,
+            showFlightRoutes,
         };
 
         if (changedKeys.size === 0) return;
@@ -383,10 +465,12 @@ export default forwardRef<MapRef, Props>(function Map(
         showContinents,
         showTimezones,
         showDensity,
+        showGdp,
         showHeatmap,
         showGlobe,
         showTerrain,
         showAirports,
+        showFlightRoutes,
     ]);
 
     const clearHoveredCountry = useCallback(() => {
@@ -656,6 +740,42 @@ export default forwardRef<MapRef, Props>(function Map(
             map.once("load", apply);
         }
     }, [map, showWeather, onLoadingComplete]);
+
+    useEffect(() => {
+        if (!map || !showWeather) return;
+        const apply = () => {
+            if (map.getLayer("rain-radar")) {
+                map.setPaintProperty("rain-radar", "raster-opacity", layerOpacities.weather);
+            }
+        };
+        if (map.isStyleLoaded()) {
+            apply();
+        } else {
+            map.once("load", apply);
+        }
+    }, [map, showWeather, layerOpacities.weather]);
+
+    useEffect(() => {
+        if (!map || !showFlightRoutes) return;
+        let cancelled = false;
+
+        getFlightRoutesGeoJson().then((geoJson) => {
+            if (cancelled) return;
+            const apply = () => {
+                const source = map.getSource("flightRoutes") as GeoJSONSource | undefined;
+                source?.setData(geoJson);
+            };
+            if (map.isStyleLoaded()) {
+                apply();
+            } else {
+                map.once("load", apply);
+            }
+        });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [map, showFlightRoutes]);
 
     // Sync map position to URL
     useEffect(() => {

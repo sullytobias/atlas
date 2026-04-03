@@ -190,18 +190,22 @@ export default function AdvancedTab() {
     const { loadingStates } = useLoadingStore();
     const {
         showAirports,
+        showFlightRoutes,
         showCountryComparison,
         showDistanceMeasure,
         showStreetViewPicker,
         showTerrain,
         showGlobe,
+        layerOpacities,
         toggleAirport,
+        toggleFlightRoutes,
         toggleCountryComparison,
         toggleDistanceMeasure,
         toggleStreetViewPicker,
         toggleTerrain,
         toggleGlobe,
         setAllAirports,
+        setLayerOpacity,
     } = useMapStore();
 
     const handleAirportToggle = useCallback(
@@ -327,6 +331,52 @@ export default function AdvancedTab() {
                             None
                         </button>
                     </div>
+                </div>
+                <div
+                    className="layer-item-wrapper"
+                    style={
+                        {
+                            "--layer-color": "#a8d8f0",
+                            marginBottom: "12px",
+                        } as React.CSSProperties
+                    }
+                >
+                    <LayerButton
+                        label="Flight Routes"
+                        description="Great-circle arcs between major airports worldwide."
+                        icon={null}
+                        active={showFlightRoutes}
+                        loading={!!loadingStates["flightRoutes"]}
+                        onClick={toggleFlightRoutes}
+                        color="#a8d8f0"
+                        ariaLabel="Toggle flight routes"
+                    />
+                    {showFlightRoutes && (
+                        <div className="layer-opacity-control">
+                            <span className="layer-opacity-label">Opacity</span>
+                            <input
+                                type="range"
+                                className="layer-opacity-slider"
+                                min={0.1}
+                                max={1}
+                                step={0.05}
+                                value={layerOpacities.flightRoutes ?? 0.55}
+                                onChange={(e) =>
+                                    setLayerOpacity(
+                                        "flightRoutes",
+                                        parseFloat(e.target.value),
+                                    )
+                                }
+                                aria-label="Flight routes opacity"
+                            />
+                            <span className="layer-opacity-value">
+                                {Math.round(
+                                    (layerOpacities.flightRoutes ?? 0.55) * 100,
+                                )}
+                                %
+                            </span>
+                        </div>
+                    )}
                 </div>
                 <div className="card-grid">
                     {airportTypesMemo.map((airport) => (

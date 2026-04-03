@@ -5,6 +5,8 @@ import OverlayPanel from "../OverlayPanel/OverlayPanel";
 import countryData from "../../data/data.json";
 import bordersData from "../../data/borders.json";
 import territoriesData from "../../data/territories.json";
+import gdpData from "../../data/gdpData.json";
+import { CODE_MAPPING } from "../../utils/countryCodeMappings";
 import { useWeather, getWeatherInfo } from "../../hooks/useWeather";
 import "./CountryDetailsPanel.css";
 
@@ -30,6 +32,11 @@ const SORTED_AREA = allFeatureProps
 
 const SORTED_DENSITY = allFeatureProps
     .map((p) => p.populationDensity ?? 0)
+    .filter((v) => v > 0)
+    .sort((a, b) => a - b);
+
+const gdpByCode = gdpData as Record<string, number>;
+const SORTED_GDP = Object.values(gdpByCode)
     .filter((v) => v > 0)
     .sort((a, b) => a - b);
 
@@ -372,6 +379,29 @@ export default function CountryDetailsPanel() {
                                             {getPercentile(SORTED_DENSITY, selectedCountry.populationDensity ?? 0)}%
                                         </span>
                                     </div>
+                                    {(() => {
+                                        const adm0a3 = CODE_MAPPING[selectedCountry.cca3] || selectedCountry.cca3;
+                                        const gdp = gdpByCode[adm0a3];
+                                        return (
+                                            <div className="cdp-stat">
+                                                <span className="cdp-stat-label">GDP</span>
+                                                <span className="cdp-stat-value">
+                                                    {gdp ? `$${formatCompact(gdp * 1e6)}` : "N/A"}
+                                                </span>
+                                                <div className="cdp-stat-bar">
+                                                    <div
+                                                        className="cdp-stat-bar-fill"
+                                                        style={{
+                                                            width: `${getPercentile(SORTED_GDP, gdp ?? 0)}%`,
+                                                        }}
+                                                    />
+                                                </div>
+                                                <span className="cdp-stat-pct">
+                                                    {getPercentile(SORTED_GDP, gdp ?? 0)}%
+                                                </span>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
 
                                 {/* Info rows */}

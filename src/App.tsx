@@ -42,6 +42,7 @@ export default function App() {
     const {
         showContinents,
         showDensity,
+        showGdp,
         showHeatmap,
         showTimezones,
         theme,
@@ -90,7 +91,8 @@ export default function App() {
         showContinents,
         showHeatmap,
         showDensity,
-        showTimezones
+        showTimezones,
+        showGdp
     );
 
     useEffect(() => {

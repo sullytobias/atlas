@@ -107,6 +107,7 @@ function normalizeComparisonCountries(
 
 interface MapState {
     pendingFlyTo: [number, number] | null;
+    layerOpacities: Record<string, number>;
     showCoastlines: boolean;
     showNightLights: boolean;
     showWeather: boolean;
@@ -115,7 +116,9 @@ interface MapState {
     showContinents: boolean;
     showTimezones: boolean;
     showDensity: boolean;
+    showGdp: boolean;
     showHeatmap: boolean;
+    showFlightRoutes: boolean;
     showStreetViewPicker: boolean;
     showDistanceMeasure: boolean;
     showCountryComparison: boolean;
@@ -141,7 +144,9 @@ interface MapState {
     toggleContinents: () => void;
     toggleTimezones: () => void;
     toggleDensity: () => void;
+    toggleGdp: () => void;
     toggleHeatmap: () => void;
+    toggleFlightRoutes: () => void;
     toggleStreetViewPicker: () => void;
     toggleDistanceMeasure: () => void;
     toggleCountryComparison: () => void;
@@ -164,10 +169,22 @@ interface MapState {
     clearMeasurement: () => void;
     toggleTheme: () => void;
     setPendingFlyTo: (coords: [number, number] | null) => void;
+    setLayerOpacity: (key: string, opacity: number) => void;
 }
 
 export const useMapStore = create<MapState>((set) => ({
     pendingFlyTo: null,
+    layerOpacities: {
+        coastlines: 1.0,
+        satellite: 1.0,
+        density: 0.5,
+        gdp: 0.5,
+        heatmap: 0.5,
+        continents: 0.4,
+        nightLights: 0.9,
+        weather: 0.7,
+        flightRoutes: 0.55,
+    },
     showCoastlines: false,
     showNightLights: false,
     showWeather: false,
@@ -176,7 +193,9 @@ export const useMapStore = create<MapState>((set) => ({
     showContinents: false,
     showTimezones: false,
     showDensity: false,
+    showGdp: false,
     showHeatmap: false,
+    showFlightRoutes: false,
     showStreetViewPicker: false,
     showDistanceMeasure: false,
     showCountryComparison: false,
@@ -250,9 +269,17 @@ export const useMapStore = create<MapState>((set) => ({
         useLoadingStore.getState().setLoading("density", true);
         set((state) => ({ showDensity: !state.showDensity }));
     },
+    toggleGdp: () => {
+        useLoadingStore.getState().setLoading("gdp", true);
+        set((state) => ({ showGdp: !state.showGdp }));
+    },
     toggleHeatmap: () => {
         useLoadingStore.getState().setLoading("heatmap", true);
         set((state) => ({ showHeatmap: !state.showHeatmap }));
+    },
+    toggleFlightRoutes: () => {
+        useLoadingStore.getState().setLoading("flightRoutes", true);
+        set((state) => ({ showFlightRoutes: !state.showFlightRoutes }));
     },
     toggleStreetViewPicker: () =>
         set((state) => ({
@@ -457,4 +484,8 @@ export const useMapStore = create<MapState>((set) => ({
             theme: state.theme === "dark" ? "light" : "dark",
         })),
     setPendingFlyTo: (coords) => set({ pendingFlyTo: coords }),
+    setLayerOpacity: (key, opacity) =>
+        set((state) => ({
+            layerOpacities: { ...state.layerOpacities, [key]: opacity },
+        })),
 }));

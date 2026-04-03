@@ -4,6 +4,7 @@ import type {
 } from "maplibre-gl";
 import { getContinentColorExpression } from "../constants/continents";
 import countryData from "../data/data.json";
+import gdpData from "../data/gdpData.json";
 import {
     ADDITIONAL_TERRITORIES,
     CODE_MAPPING,
@@ -55,6 +56,14 @@ const POPULATION_EXPRESSION = buildCountryMetricExpression(
 const DENSITY_EXPRESSION = buildCountryMetricExpression(
     (properties) => properties.populationDensity ?? -1,
 );
+
+const gdpByCode = gdpData as Record<string, number>;
+const GDP_EXPRESSION: ExpressionSpecification = [
+    "match",
+    ["get", "ADM0_A3"],
+    ...Object.entries(gdpByCode).flatMap(([code, value]) => [code, value]),
+    -1,
+] as unknown as ExpressionSpecification;
 export const MAP_LAYERS: LayerSpecification[] = [
     {
         id: "basic-base",
@@ -130,6 +139,40 @@ export const MAP_LAYERS: LayerSpecification[] = [
                     "#59c096",
                     1000,
                     "#2f9f87",
+                ],
+                "transparent",
+            ],
+            "fill-opacity": 0.5,
+        },
+    },
+    {
+        id: "gdp-choropleth",
+        type: "fill",
+        source: "countries",
+        "source-layer": "countries",
+        layout: {
+            visibility: "none",
+        },
+        paint: {
+            "fill-color": [
+                "case",
+                [">=", GDP_EXPRESSION, 0],
+                [
+                    "interpolate",
+                    ["linear"],
+                    GDP_EXPRESSION,
+                    0,
+                    "#fef9e7",
+                    1000,
+                    "#fde68a",
+                    10000,
+                    "#fbbf24",
+                    100000,
+                    "#d97706",
+                    1000000,
+                    "#92400e",
+                    10000000,
+                    "#451a03",
                 ],
                 "transparent",
             ],
@@ -397,6 +440,37 @@ export const MAP_LAYERS: LayerSpecification[] = [
             "text-color": "#f8fafc",
             "text-halo-color": "#082f49",
             "text-halo-width": 1.6,
+        },
+    },
+    {
+        id: "flight-routes-glow",
+        type: "line",
+        source: "flightRoutes",
+        layout: {
+            "line-cap": "round",
+            "line-join": "round",
+            visibility: "none",
+        },
+        paint: {
+            "line-color": "#a8d8f0",
+            "line-width": 3,
+            "line-opacity": 0.18,
+            "line-blur": 2,
+        },
+    },
+    {
+        id: "flight-routes",
+        type: "line",
+        source: "flightRoutes",
+        layout: {
+            "line-cap": "round",
+            "line-join": "round",
+            visibility: "none",
+        },
+        paint: {
+            "line-color": "#72bfe1",
+            "line-width": 2,
+            "line-opacity": 0.55,
         },
     },
     {

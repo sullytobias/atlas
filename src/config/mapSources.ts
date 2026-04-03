@@ -74,6 +74,13 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
             features: [],
         } as FeatureCollection<Point, { label: string }>,
     },
+    flightRoutes: {
+        type: "geojson",
+        data: {
+            type: "FeatureCollection",
+            features: [],
+        } as FeatureCollection<LineString, Record<string, never>>,
+    },
     nightLights: {
         type: "raster",
         tiles: [
