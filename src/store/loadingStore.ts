@@ -64,6 +64,27 @@ export interface SelectedAirport {
     wikipediaLink?: string;
 }
 
+export interface SelectedEarthquake {
+    id: string;
+    mag: number;
+    place: string;
+    time: number;
+    depth: number;
+    url: string;
+    lat: number;
+    lng: number;
+}
+
+export interface SelectedVolcano {
+    name: string;
+    country: string;
+    type: string;
+    lastEruption: string;
+    elevation: number;
+    lat: number;
+    lng: number;
+}
+
 export interface SelectedLocation {
     latitude: number;
     longitude: number;
@@ -119,6 +140,8 @@ interface MapState {
     showGdp: boolean;
     showHeatmap: boolean;
     showFlightRoutes: boolean;
+    showEarthquakes: boolean;
+    showVolcanoes: boolean;
     showStreetViewPicker: boolean;
     showDistanceMeasure: boolean;
     showCountryComparison: boolean;
@@ -126,6 +149,8 @@ interface MapState {
     showGlobe: boolean;
     showAirports: AirportState;
     selectedAirport: SelectedAirport | null;
+    selectedEarthquake: SelectedEarthquake | null;
+    selectedVolcano: SelectedVolcano | null;
     selectedCountry: SelectedCountry | null;
     selectedLocation: SelectedLocation | null;
     measurementStart: MeasurementPoint | null;
@@ -148,6 +173,10 @@ interface MapState {
     toggleGdp: () => void;
     toggleHeatmap: () => void;
     toggleFlightRoutes: () => void;
+    toggleEarthquakes: () => void;
+    toggleVolcanoes: () => void;
+    setSelectedEarthquake: (earthquake: SelectedEarthquake | null) => void;
+    setSelectedVolcano: (volcano: SelectedVolcano | null) => void;
     toggleStreetViewPicker: () => void;
     toggleDistanceMeasure: () => void;
     toggleCountryComparison: () => void;
@@ -186,6 +215,8 @@ export const useMapStore = create<MapState>((set) => ({
         nightLights: 0.9,
         weather: 0.7,
         flightRoutes: 0.55,
+        earthquakes: 0.8,
+        volcanoes: 0.9,
     },
     showCoastlines: false,
     showNightLights: false,
@@ -198,12 +229,16 @@ export const useMapStore = create<MapState>((set) => ({
     showGdp: false,
     showHeatmap: false,
     showFlightRoutes: false,
+    showEarthquakes: false,
+    showVolcanoes: false,
     showStreetViewPicker: false,
     showDistanceMeasure: false,
     showCountryComparison: false,
     showTerrain: false,
     showGlobe: false,
     selectedAirport: null,
+    selectedEarthquake: null,
+    selectedVolcano: null,
     selectedCountry: null,
     selectedLocation: null,
     measurementStart: null,
@@ -291,6 +326,34 @@ export const useMapStore = create<MapState>((set) => ({
         useLoadingStore.getState().setLoading("flightRoutes", true);
         set((state) => ({ showFlightRoutes: !state.showFlightRoutes }));
     },
+    toggleEarthquakes: () => {
+        useLoadingStore.getState().setLoading("earthquakes", true);
+        set((state) => ({ showEarthquakes: !state.showEarthquakes }));
+    },
+    toggleVolcanoes: () => {
+        useLoadingStore.getState().setLoading("volcanoes", true);
+        set((state) => ({ showVolcanoes: !state.showVolcanoes }));
+    },
+    setSelectedEarthquake: (earthquake) =>
+        set((state) => ({
+            selectedEarthquake: earthquake,
+            selectedVolcano: earthquake ? null : state.selectedVolcano,
+            selectedAirport: earthquake ? null : state.selectedAirport,
+            selectedCountry: earthquake ? null : state.selectedCountry,
+            selectedLocation: earthquake ? null : state.selectedLocation,
+            measurementStart: earthquake ? null : state.measurementStart,
+            selectedMeasurement: earthquake ? null : state.selectedMeasurement,
+        })),
+    setSelectedVolcano: (volcano) =>
+        set((state) => ({
+            selectedVolcano: volcano,
+            selectedEarthquake: volcano ? null : state.selectedEarthquake,
+            selectedAirport: volcano ? null : state.selectedAirport,
+            selectedCountry: volcano ? null : state.selectedCountry,
+            selectedLocation: volcano ? null : state.selectedLocation,
+            measurementStart: volcano ? null : state.measurementStart,
+            selectedMeasurement: volcano ? null : state.selectedMeasurement,
+        })),
     toggleStreetViewPicker: () =>
         set((state) => ({
             showStreetViewPicker: !state.showStreetViewPicker,
@@ -367,6 +430,8 @@ export const useMapStore = create<MapState>((set) => ({
     setSelectedAirport: (airport) =>
         set((state) => ({
             selectedAirport: airport,
+            selectedEarthquake: airport ? null : state.selectedEarthquake,
+            selectedVolcano: airport ? null : state.selectedVolcano,
             selectedCountry: airport ? null : state.selectedCountry,
             selectedLocation: airport ? null : state.selectedLocation,
             measurementStart: airport ? null : state.measurementStart,
@@ -378,6 +443,8 @@ export const useMapStore = create<MapState>((set) => ({
     setSelectedCountry: (country) =>
         set((state) => ({
             selectedAirport: country ? null : state.selectedAirport,
+            selectedEarthquake: country ? null : state.selectedEarthquake,
+            selectedVolcano: country ? null : state.selectedVolcano,
             selectedCountry: country,
             selectedLocation: country ? null : state.selectedLocation,
             measurementStart: country ? null : state.measurementStart,

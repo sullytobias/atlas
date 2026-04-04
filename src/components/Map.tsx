@@ -80,6 +80,8 @@ export default forwardRef<MapRef, Props>(function Map(
         showAirports,
         showWeather,
         showFlightRoutes,
+        showEarthquakes,
+        showVolcanoes,
         layerOpacities,
         measurementStart,
         selectedMeasurement,
@@ -115,6 +117,8 @@ export default forwardRef<MapRef, Props>(function Map(
         showTerrain,
         showAirports,
         showFlightRoutes,
+        showEarthquakes,
+        showVolcanoes,
     });
 
     useImperativeHandle(
@@ -283,6 +287,30 @@ export default forwardRef<MapRef, Props>(function Map(
                 ],
             },
             {
+                layerId: "earthquakes-circles",
+                condition: showEarthquakes,
+                loadingKey: "earthquakes",
+                paintProperties: [
+                    {
+                        name: "circle-opacity",
+                        visibleValue: layerOpacities.earthquakes ?? 0.8,
+                        hiddenValue: 0,
+                    },
+                ],
+            },
+            {
+                layerId: "volcanoes-circles",
+                condition: showVolcanoes,
+                loadingKey: "volcanoes",
+                paintProperties: [
+                    {
+                        name: "circle-opacity",
+                        visibleValue: layerOpacities.volcanoes ?? 0.9,
+                        hiddenValue: 0,
+                    },
+                ],
+            },
+            {
                 layerId: "airports-large",
                 condition: showAirports.large ?? false,
                 loadingKey: "airport-large",
@@ -341,6 +369,8 @@ export default forwardRef<MapRef, Props>(function Map(
             showTerrain,
             showAirports,
             showFlightRoutes,
+            showEarthquakes,
+            showVolcanoes,
             layerOpacities,
         ],
     );
@@ -451,6 +481,12 @@ export default forwardRef<MapRef, Props>(function Map(
         if (previousState.showFlightRoutes !== showFlightRoutes) {
             changedKeys.add("flightRoutes");
         }
+        if (previousState.showEarthquakes !== showEarthquakes) {
+            changedKeys.add("earthquakes");
+        }
+        if (previousState.showVolcanoes !== showVolcanoes) {
+            changedKeys.add("volcanoes");
+        }
 
         previousLayerStateRef.current = {
             showCoastlines,
@@ -465,6 +501,8 @@ export default forwardRef<MapRef, Props>(function Map(
             showTerrain,
             showAirports,
             showFlightRoutes,
+            showEarthquakes,
+            showVolcanoes,
         };
 
         if (changedKeys.size === 0) return;
@@ -488,6 +526,8 @@ export default forwardRef<MapRef, Props>(function Map(
         showTerrain,
         showAirports,
         showFlightRoutes,
+        showEarthquakes,
+        showVolcanoes,
     ]);
 
     const clearHoveredCountry = useCallback(() => {
@@ -528,6 +568,22 @@ export default forwardRef<MapRef, Props>(function Map(
         (e: MapMouseEvent) => {
             const map = mapRef.current;
             if (!map) return;
+
+            // Earthquake / volcano layers get cursor priority
+            const evLayers: string[] = [];
+            if (showEarthquakes) evLayers.push("earthquakes-circles");
+            if (showVolcanoes) evLayers.push("volcanoes-circles");
+            if (evLayers.length > 0) {
+                const evFeatures = map.queryRenderedFeatures(e.point, {
+                    layers: evLayers,
+                });
+                if (evFeatures.length > 0) {
+                    map.getCanvas().style.cursor = "pointer";
+                    setHoveredGdpInfo(null);
+                    return;
+                }
+            }
+
             const features = getCountryFeaturesAtPoint(map, e.point);
 
             if (features.length > 0) {
@@ -572,6 +628,8 @@ export default forwardRef<MapRef, Props>(function Map(
             setHoveredCountry,
             showCountryComparison,
             showGdp,
+            showEarthquakes,
+            showVolcanoes,
             setHoveredGdpInfo,
         ],
     );
@@ -809,6 +867,43 @@ export default forwardRef<MapRef, Props>(function Map(
             cancelled = true;
         };
     }, [map, showFlightRoutes]);
+
+    // Fetch live earthquake data from USGS
+    useEffect(() => {
+        if (!map || !showEarthquakes) return;
+        let cancelled = false;
+
+        fetch(
+            "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month.geojson",
+        )
+            .then((r) => r.json())
+            .then((geoJson) => {
+                if (cancelled) return;
+                const apply = () => {
+                    const source = map.getSource("earthquakes") as
+                        | GeoJSONSource
+                        | undefined;
+                    source?.setData(geoJson);
+                };
+                if (map.isStyleLoaded()) {
+                    apply();
+                } else {
+                    map.once("load", apply);
+                }
+            })
+            .catch(() => {})
+            .finally(() => {
+                if (!cancelled && onLoadingComplete) {
+                    window.requestAnimationFrame(() =>
+                        onLoadingComplete("earthquakes"),
+                    );
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [map, showEarthquakes, onLoadingComplete]);
 
     // Sync map position to URL
     useEffect(() => {

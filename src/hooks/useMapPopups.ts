@@ -25,6 +25,8 @@ export function useMapPopups(
     const setSelectedCountry = useMapStore((state) => state.setSelectedCountry);
     const addToSearchHistory = useMapStore((state) => state.addToSearchHistory);
     const setSelectedAirport = useMapStore((state) => state.setSelectedAirport);
+    const setSelectedEarthquake = useMapStore((state) => state.setSelectedEarthquake);
+    const setSelectedVolcano = useMapStore((state) => state.setSelectedVolcano);
     const setSelectedLocation = useMapStore(
         (state) => state.setSelectedLocation
     );
@@ -83,6 +85,45 @@ export function useMapPopups(
                     latitude: e.lngLat.lat,
                     longitude: e.lngLat.lng,
                     timezoneInfo: getTimezoneInfoAtPoint(map, e.point),
+                });
+                return;
+            }
+
+            const earthquakeFeatures = map.queryRenderedFeatures(e.point, {
+                layers: ["earthquakes-circles"],
+            });
+            if (earthquakeFeatures.length > 0) {
+                const props = earthquakeFeatures[0].properties;
+                const geo = earthquakeFeatures[0].geometry;
+                const coords = geo.type === "Point" ? geo.coordinates : [0, 0, 0];
+                setSelectedEarthquake({
+                    id: String(props?.id ?? earthquakeFeatures[0].id ?? ""),
+                    mag: Number(props?.mag ?? 0),
+                    place: String(props?.place ?? "Unknown location"),
+                    time: Number(props?.time ?? 0),
+                    depth: Number(coords[2] ?? 0),
+                    url: String(props?.url ?? ""),
+                    lat: Number(coords[1] ?? 0),
+                    lng: Number(coords[0] ?? 0),
+                });
+                return;
+            }
+
+            const volcanoFeatures = map.queryRenderedFeatures(e.point, {
+                layers: ["volcanoes-circles"],
+            });
+            if (volcanoFeatures.length > 0) {
+                const props = volcanoFeatures[0].properties;
+                const geo = volcanoFeatures[0].geometry;
+                const coords = geo.type === "Point" ? geo.coordinates : [0, 0];
+                setSelectedVolcano({
+                    name: String(props?.name ?? "Unknown Volcano"),
+                    country: String(props?.country ?? ""),
+                    type: String(props?.type ?? ""),
+                    lastEruption: String(props?.lastEruption ?? "Unknown"),
+                    elevation: Number(props?.elevation ?? 0),
+                    lat: Number(coords[1] ?? 0),
+                    lng: Number(coords[0] ?? 0),
                 });
                 return;
             }
@@ -147,6 +188,8 @@ export function useMapPopups(
             mapRef,
             setComparisonCountry,
             setSelectedAirport,
+            setSelectedEarthquake,
+            setSelectedVolcano,
             setSelectedCountry,
             setMeasurementStart,
             setSelectedLocation,

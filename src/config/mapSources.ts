@@ -1,10 +1,11 @@
-import type { FeatureCollection, LineString, Point } from "geojson";
+import type { FeatureCollection, LineString, Point, GeoJSON } from "geojson";
 import type { SourceSpecification } from "maplibre-gl";
 import countriesData from "../data/data.json";
 
 const continentsDataUrl = new URL("../data/continents.json", import.meta.url)
     .href;
 const airportsDataUrl = new URL("../data/airports.json", import.meta.url).href;
+const volcanoesDataUrl = new URL("../data/volcanoes.json", import.meta.url).href;
 const timezonePolygonsDataUrl = `${import.meta.env.BASE_URL}timezones-now.min.json`;
 const timezoneLabelsDataUrl = `${import.meta.env.BASE_URL}timezone-labels-now.json`;
 const countriesGeoJson = countriesData as FeatureCollection<
@@ -98,6 +99,17 @@ export const MAP_SOURCES: Record<string, SourceSpecification> = {
         tileSize: 256,
         maxzoom: 8,
         attribution: "RainViewer",
+    },
+    earthquakes: {
+        type: "geojson",
+        data: {
+            type: "FeatureCollection",
+            features: [],
+        } as GeoJSON,
+    },
+    volcanoes: {
+        type: "geojson",
+        data: volcanoesDataUrl,
     },
     terrainSource: {
         type: "raster-dem",

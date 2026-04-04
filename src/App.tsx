@@ -20,6 +20,9 @@ const CountryDetailsPanel = lazy(
 const CountryComparisonPanel = lazy(
     () => import("./components/CountryComparisonPanel/CountryComparisonPanel")
 );
+const EarthquakeVolcanoPanel = lazy(
+    () => import("./components/EarthquakeVolcanoPanel/EarthquakeVolcanoPanel")
+);
 
 type CountryFeature = {
     properties: {
@@ -107,6 +110,7 @@ export default function App() {
                 <MapControls />
                 <CountryDetailsPanel />
                 <CountryComparisonPanel />
+                <EarthquakeVolcanoPanel />
                 <Map
                     ref={mapRef}
                     onLoadingComplete={handleLoadingComplete}

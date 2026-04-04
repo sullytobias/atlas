@@ -62,6 +62,8 @@ export default function MapControls() {
         showStreetViewPicker,
         showTerrain,
         showGlobe,
+        showEarthquakes,
+        showVolcanoes,
         theme,
         toggleTheme,
     } = useMapStore();
@@ -78,6 +80,8 @@ export default function MapControls() {
                 showTimezones,
                 showDensity,
                 showHeatmap,
+                showEarthquakes,
+                showVolcanoes,
             ].filter(Boolean).length,
         [
             showCoastlines,
@@ -89,6 +93,8 @@ export default function MapControls() {
             showTimezones,
             showDensity,
             showHeatmap,
+            showEarthquakes,
+            showVolcanoes,
         ],
     );
 
