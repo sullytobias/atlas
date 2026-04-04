@@ -23,6 +23,30 @@ export type SearchResult = {
     matchType: "country" | "capital";
 };
 
+export function getCountryByCode(
+    countries: CountryDataItem[],
+    cca3: string,
+): SearchResult | null {
+    const country = countries.find((c) => c.properties.cca3 === cca3);
+    if (
+        !country ||
+        !country.properties.capital ||
+        !country.geometry.coordinates ||
+        country.geometry.coordinates.length !== 2
+    ) {
+        return null;
+    }
+    return {
+        cca3: country.properties.cca3,
+        country: country.properties.country,
+        capital: country.properties.capital,
+        flag: country.properties.flag,
+        flagAlt: country.properties.flagAlt,
+        coordinates: country.geometry.coordinates as [number, number],
+        matchType: "country",
+    };
+}
+
 export function getSearchResults(
     countries: CountryDataItem[],
     searchTerm: string

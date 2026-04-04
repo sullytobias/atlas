@@ -134,6 +134,7 @@ interface MapState {
     hoveredComparisonCountry: SelectedCountry | null;
     theme: "dark" | "light";
     visitedCountries: string[];
+    searchHistory: string[];
 
     toggleCoastlines: () => void;
     toggleNightLights: () => void;
@@ -170,6 +171,7 @@ interface MapState {
     toggleTheme: () => void;
     setPendingFlyTo: (coords: [number, number] | null) => void;
     setLayerOpacity: (key: string, opacity: number) => void;
+    addToSearchHistory: (cca3: string) => void;
 }
 
 export const useMapStore = create<MapState>((set) => ({
@@ -209,6 +211,14 @@ export const useMapStore = create<MapState>((set) => ({
     comparisonCountries: [null, null],
     hoveredComparisonCountry: null,
     theme: "dark",
+    searchHistory: (() => {
+        try {
+            const raw = localStorage.getItem("atlas-history");
+            return raw ? (JSON.parse(raw) as string[]) : [];
+        } catch {
+            return [];
+        }
+    })(),
     visitedCountries: (() => {
         try {
             const raw = localStorage.getItem("atlas-visited");
@@ -483,6 +493,17 @@ export const useMapStore = create<MapState>((set) => ({
         set((state) => ({
             theme: state.theme === "dark" ? "light" : "dark",
         })),
+    addToSearchHistory: (cca3) =>
+        set((state) => {
+            const next = [
+                cca3,
+                ...state.searchHistory.filter((c) => c !== cca3),
+            ].slice(0, 5);
+            try {
+                localStorage.setItem("atlas-history", JSON.stringify(next));
+            } catch {}
+            return { searchHistory: next };
+        }),
     setPendingFlyTo: (coords) => set({ pendingFlyTo: coords }),
     setLayerOpacity: (key, opacity) =>
         set((state) => ({

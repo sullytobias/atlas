@@ -245,6 +245,30 @@
     font-weight: 500;
 }
 
+.legend-gradient-scale {
+    padding: 2px 0 4px;
+    width: 100%;
+}
+
+.legend-gradient-bar {
+    height: 14px;
+    border-radius: 4px;
+    width: 100%;
+    border: 1px solid var(--border);
+}
+
+.legend-gradient-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.legend-gradient-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
 /* Scrollbar */
 .legend-drawer-content::-webkit-scrollbar {
     width: 6px;

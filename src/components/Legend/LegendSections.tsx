@@ -95,16 +95,20 @@ function DensityLegendContent() {
 
 function GdpLegendContent() {
     return (
-        <div className="legend-items legend-items-compact">
-            {GDP_COLORS.map((item) => (
-                <div key={item.label} className="legend-scale-item">
-                    <div
-                        className="legend-scale-swatch"
-                        style={{ backgroundColor: item.color }}
-                    />
-                    <span className="legend-scale-label">{item.label}</span>
-                </div>
-            ))}
+        <div className="legend-gradient-scale">
+            <div
+                className="legend-gradient-bar"
+                style={{
+                    background: `linear-gradient(to right, ${GDP_COLORS.map((c) => c.color).join(", ")})`,
+                }}
+            />
+            <div className="legend-gradient-labels">
+                {["$0", "$1B", "$10B", "$100B", "$1T", "$10T+"].map((label) => (
+                    <span key={label} className="legend-gradient-label">
+                        {label}
+                    </span>
+                ))}
+            </div>
         </div>
     );
 }

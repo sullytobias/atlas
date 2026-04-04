@@ -2,9 +2,11 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import countryData from "../../data/data.json";
 import {
     getSearchResults,
+    getCountryByCode,
     type CountryDataItem,
     type SearchResult,
 } from "./searchResults";
+import { useMapStore } from "../../store/loadingStore";
 import "./SearchBar.css";
 
 type Props = {
@@ -55,6 +57,9 @@ export default function SearchBar({ onLocationSelect }: Props) {
     const searchBarRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    const searchHistory = useMapStore((s) => s.searchHistory);
+    const addToSearchHistory = useMapStore((s) => s.addToSearchHistory);
+
     const countries = useMemo(() => {
         const data = countryData as { features: CountryDataItem[] };
         return data.features;
@@ -64,11 +69,27 @@ export default function SearchBar({ onLocationSelect }: Props) {
         return getSearchResults(countries, searchTerm);
     }, [searchTerm, countries]);
 
+    const historyResults = useMemo<SearchResult[]>(
+        () =>
+            searchHistory
+                .map((cca3) => getCountryByCode(countries, cca3))
+                .filter((r): r is SearchResult => r !== null),
+        [searchHistory, countries],
+    );
+
+    const displayResults = useMemo(
+        () => (searchTerm.trim() ? results : historyResults),
+        [searchTerm, results, historyResults],
+    );
+
     useEffect(() => {
-        if (!searchTerm.trim()) setShowResults(false);
-        else setShowResults(true);
+        if (!searchTerm.trim()) {
+            setShowResults(historyResults.length > 0);
+        } else {
+            setShowResults(true);
+        }
         setFocusedIndex(-1);
-    }, [searchTerm, results.length]);
+    }, [searchTerm, results.length, historyResults.length]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -89,12 +110,13 @@ export default function SearchBar({ onLocationSelect }: Props) {
         (result: SearchResult) => {
             const zoom = 6;
             onLocationSelect(result.coordinates, result.cca3, zoom);
+            addToSearchHistory(result.cca3);
             setSearchTerm("");
             setIsOpen(false);
             setShowResults(false);
             setFocusedIndex(-1);
         },
-        [onLocationSelect]
+        [onLocationSelect, addToSearchHistory]
     );
 
     const handleClear = useCallback(() => {
@@ -124,7 +146,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
                 setShowResults(false);
             } else if (e.key === "ArrowDown") {
                 setFocusedIndex((prev) =>
-                    Math.min(prev + 1, results.length - 1)
+                    Math.min(prev + 1, displayResults.length - 1)
                 );
                 setShowResults(true);
             } else if (e.key === "ArrowUp") {
@@ -133,12 +155,12 @@ export default function SearchBar({ onLocationSelect }: Props) {
             } else if (
                 e.key === "Enter" &&
                 focusedIndex >= 0 &&
-                results[focusedIndex]
+                displayResults[focusedIndex]
             ) {
-                handleResultClick(results[focusedIndex]);
+                handleResultClick(displayResults[focusedIndex]);
             }
         },
-        [results, focusedIndex, handleResultClick]
+        [displayResults, focusedIndex, handleResultClick]
     );
 
     const wrapperClass = isOpen
@@ -175,7 +197,7 @@ export default function SearchBar({ onLocationSelect }: Props) {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onFocus={() => {
-                                    if (results.length > 0)
+                                    if (displayResults.length > 0)
                                         setShowResults(true);
                                 }}
                                 autoFocus
@@ -217,10 +239,15 @@ export default function SearchBar({ onLocationSelect }: Props) {
                                 id="search-bar-results-list"
                                 role="listbox"
                             >
-                                {results.length > 0
-                                    ? results.map((result, index) => (
+                                {!searchTerm.trim() && historyResults.length > 0 && (
+                                    <div className="search-bar-results-header">
+                                        Recent
+                                    </div>
+                                )}
+                                {displayResults.length > 0
+                                    ? displayResults.map((result, index) => (
                                           <SearchResultItem
-                                              key={`${result.country}-${index}`}
+                                              key={`${result.cca3}-${index}`}
                                               id={`search-bar-result-${index}`}
                                               result={result}
                                               onClick={() =>

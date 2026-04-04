@@ -5,6 +5,7 @@ import {
     useCallback,
     useImperativeHandle,
     forwardRef,
+    useState,
 } from "react";
 import type { GeoJSONSource, RasterTileSource, StyleSpecification } from "maplibre-gl";
 import { MapMouseEvent } from "maplibre-gl";
@@ -12,6 +13,7 @@ import { MapMouseEvent } from "maplibre-gl";
 import { MAP_SOURCES } from "../config/mapSources";
 import { getFlightRoutesGeoJson } from "../utils/flightRoutes";
 import { MAP_LAYERS } from "../config/mapLayers";
+import gdpRaw from "../data/gdpData.json";
 import { useMapInstance } from "../hooks/useMapInstance";
 import { useLayerVisibility } from "../hooks/useLayerVisibility";
 import { useMapStore } from "../store/loadingStore";
@@ -41,12 +43,27 @@ export type MapRef = {
     flyToLocation: (coordinates: [number, number], zoom?: number) => void;
 };
 
+const gdpByCode = gdpRaw as Record<string, number>;
+
+function formatGdpMillions(millions: number): string {
+    const value = millions * 1e6;
+    if (value >= 1e12) return `${(value / 1e12).toFixed(1)}T`;
+    if (value >= 1e9) return `${(value / 1e9).toFixed(1)}B`;
+    return `${(value / 1e6).toFixed(1)}M`;
+}
+
 export default forwardRef<MapRef, Props>(function Map(
     { onLoadingComplete, onMapMove },
     ref,
 ) {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const hoveredCountryId = useRef<string | number | null>(null);
+    const [hoveredGdpInfo, setHoveredGdpInfo] = useState<{
+        name: string;
+        gdp: number | null;
+        x: number;
+        y: number;
+    } | null>(null);
 
     const {
         showCoastlines,
@@ -516,6 +533,19 @@ export default forwardRef<MapRef, Props>(function Map(
             if (features.length > 0) {
                 map.getCanvas().style.cursor = "pointer";
 
+                if (showGdp) {
+                    const adm0a3 = features[0].properties?.ADM0_A3 as string | undefined;
+                    const name = features[0].properties?.ADMIN as string | undefined;
+                    setHoveredGdpInfo({
+                        name: name ?? adm0a3 ?? "",
+                        gdp: adm0a3 ? (gdpByCode[adm0a3] ?? null) : null,
+                        x: e.originalEvent.clientX,
+                        y: e.originalEvent.clientY,
+                    });
+                } else {
+                    setHoveredGdpInfo(null);
+                }
+
                 const countryId = features[0].id;
                 if (countryId === undefined) return;
 
@@ -533,6 +563,7 @@ export default forwardRef<MapRef, Props>(function Map(
                 map.getCanvas().style.cursor = "default";
                 clearHoveredCountry();
                 setHoveredComparisonCountry(null);
+                setHoveredGdpInfo(null);
             }
         },
         [
@@ -540,6 +571,8 @@ export default forwardRef<MapRef, Props>(function Map(
             setHoveredComparisonCountry,
             setHoveredCountry,
             showCountryComparison,
+            showGdp,
+            setHoveredGdpInfo,
         ],
     );
 
@@ -796,6 +829,23 @@ export default forwardRef<MapRef, Props>(function Map(
         <>
             <SimpleLoader map={map} />
             <div ref={containerRef} className="map" />
+            {hoveredGdpInfo && showGdp && (
+                <div
+                    className="map-gdp-tooltip"
+                    style={{
+                        left: hoveredGdpInfo.x + 14,
+                        top: hoveredGdpInfo.y - 10,
+                    }}
+                >
+                    <div className="map-gdp-tooltip-name">{hoveredGdpInfo.name}</div>
+                    <div className="map-gdp-tooltip-value">
+                        GDP:{" "}
+                        {hoveredGdpInfo.gdp != null
+                            ? `$${formatGdpMillions(hoveredGdpInfo.gdp)}`
+                            : "No data"}
+                    </div>
+                </div>
+            )}
         </>
     );
 });

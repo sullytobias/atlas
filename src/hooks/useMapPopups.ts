@@ -23,6 +23,7 @@ export function useMapPopups(
     mapRef: React.RefObject<MLMap | null>
 ) {
     const setSelectedCountry = useMapStore((state) => state.setSelectedCountry);
+    const addToSearchHistory = useMapStore((state) => state.addToSearchHistory);
     const setSelectedAirport = useMapStore((state) => state.setSelectedAirport);
     const setSelectedLocation = useMapStore(
         (state) => state.setSelectedLocation
@@ -135,10 +136,12 @@ export function useMapPopups(
 
             if (showCountryComparison) {
                 setComparisonCountry(enrichedProperties);
+                addToSearchHistory(enrichedProperties.cca3);
                 return;
             }
 
             setSelectedCountry(enrichedProperties);
+            addToSearchHistory(enrichedProperties.cca3);
         },
         [
             mapRef,
@@ -148,6 +151,7 @@ export function useMapPopups(
             setMeasurementStart,
             setSelectedLocation,
             setSelectedMeasurement,
+            addToSearchHistory,
         ],
     );
 

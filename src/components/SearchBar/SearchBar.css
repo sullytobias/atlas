@@ -198,6 +198,16 @@
     padding-left: 30px;
 }
 
+.search-bar-results-header {
+    padding: 6px 14px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    user-select: none;
+}
+
 .search-bar-no-results {
     padding: 20px 16px;
     text-align: center;
